@@ -11,26 +11,12 @@ class PersonalityScreener:
             'N': 'Neurotizismus'
         }
         
-        # Beispielhafte Trainingsdaten für ML-Modell
-        self.setup_sample_data()
-    
-    def setup_sample_data(self):
-        """Erstellt Beispieldaten für das ML-Modell"""
-        np.random.seed(42)
-        n_samples = 1000
-        
-        # Simulierte Persönlichkeitsprofile
-        self.sample_profiles = pd.DataFrame({
-            'O': np.random.normal(50, 15, n_samples),
-            'C': np.random.normal(50, 15, n_samples),
-            'E': np.random.normal(50, 15, n_samples),
-            'A': np.random.normal(50, 15, n_samples),
-            'N': np.random.normal(50, 15, n_samples)
-        })
-        
-        # Skalierung
-        self.scaler = StandardScaler()
-        self.scaler.fit(self.sample_profiles)
+# Vereinfachte Initialisierung - keine ML-Daten nötig
+def setup_sample_data(self):
+    """Vereinfachte Dateninitialisierung - ohne numpy/pandas"""
+    # Keine komplexen Datenstrukturen mehr nötig
+    # Die Similarity-Berechnung verwendet jetzt einfache Logik
+    pass
     
     def behavioral_questionnaire(self):
         """Fragebogen für verhaltensbasierte Einschätzung"""
@@ -127,25 +113,24 @@ class PersonalityScreener:
         
         return profile
     
-    def calculate_similarity(self, user_scores):
-        """Berechnet Ähnlichkeit mit typischen Profilen"""
-        user_array = np.array([user_scores[dim] for dim in self.dimensions]).reshape(1, -1)
-        user_scaled = self.scaler.transform(user_array)
-        
-        # Beispielhafte Ähnlichkeitsberechnung
-        similarities = {}
-        typical_profiles = {
-            "Kreativer Innovator": [80, 60, 65, 55, 45],
-            "Zuverlässiger Organisator": [45, 85, 50, 60, 40],
-            "Sozialer Netzwerker": [60, 50, 80, 70, 35],
-            "Teamplayer": [50, 60, 55, 80, 45],
-            "Stabiler Problemlöser": [55, 65, 45, 60, 25]
-        }
-        
-        for profile_name, typical_scores in typical_profiles.items():
-            typical_array = np.array(typical_scores).reshape(1, -1)
-            typical_scaled = self.scaler.transform(typical_array)
-            similarity = 1 - np.abs(user_scaled - typical_scaled).mean()
-            similarities[profile_name] = max(0, similarity * 100)
-        
-        return similarities
+def calculate_similarity(self, user_scores):
+    """Berechnet Ähnlichkeit mit typischen Profilen - vereinfachte Version"""
+    similarities = {}
+    typical_profiles = {
+        "Kreativer Innovator": {"O": 80, "C": 60, "E": 65, "A": 55, "N": 45},
+        "Zuverlässiger Organisator": {"O": 45, "C": 85, "E": 50, "A": 60, "N": 40},
+        "Sozialer Netzwerker": {"O": 60, "C": 50, "E": 80, "A": 70, "N": 35},
+        "Teamplayer": {"O": 50, "C": 60, "E": 55, "A": 80, "N": 45},
+        "Stabiler Problemlöser": {"O": 55, "C": 65, "E": 45, "A": 60, "N": 25}
+    }
+    
+    for profile_name, typical_scores in typical_profiles.items():
+        total_diff = 0
+        for dim in self.dimensions:
+            diff = abs(user_scores[dim] - typical_scores[dim])
+            total_diff += diff
+        # Umrechnung in Ähnlichkeit (0-100%)
+        similarity = max(0, 100 - (total_diff / 5))
+        similarities[profile_name] = similarity
+    
+    return similarities
