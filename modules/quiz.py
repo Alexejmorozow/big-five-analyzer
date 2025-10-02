@@ -1,343 +1,732 @@
 import streamlit as st
 import random
 import time
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+from typing import List, Dict, Any
 
-class QuizModule:
+class ClinicalReasoningQuiz:
     def __init__(self):
         self.all_questions = self.load_questions()
     
-    def load_questions(self):
-        """Lädt alle Fragen inklusive der neuen Erweiterungen"""
+    def load_questions(self) -> List[Dict[str, Any]]:
+        """Lädt alle Fragen für das Clinical Reasoning Training"""
         return [
-            # 📊 BASIS-FRAGEN
+            # 📊 LIKERT-INTERPRETATION
             {
-                "id": 1, "difficulty": 1,
+                "id": 1,
                 "type": "likert_interpretation",
-                "question": "Wie wahrscheinlich ist diese Interpretation des Verhaltens?",
-                "scenario": "Eine Person beginnt jeden Tag um 7:00 Uhr, arbeitet strukturiert mit To-Do-Listen, und erledigt alle Aufgaben termingerecht.",
+                "difficulty": 2,
+                "question": "Bewerten Sie die Plausibilität jeder Interpretation auf einer Skala von 1-5:",
+                "scenario": "Ein Mitarbeiter beginnt pünktlich um 8:00, plant seine Arbeit minutiös durch, dokumentiert akribisch und korrigiert selbst kleinste Unstimmigkeiten. Wirkt dabei nicht gestresst, sondern zufrieden.",
                 "interpretations": [
                     "Hohe Gewissenhaftigkeit (strukturierte Arbeitsweise)",
-                    "Niedrige Offenheit (Angst vor Spontaneität)", 
-                    "Hoher Neurotizismus (Kontrollzwang)",
-                    "Situative Anpassung (Probezeit)"
+                    "Ängstlicher Perfektionismus (hoher Neurotizismus)",
+                    "Berufliche Sozialisation (erlerntes Verhalten)",
+                    "Kompetenzdemonstration (Streben nach Anerkennung)"
                 ],
-                "correct_likert": [4, 2, 3, 3],
-                "explanation": "🔍 **Klassischer Fall hoher Gewissenhaftigkeit:** Struktur und Pünktlichkeit sind Kernmerkmale.",
-                "learning_point": "Gewissenhaftigkeit zeigt sich in konsistenter Organisation über Zeit hinweg."
-            },
-            {
-                "id": 2, "difficulty": 1,
-                "type": "multiple_correct",
-                "question": "Welche Dimensionen erklären dieses Verhalten am besten?",
-                "scenario": "Jemand geht auf Partys auf fremde Menschen zu, initiiert Gespräche und scheint Energie aus sozialen Kontakten zu ziehen.",
-                "options": [
-                    "Hohe Extraversion (Geselligkeit, Energiegewinn)",
-                    "Niedrige Verträglichkeit (Aufdringlichkeit)",
-                    "Hohe Offenheit (Interesse an neuen Menschen)",
-                    "Niedriger Neurotizismus (soziale Sicherheit)"
-                ],
-                "correct_answers": [0, 3],
-                "explanation": "💃 **Extraversions-Muster:** Soziale Initiative + Energiegewinn = klassische Extraversion.",
-                "learning_point": "Extraversion ≠ nur Geselligkeit, sondern auch Energiegewinn aus Sozialkontakten."
+                "expert_ratings": [4, 2, 3, 2],
+                "tolerance": 1,
+                "explanation": "🔍 **Abwägende Deutung:** Die Zufriedenheit spricht stark für hohe Gewissenhaftigkeit als Kernmerkmal. Fehlende Stresssymptome machen Neurotizismus unwahrscheinlicher.",
+                "learning_point": "Gewissenhaftigkeit muss nicht mit Stress verbunden sein - Struktur kann Sicherheit geben."
             },
             
-            # 🔮 PHÄNOMEN-DEUTUNG
+            # ✅ MULTIPLE-CORRECT BEHAVIORAL INTERPRETATION
             {
-                "id": 101, "difficulty": 2,
-                "type": "phenomenon_interpretation",
-                "question": "Wie könnte dieses Verhalten im Rahmen der Big Five gedeutet werden?",
-                "scenario": "Eine Patientin in der Therapie vermeidet Blickkontakt, spricht sehr leise und zögert lange vor Antworten.",
-                "possible_interpretations": [
-                    "Hoher Neurotizismus (soziale Ängstlichkeit)",
-                    "Niedrige Extraversion (introvertierte Grundtendenz)", 
-                    "Hohe Verträglichkeit (konfliktscheues Verhalten)",
-                    "Situative Reaktion (akute Belastung)",
-                    "Kombination aus Neurotizismus und niedriger Extraversion"
+                "id": 2,
+                "type": "multiple_correct_behavioral",
+                "difficulty": 2,
+                "question": "Welche Interpretationen sind wissenschaftlich plausibel?",
+                "scenario": "Maria sitzt in Teammeetings meist still, spricht nur wenn direkt gefragt, beobachtet intensiv und macht sich detaillierte Notizen. In Einzelgesprächen wirkt sie jedoch kompetent und reflektiert.",
+                "interpretations": [
+                    "Introversion (niedrige Extraversion)",
+                    "Soziale Ängstlichkeit (hoher Neurotizismus)",
+                    "Beobachtende Lernstrategie (kognitive Präferenz)",
+                    "Geringe Verträglichkeit (Desinteresse an anderen)",
+                    "Hohe Gewissenhaftigkeit (gründliche Vorbereitung)"
                 ],
-                "valid_hypotheses": [0, 1, 2, 3, 4],
-                "most_plausible": [0, 4, 3],
-                "explanation": "🔍 **Mehrdeutige Phänomendeutung:** Verhaltensmuster können unterschiedliche Ursachen haben.",
-                "learning_point": "Identische Verhaltensmuster können unterschiedliche Ursachen haben."
+                "correct_answers": [0, 2, 4],
+                "explanation": "👥 **Mehrdeutiges Verhalten:** Das Verhalten könnte Introversion, beobachtende Lernpräferenz oder Gewissenhaftigkeit spiegeln.",
+                "learning_point": "Ruhiges Verhalten kann verschiedene Ursachen haben - Kontext ist entscheidend."
             },
             
-            # ⏱️ FALLVERLÄUFE
+            # 🧩 COMBINATION QUESTION
             {
-                "id": 102, "difficulty": 3,
-                "type": "case_progression", 
-                "question": "Handelt es sich um einen Persönlichkeitsstil oder einen situativen Zustand?",
-                "scenario": "**Woche 1-4:** Ruhig, aber kompetent. **Woche 5-8:** Gereizt und kritisch. **Woche 9-12:** Normalisierung mit grundlegender Zurückhaltung.",
-                "options": [
-                    "Stabiler Persönlichkeitsstil mit situativer Überlagerung",
-                    "Primär situative Reaktion auf extravertierter Basis",
-                    "Entwicklung einer Persönlichkeitsänderung",
-                    "Kombination aus stabiler Introversion + Belastungsreaktion"
+                "id": 3,
+                "type": "combination_question",
+                "difficulty": 3,
+                "question": "Welche 2 Dimensionen-Kombination erklärt dieses komplexe Muster am besten?",
+                "scenario": "Eine Person zeigt intensive Begeisterung für philosophische Diskussionen und künstlerische Projekte, wirkt aber gleichzeitig sehr diszipliniert und strukturiert in der Umsetzung.",
+                "behavior_pattern": "Kreativität + Strukturiertheit + selektive Soziabilität",
+                "combinations": [
+                    "Hohe Offenheit + hohe Gewissenhaftigkeit",
+                    "Hohe Offenheit + niedrige Extraversion", 
+                    "Niedrige Verträglichkeit + hohe Gewissenhaftigkeit",
+                    "Hohe Offenheit + hohe Gewissenhaftigkeit + niedrige Extraversion"
                 ],
-                "correct_interpretation": [0, 3],
-                "explanation": "⏱️ **Verlaufsdiagnostik:** Stabile Grundtendenz + situative Überlagerung.",
-                "learning_point": "Verlaufsbeobachtung unterscheidet stabile Traits von state-abhängigen Reaktionen."
+                "correct_combination": 3,
+                "explanation": "🎭 **Komplexes Interaktionsmuster:** Die Kombination aus hoher Offenheit (Kreativität), hoher Gewissenhaftigkeit (Struktur) und niedriger Extraversion erklärt das Verhaltensmuster.",
+                "learning_point": "Scheinbare Widersprüche werden durch Kombinationen orthogonaler Dimensionen erklärt."
+            },
+            
+            # ⚠️ TRICK SCENARIO
+            {
+                "id": 4,
+                "type": "trick_scenario", 
+                "difficulty": 3,
+                "question": "Warum verhält sich diese normalerweise extrovertierte Person plötzlich zurückgezogen?",
+                "scenario": "Lisa ist normalerweise gesellig, initiiert Gespräche und wirkt in Gruppen energisch. Seit 3 Wochen wirkt sie jedoch zurückgezogen, meidet soziale Interaktionen und wirkt erschöpft.",
+                "options": [
+                    "Persönlichkeitsänderung (dauerhafte Introversion)",
+                    "Akute private Belastung (Situativer State)", 
+                    "Burnout-Entwicklung (berufliche Überlastung)",
+                    "Strategische Anpassung (bewusste Verhaltensänderung)"
+                ],
+                "correct_answers": [1, 2],
+                "explanation": "⏱️ **Trait vs. State:** Plötzliche Verhaltensänderungen deuten auf akute Zustände (States) als auf Persönlichkeitsänderungen (Traits) hin.",
+                "learning_point": "Plötzliche Verhaltensänderungen = situative Faktoren; stabile Muster = Persönlichkeitsfaktoren."
+            },
+            
+            # 📈 RANKING TASK
+            {
+                "id": 5,
+                "type": "ranking_task",
+                "difficulty": 3, 
+                "question": "Ordnen Sie die Hypothesen nach wissenschaftlicher Plausibilität (1 = am plausibelsten):",
+                "scenario": "Ein bisher zuverlässiger Mitarbeiter beginnt plötzlich, Deadlines zu verpassen, wirkt unkonzentriert und emotional labil. Kollegen berichten von Stimmungsschwankungen.",
+                "hypotheses": [
+                    "Akute private Belastung (Familienkrise, Gesundheit)",
+                    "Beginndes Burnout-Syndrom (berufliche Überlastung)",
+                    "Entwicklung einer depressiven Episode", 
+                    "Nachlassende Arbeitsmotivation (innere Kündigung)"
+                ],
+                "correct_ranking": [0, 1, 2, 3],
+                "explanation": "📈 **Probabilistisches Reasoning:** Akute private Belastung ist am wahrscheinlichsten (plötzlicher Beginn, emotionale Labilität).",
+                "learning_point": "Bei plötzlichen Veränderungen: Akute States vor Persönlichkeitsänderungen priorisieren."
+            },
+            
+            # 🔬 RESEARCH CRITICAL THINKING
+            {
+                "id": 6,
+                "type": "research_critical",
+                "difficulty": 3,
+                "question": "Welche methodischen Probleme können bei Big-Five-Assessments auftreten?",
+                "scenario": "Ein Unternehmen führt Big-Five-Tests in der Personalauswahl ein. Die Tests werden online ohne Aufsicht durchgeführt.",
+                "critical_issues": [
+                    "Soziale Erwünschtheit (response bias)",
+                    "Kulturelle Unterschiede in der Item-Interpretation", 
+                    "Fehlende situative Validität (Labor vs. Realität)",
+                    "Überbetonung dispositionaler Faktoren",
+                    "Probleme der Selbstauskunft (limited self-knowledge)"
+                ],
+                "correct_answers": [0, 1, 2, 3, 4],
+                "explanation": "🎯 **Methodenkritik:** Big-Five-Assessments haben mehrere Limitationen: Response Biases, kulturelle Variabilität, eingeschränkte ökologische Validität.",
+                "learning_point": "Wissenschaftliche Diagnostik erfordert kritische Reflexion methodischer Grenzen."
             }
         ]
     
     def display_quiz(self):
-        """Hauptmethode zur Anzeige des Quizzes"""
-        st.header("🧠 Big Five Clinical Reasoning Quiz")
+        """Hauptmethode zur Anzeige des Clinical Reasoning Trainings"""
+        st.set_page_config(
+            page_title="Big Five Clinical Reasoning Training",
+            page_icon="🧠",
+            layout="wide"
+        )
         
-        # Session State initialisieren
-        if 'quiz_initialized' not in st.session_state:
-            self._initialize_session_state()
+        st.header("🧠 Big Five Clinical Reasoning Training")
+        st.markdown("**Training des diagnostischen Urteilsvermögens in mehrdeutigen Situationen**")
+        
+        self._initialize_session_state()
         
         if not st.session_state.quiz_configurated:
-            self.show_quiz_configuration()
+            self.show_training_configuration()
             return
         
-        if not st.session_state.quiz_started:
-            self.show_quiz_intro()
+        if not st.session_state.training_started:
+            self.show_training_intro()
             return
         
         if st.session_state.show_results:
-            self.show_results()
+            self.show_training_results()
         else:
-            self.show_question()
+            self.show_current_exercise()
     
     def _initialize_session_state(self):
-        """Initialisiert den Session State komplett"""
-        st.session_state.quiz_initialized = True
-        st.session_state.quiz_configurated = False
-        st.session_state.quiz_started = False
-        st.session_state.current_question = 0
-        st.session_state.score = 0
-        st.session_state.show_results = False
-        st.session_state.last_action = None
+        """Initialisiert Session State Variablen"""
+        if 'clinical_initialized' not in st.session_state:
+            st.session_state.clinical_initialized = True
+            st.session_state.quiz_configurated = False
+            st.session_state.training_started = False
+            st.session_state.current_exercise = 0
+            st.session_state.reasoning_score = 0
+            st.session_state.show_results = False
+            st.session_state.answer_evaluated = False
+            st.session_state.exercise_questions = []
+            st.session_state.user_responses = []
     
-    def show_quiz_configuration(self):
-        """Zeigt die Quiz-Konfiguration"""
-        st.markdown("## 🎯 Quiz konfigurieren")
+    def show_training_configuration(self):
+        """Zeigt die Trainings-Konfiguration"""
+        st.markdown("## 🎯 Clinical Reasoning Training konfigurieren")
         
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("🔬 Kleines Quiz (2 Fragen)", use_container_width=True, key="btn_small"):
-                self.setup_quiz("small")
+            st.subheader("🔬 Grundlagen-Training")
+            st.markdown("""
+            - **3 Übungen** (ca. 10-15 Minuten)
+            - **Fokus:** Basis-Interpretationen und einfache Muster
+            - **Perfekt für:** Einstieg in klinisches Reasoning
+            """)
+            if st.button("Grundlagen starten", use_container_width=True, key="btn_basic"):
+                self.setup_training("basic")
         
         with col2:
-            if st.button("🎓 Großes Quiz (4 Fragen)", use_container_width=True, key="btn_large"):
-                self.setup_quiz("large")
+            st.subheader("🎓 Experten-Training") 
+            st.markdown("""
+            - **6 Übungen** (ca. 20-25 Minuten)
+            - **Umfassend:** Komplexe Muster und kritische Reflexion
+            - **Vertieft:** Probabilistisches Denken und Methodenkritik
+            """)
+            if st.button("Experten starten", use_container_width=True, key="btn_expert"):
+                self.setup_training("expert")
     
-    def setup_quiz(self, quiz_size):
-        """Bereitet das Quiz vor"""
-        all_questions = self.all_questions.copy()
-        random.shuffle(all_questions)
+    def setup_training(self, training_level):
+        """Bereitet das Training vor"""
+        all_exercises = self.all_questions.copy()
+        random.shuffle(all_exercises)
         
-        if quiz_size == "small":
-            questions = all_questions[:2]
+        if training_level == "basic":
+            exercises = all_exercises[:3]
         else:
-            questions = all_questions[:4]
+            exercises = all_exercises[:6]
         
-        st.session_state.quiz_questions = questions
+        st.session_state.exercise_questions = exercises
         st.session_state.quiz_configurated = True
-        st.session_state.quiz_size = quiz_size
+        st.session_state.training_level = training_level
         st.rerun()
     
-    def show_quiz_intro(self):
-        """Zeigt die Quiz-Einleitung"""
-        question_count = len(st.session_state.quiz_questions)
-        st.success(f"**🎯 Quiz konfiguriert: {question_count} Fragen**")
+    def show_training_intro(self):
+        """Zeigt die Trainingseinleitung"""
+        exercise_count = len(st.session_state.exercise_questions)
         
-        if st.button("🎯 Quiz starten", type="primary", use_container_width=True, key="btn_start"):
-            st.session_state.quiz_started = True
+        st.success(f"**🎯 {st.session_state.training_level.capitalize()}-Training konfiguriert: {exercise_count} Übungen**")
+        
+        st.info("""
+        **📚 Clinical Reasoning Kompetenzen trainieren:**
+        
+        🎯 **Ziele dieses Trainings:**
+        - Mehrdeutige Verhaltensmuster interpretieren lernen
+        - Probabilistisches statt binäres Denken entwickeln  
+        - Dimensions-Kombinationen verstehen
+        - Situative vs. dispositionale Faktoren unterscheiden
+        
+        💡 **Lernphilosophie:**
+        - Es gibt selten eine einzige "richtige" Antwort
+        - Verschiedene Interpretationen können gleichzeitig plausibel sein
+        - Kontext verändert die Bedeutung von Verhalten
+        """)
+        
+        if st.button("🎯 Training beginnen", type="primary", use_container_width=True):
+            st.session_state.training_started = True
             st.session_state.start_time = time.time()
+            st.session_state.answer_evaluated = False
             st.rerun()
     
-    def show_question(self):
-        """Zeigt die aktuelle Frage - KOMPLETT KORRIGIERT"""
-        question_data = st.session_state.quiz_questions[st.session_state.current_question]
+    def show_current_exercise(self):
+        """Zeigt die aktuelle Übung"""
+        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
+            st.session_state.show_results = True
+            st.rerun()
+            return
+            
+        exercise_data = st.session_state.exercise_questions[st.session_state.current_exercise]
         
         # Fortschrittsanzeige
-        progress = (st.session_state.current_question + 1) / len(st.session_state.quiz_questions)
+        progress = (st.session_state.current_exercise + 1) / len(st.session_state.exercise_questions)
         st.progress(progress)
-        st.caption(f"Frage {st.session_state.current_question + 1} von {len(st.session_state.quiz_questions)}")
+        st.caption(f"Übung {st.session_state.current_exercise + 1} von {len(st.session_state.exercise_questions)}")
         
-        st.markdown(f"### {question_data['question']}")
+        # Schwierigkeitsgrad
+        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
+        st.write(f"{difficulty_icons[exercise_data['difficulty']]} **Schwierigkeitsgrad {exercise_data['difficulty']}/3**")
         
-        if question_data.get('scenario'):
-            with st.expander("📋 Fallvignette anzeigen", expanded=True):
-                st.write(question_data['scenario'])
+        # Übungstyp-spezifische Anzeige
+        exercise_handlers = {
+            'likert_interpretation': self.show_likert_exercise,
+            'multiple_correct_behavioral': self.show_multiple_behavioral_exercise,
+            'combination_question': self.show_combination_exercise,
+            'trick_scenario': self.show_trick_scenario_exercise,
+            'ranking_task': self.show_ranking_exercise,
+            'research_critical': self.show_research_critical_exercise
+        }
         
-        # Fragetyp anzeigen
-        if question_data['type'] == 'likert_interpretation':
-            self.show_likert_question(question_data)
-        elif question_data['type'] == 'multiple_correct':
-            self.show_multiple_correct_question(question_data)
-        elif question_data['type'] == 'phenomenon_interpretation':
-            self.show_phenomenon_interpretation(question_data)
-        elif question_data['type'] == 'case_progression':
-            self.show_case_progression(question_data)
+        handler = exercise_handlers.get(exercise_data['type'])
+        if handler:
+            handler(exercise_data)
+        else:
+            st.error(f"Unbekannter Übungstyp: {exercise_data['type']}")
     
-    def show_likert_question(self, question_data):
-        """Zeigt Likert-Skalen Fragen"""
+    def show_likert_exercise(self, exercise_data):
+        """Zeigt Likert-Skalen Übung"""
+        st.markdown(f"### 📊 {exercise_data['question']}")
+        
+        with st.expander("📋 Verhaltensbeschreibung anzeigen", expanded=True):
+            st.write(exercise_data['scenario'])
+        
         st.write("**Bewerten Sie auf einer Skala von 1-5:**")
+        st.caption("1 = sehr unwahrscheinlich, 3 = neutral, 5 = sehr wahrscheinlich")
         
-        user_ratings = []
-        for i, interpretation in enumerate(question_data['interpretations']):
-            rating = st.slider(
-                f"{interpretation}",
-                min_value=1, max_value=5, value=3,
-                key=f"likert_{question_data['id']}_{i}"
-            )
-            user_ratings.append(rating)
-        
-        # WICHTIG: Nur einen Button pro Frage!
-        if st.button("📊 Antwort auswerten", type="primary", key=f"eval_{question_data['id']}"):
-            self.evaluate_likert_question(user_ratings, question_data)
-            # Direkt nach der Auswertung den Next-Button zeigen
-            self._show_next_button(question_data)
-    
-    def show_multiple_correct_question(self, question_data):
-        """Zeigt Multiple-Choice-Fragen"""
-        st.write("**Wählen Sie alle korrekten Aussagen:**")
-        
-        user_answers = st.multiselect(
-            "Mehrfachauswahl:",
-            question_data["options"],
-            key=f"multiple_{question_data['id']}"
-        )
-        
-        if st.button("✅ Antwort auswerten", type="primary", key=f"eval_{question_data['id']}"):
-            self.evaluate_multiple_correct_question(user_answers, question_data)
-            self._show_next_button(question_data)
-    
-    def show_phenomenon_interpretation(self, question_data):
-        """Zeigt Phänomen-Deutungs-Fragen"""
-        st.write("**Welche Interpretationen sind plausibel?**")
-        
-        user_answers = st.multiselect(
-            "Mehrfachauswahl:",
-            question_data["possible_interpretations"],
-            key=f"phenomenon_{question_data['id']}"
-        )
-        
-        if st.button("🔮 Antwort auswerten", type="primary", key=f"eval_{question_data['id']}"):
-            self.evaluate_phenomenon_interpretation(user_answers, question_data)
-            self._show_next_button(question_data)
-    
-    def show_case_progression(self, question_data):
-        """Zeigt Fallverlaufs-Fragen"""
-        st.write("**Analyse des Verhaltens über Zeit:**")
-        
-        user_answers = st.multiselect(
-            "Wählen Sie zutreffende Interpretationen:",
-            question_data["options"],
-            key=f"case_{question_data['id']}"
-        )
-        
-        if st.button("⏱️ Antwort auswerten", type="primary", key=f"eval_{question_data['id']}"):
-            self.evaluate_case_progression(user_answers, question_data)
-            self._show_next_button(question_data)
-    
-    def _show_next_button(self, question_data):
-        """Zeigt den Next-Button - EINFACHE UND FUNKTIONIERENDE VERSION"""
-        st.markdown("---")
-        
-        # WICHTIG: Ein ganz einfacher Button ohne komplexe Logik
-        if st.button("➡️ **Nächste Frage**", type="primary", use_container_width=True, 
-                    key=f"next_{question_data['id']}_{st.session_state.current_question}"):
+        if not st.session_state.answer_evaluated:
+            user_ratings = []
+            for i, interpretation in enumerate(exercise_data['interpretations']):
+                rating = st.slider(
+                    f"{interpretation}",
+                    min_value=1, max_value=5, value=3,
+                    key=f"likert_{exercise_data['id']}_{i}"
+                )
+                user_ratings.append(rating)
             
-            # Zur nächsten Frage oder zu den Ergebnissen
-            if st.session_state.current_question + 1 < len(st.session_state.quiz_questions):
-                st.session_state.current_question += 1
-            else:
-                st.session_state.show_results = True
-            
-            # Rerun erzwingen
-            st.rerun()
-
-    # ========== EVALUATIONS-METHODEN ==========
+            if st.button("📈 Einschätzung auswerten", type="primary", key=f"submit_{exercise_data['id']}"):
+                self.evaluate_likert_ratings(user_ratings, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
+        else:
+            self.show_exercise_feedback(exercise_data)
     
-    def evaluate_likert_question(self, user_ratings, question_data):
-        """Bewertet Likert-Skalen Fragen"""
-        correct_ratings = question_data['correct_likert']
-        deviations = [abs(user - correct) for user, correct in zip(user_ratings, correct_ratings)]
-        accuracy = max(0, 100 - (sum(deviations) / (len(correct_ratings) * 4)) * 100)
+    def evaluate_likert_ratings(self, user_ratings, exercise_data):
+        """Bewertet Likert-Einschätzungen mit Plotly Visualisierung"""
+        expert_ratings = exercise_data['expert_ratings']
+        tolerance = exercise_data['tolerance']
         
-        st.subheader("📊 Auswertung")
+        deviations = [abs(user - expert) for user, expert in zip(user_ratings, expert_ratings)]
+        within_tolerance = sum(1 for dev in deviations if dev <= tolerance)
+        accuracy = (within_tolerance / len(deviations)) * 100
+        
+        st.subheader("📊 Auswertung Ihrer Einschätzung")
         
         if accuracy >= 80:
-            st.success(f"🎉 Exzellente Einschätzung! ({accuracy:.1f}%)")
+            st.success(f"🎉 Exzellente probabilistische Einschätzung! ({accuracy:.1f}% im Toleranzbereich)")
+            st.session_state.reasoning_score += 1
         elif accuracy >= 60:
-            st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}%)")
+            st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}% im Toleranzbereich)")
         else:
-            st.error(f"📚 Abweichungen ({accuracy:.1f}%)")
+            st.error(f"📚 Deutliche Abweichungen von Experteneinschätzungen ({accuracy:.1f}% im Toleranzbereich)")
         
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
+        # Plotly Visualisierung
+        fig = go.Figure()
+        
+        # Ihre Einschätzungen
+        fig.add_trace(go.Scatter(
+            x=exercise_data['interpretations'],
+            y=user_ratings,
+            mode='markers+lines',
+            name='Ihre Einschätzung',
+            marker=dict(size=12, color='blue'),
+            line=dict(color='blue', width=2)
+        ))
+        
+        # Experteneinschätzungen
+        fig.add_trace(go.Scatter(
+            x=exercise_data['interpretations'],
+            y=expert_ratings,
+            mode='markers+lines',
+            name='Experteneinschätzung',
+            marker=dict(size=12, color='red'),
+            line=dict(color='red', width=2, dash='dash')
+        ))
+        
+        fig.update_layout(
+            title="Vergleich Ihrer Einschätzung mit Expertenrating",
+            xaxis_title="Interpretationen",
+            yaxis_title="Plausibilität (1-5)",
+            yaxis=dict(range=[0.5, 5.5]),
+            height=400
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        with st.expander("📚 Klinische Einordnung", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
     
-    def evaluate_multiple_correct_question(self, user_answers, question_data):
-        """Bewertet Multiple-Choice-Fragen"""
-        user_indices = [question_data["options"].index(ans) for ans in user_answers]
-        correct_indices = question_data["correct_answers"]
+    def show_multiple_behavioral_exercise(self, exercise_data):
+        """Zeigt Multiple-Choice Behavioral Interpretation"""
+        st.markdown(f"### 👥 {exercise_data['question']}")
+        
+        with st.expander("📋 Verhaltensbeobachtung anzeigen", expanded=True):
+            st.write(exercise_data['scenario'])
+        
+        if not st.session_state.answer_evaluated:
+            user_answers = st.multiselect(
+                "Wählen Sie alle plausiblen Interpretationen:",
+                exercise_data["interpretations"],
+                key=f"multiple_{exercise_data['id']}"
+            )
+            
+            if st.button("🔮 Interpretationen bewerten", type="primary", key=f"submit_{exercise_data['id']}"):
+                self.evaluate_behavioral_interpretation(user_answers, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
+        else:
+            self.show_exercise_feedback(exercise_data)
+    
+    def evaluate_behavioral_interpretation(self, user_answers, exercise_data):
+        """Bewertet behavioral Interpretationen mit Plotly"""
+        user_indices = [exercise_data["interpretations"].index(ans) for ans in user_answers]
+        correct_indices = exercise_data["correct_answers"]
+        
         correct_selected = len(set(user_indices) & set(correct_indices))
+        incorrect_selected = len(set(user_indices) - set(correct_indices))
+        missed_correct = len(set(correct_indices) - set(user_indices))
         
-        st.subheader("✅ Auswertung")
+        st.subheader("👥 Auswertung Verhaltensinterpretation")
         
-        if correct_selected == len(correct_indices):
-            st.success("🎉 Perfekt! Vollständiges Wissen.")
-            st.session_state.score += 1
+        if correct_selected == len(correct_indices) and incorrect_selected == 0:
+            st.success("🎉 Vollständiges und akkurates Interpretationsspektrum!")
+            st.session_state.reasoning_score += 1
+        elif incorrect_selected == 0:
+            st.warning("👍 Korrekte Auswahl, aber nicht vollständig.")
         else:
-            st.warning("👍 Korrekt, aber nicht vollständig.")
+            st.error("📚 Enthält fehlerhafte oder unplausible Interpretationen.")
         
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
+        # Plotly Donut Chart für die Auswertung
+        labels = ['Korrekt gewählt', 'Übersehen', 'Falsch gewählt']
+        values = [correct_selected, missed_correct, incorrect_selected]
+        colors = ['#00cc96', '#ffa15a', '#ef553b']
+        
+        fig = go.Figure(data=[go.Pie(
+            labels=labels,
+            values=values,
+            hole=.3,
+            marker_colors=colors
+        )])
+        
+        fig.update_layout(
+            title="Zusammenfassung Ihrer Interpretationen",
+            height=300
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        with st.expander("📚 Wissenschaftliche Einordnung", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
     
-    def evaluate_phenomenon_interpretation(self, user_answers, question_data):
-        """Bewertet Phänomen-Deutungen"""
-        user_indices = [question_data["possible_interpretations"].index(ans) for ans in user_answers]
-        correct_selections = len(set(user_indices) & set(question_data["valid_hypotheses"]))
+    def show_combination_exercise(self, exercise_data):
+        """Zeigt Kombinations-Übung"""
+        st.markdown(f"### 🧩 {exercise_data['question']}")
         
-        st.subheader("🔮 Auswertung")
+        with st.expander("📋 Komplexes Verhaltensmuster anzeigen", expanded=True):
+            st.write(exercise_data['scenario'])
+            st.info(f"**Muster:** {exercise_data['behavior_pattern']}")
         
-        if correct_selections == len(question_data["valid_hypotheses"]):
-            st.success("🎉 Vollständiges Hypothesenspektrum erkannt!")
-            st.session_state.score += 1
+        if not st.session_state.answer_evaluated:
+            user_choice = st.radio(
+                "Wählen Sie die beste Erklärung:",
+                exercise_data["combinations"],
+                key=f"combination_{exercise_data['id']}"
+            )
+            
+            if st.button("🎭 Kombination bewerten", type="primary", key=f"submit_{exercise_data['id']}"):
+                user_index = exercise_data["combinations"].index(user_choice)
+                self.evaluate_combination_choice(user_index, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
         else:
-            st.warning("👍 Gute Auswahl")
-        
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
+            self.show_exercise_feedback(exercise_data)
     
-    def evaluate_case_progression(self, user_answers, question_data):
-        """Bewertet Fallverlaufs-Analysen"""
-        user_indices = [question_data["options"].index(ans) for ans in user_answers]
-        correct_indices = question_data["correct_interpretation"]
+    def evaluate_combination_choice(self, user_index, exercise_data):
+        """Bewertet Kombinations-Auswahl"""
+        correct_index = exercise_data["correct_combination"]
         
-        st.subheader("⏱️ Auswertung")
+        st.subheader("🎭 Auswertung Dimensions-Kombination")
+        
+        if user_index == correct_index:
+            st.success("🎉 Exzellente Analyse des komplexen Musters!")
+            st.session_state.reasoning_score += 1
+        else:
+            st.error("❌ Die gewählte Kombination erklärt das Muster nicht vollständig.")
+            st.info(f"💡 **Optimale Erklärung:** {exercise_data['combinations'][correct_index]}")
+        
+        with st.expander("📚 Interaktionsanalyse", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
+    
+    def show_trick_scenario_exercise(self, exercise_data):
+        """Zeigt Trick-Scenario Übung"""
+        st.markdown(f"### ⚠️ {exercise_data['question']}")
+        
+        with st.expander("📋 Situationsbeschreibung anzeigen", expanded=True):
+            st.write(exercise_data['scenario'])
+        
+        if not st.session_state.answer_evaluated:
+            st.write("**Wählen Sie die plausiblen Erklärungen:**")
+            user_answers = st.multiselect(
+                "Mehrfachauswahl möglich:",
+                exercise_data["options"],
+                key=f"trick_{exercise_data['id']}"
+            )
+            
+            if st.button("⏱️ Trait vs. State analysieren", type="primary", key=f"submit_{exercise_data['id']}"):
+                user_indices = [exercise_data["options"].index(ans) for ans in user_answers]
+                self.evaluate_trick_scenario(user_indices, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
+        else:
+            self.show_exercise_feedback(exercise_data)
+    
+    def evaluate_trick_scenario(self, user_indices, exercise_data):
+        """Bewertet Trick-Scenario"""
+        correct_indices = exercise_data["correct_answers"]
+        
+        st.subheader("⏱️ Auswertung Trait vs. State Analyse")
         
         if set(user_indices) == set(correct_indices):
-            st.success("🎉 Exzellente Verlaufsanalyse!")
-            st.session_state.score += 1
+            st.success("🎉 Exzellente Unterscheidung zwischen Persönlichkeit und situativen Faktoren!")
+            st.session_state.reasoning_score += 1
         else:
-            st.error("❌ Verbesserungsfähig")
+            st.warning("📚 Differenzierung zwischen stabilen Traits und akuten States verbesserungsfähig")
         
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
+        with st.expander("📚 Situative vs. Dispositionale Faktoren", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
     
-    def show_results(self):
-        """Zeigt die Quiz-Ergebnisse"""
-        st.header("📊 Quiz abgeschlossen!")
+    def show_ranking_exercise(self, exercise_data):
+        """Zeigt Ranking-Übung"""
+        st.markdown(f"### 📈 {exercise_data['question']}")
         
-        total = len(st.session_state.quiz_questions)
-        score = st.session_state.score
+        with st.expander("📋 Fallbeschreibung anzeigen", expanded=True):
+            st.write(exercise_data['scenario'])
+        
+        if not st.session_state.answer_evaluated:
+            st.write("**Ziehen Sie die Hypothesen in die richtige Reihenfolge (1 = am plausibelsten):**")
+            
+            # Drag-and-drop Simulation mit selectboxen
+            hypotheses = exercise_data["hypotheses"].copy()
+            user_ranking = []
+            
+            for i in range(len(hypotheses)):
+                available_options = [h for h in hypotheses if h not in user_ranking]
+                rank_choice = st.selectbox(
+                    f"Platz {i+1}:",
+                    available_options,
+                    key=f"rank_{exercise_data['id']}_{i}"
+                )
+                user_ranking.append(rank_choice)
+            
+            if st.button("🎯 Ranking bewerten", type="primary", key=f"submit_{exercise_data['id']}"):
+                user_indices = [exercise_data["hypotheses"].index(ans) for ans in user_ranking]
+                self.evaluate_ranking(user_indices, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
+        else:
+            self.show_exercise_feedback(exercise_data)
+    
+    def evaluate_ranking(self, user_ranking, exercise_data):
+        """Bewertet Ranking-Aufgabe mit Plotly"""
+        correct_ranking = exercise_data["correct_ranking"]
+        
+        # Berechne Ranking-Korrelation
+        ranking_distance = sum(abs(user - correct) for user, correct in zip(user_ranking, correct_ranking))
+        max_distance = len(user_ranking) * (len(user_ranking) - 1) / 2
+        accuracy = max(0, 100 - (ranking_distance / max_distance) * 100)
+        
+        st.subheader("📈 Auswertung Hypothesen-Priorisierung")
+        
+        if accuracy >= 90:
+            st.success(f"🎉 Exzellente probabilistische Priorisierung! ({accuracy:.1f}% Übereinstimmung)")
+            st.session_state.reasoning_score += 1
+        elif accuracy >= 70:
+            st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}% Übereinstimmung)")
+        else:
+            st.error(f"📚 Deutliche Abweichungen in der Wahrscheinlichkeitseinschätzung ({accuracy:.1f}% Übereinstimmung)")
+        
+        # Plotly Balkendiagramm für Ranking-Vergleich
+        positions = list(range(1, len(user_ranking) + 1))
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Bar(
+            name='Ihre Rangfolge',
+            x=positions,
+            y=[exercise_data['hypotheses'][idx] for idx in user_ranking],
+            orientation='h',
+            marker_color='blue'
+        ))
+        
+        fig.add_trace(go.Bar(
+            name='Klinische Rangfolge', 
+            x=positions,
+            y=[exercise_data['hypotheses'][idx] for idx in correct_ranking],
+            orientation='h',
+            marker_color='red'
+        ))
+        
+        fig.update_layout(
+            title="Vergleich Ihrer Rangfolge mit klinischer Einschätzung",
+            xaxis_title="Rangplatz (1 = am plausibelsten)",
+            yaxis_title="Hypothesen",
+            barmode='group',
+            height=400
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        with st.expander("📚 Probabilistische Begründung", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
+    
+    def show_research_critical_exercise(self, exercise_data):
+        """Zeigt Forschungs-Kritik Übung"""
+        st.markdown(f"### 🔬 {exercise_data['question']}")
+        
+        with st.expander("📋 Kontext anzeigen", expanded=True):
+            st.write(exercise_data['scenario'])
+        
+        if not st.session_state.answer_evaluated:
+            st.write("**Welche methodischen Probleme sind relevant?**")
+            user_answers = st.multiselect(
+                "Wählen Sie alle zutreffenden Probleme:",
+                exercise_data["critical_issues"],
+                key=f"research_{exercise_data['id']}"
+            )
+            
+            if st.button("🎯 Methodenkritik bewerten", type="primary", key=f"submit_{exercise_data['id']}"):
+                user_indices = [exercise_data["critical_issues"].index(ans) for ans in user_answers]
+                self.evaluate_research_critical(user_indices, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
+        else:
+            self.show_exercise_feedback(exercise_data)
+    
+    def evaluate_research_critical(self, user_indices, exercise_data):
+        """Bewertet Forschungs-Kritik"""
+        correct_indices = exercise_data["correct_answers"]
+        
+        st.subheader("🔬 Auswertung Methodenkritik")
+        
+        if set(user_indices) == set(correct_indices):
+            st.success("🎉 Umfassende methodenkritische Reflexion!")
+            st.session_state.reasoning_score += 1
+        else:
+            st.warning("📚 Methodische Limitationen nicht vollständig erkannt")
+        
+        with st.expander("📚 Kritische Reflexion", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
+    
+    def show_exercise_feedback(self, exercise_data):
+        """Zeigt Feedback und Weiter-Button"""
+        st.markdown("---")
+        
+        if st.button("➡️ **Weiter zur nächsten Übung**", type="primary", use_container_width=True):
+            st.session_state.current_exercise += 1
+            st.session_state.answer_evaluated = False
+            st.rerun()
+    
+    def show_training_results(self):
+        """Zeigt die Trainingsergebnisse mit Plotly Visualisierungen"""
+        st.header("📊 Clinical Reasoning Training abgeschlossen!")
+        
+        total = len(st.session_state.exercise_questions)
+        score = st.session_state.reasoning_score
         percentage = (score / total) * 100
         
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Richtige Antworten", f"{score}/{total}")
-        with col2:
-            st.metric("Erfolgsquote", f"{percentage:.1f}%")
+        # Zeitberechnung
+        if 'start_time' in st.session_state:
+            time_used = time.time() - st.session_state.start_time
+            minutes = int(time_used // 60)
+            seconds = int(time_used % 60)
+            time_str = f"{minutes:02d}:{seconds:02d}"
+        else:
+            time_str = "Unbekannt"
         
-        # Neustart-Button
+        # Metriken in Columns
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Gelöste Übungen", f"{score}/{total}")
+        
+        with col2:
+            st.metric("Clinical Reasoning Score", f"{percentage:.1f}%")
+        
+        with col3:
+            st.metric("Trainingsdauer", time_str)
+        
+        # Plotly Score Visualisierung
+        fig = go.Figure(go.Indicator(
+            mode = "gauge+number+delta",
+            value = percentage,
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            title = {'text': "Clinical Reasoning Score"},
+            gauge = {
+                'axis': {'range': [None, 100]},
+                'bar': {'color': "darkblue"},
+                'steps': [
+                    {'range': [0, 50], 'color': "lightgray"},
+                    {'range': [50, 80], 'color': "gray"},
+                    {'range': [80, 100], 'color': "lightblue"}
+                ],
+                'threshold': {
+                    'line': {'color': "red", 'width': 4},
+                    'thickness': 0.75,
+                    'value': 90
+                }
+            }
+        ))
+        
+        fig.update_layout(height=300)
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Kompetenzeinschätzung
         st.markdown("---")
-        if st.button("🔄 Neues Quiz starten", type="primary", use_container_width=True, key="restart"):
-            # Session State komplett zurücksetzen
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+        st.subheader("🎯 Entwickelte Clinical Reasoning Kompetenzen")
+        
+        competencies = [
+            "✅ Mehrdeutige Verhaltensmuster interpretieren",
+            "✅ Probabilistisches Denken anwenden", 
+            "✅ Dimensions-Kombinationen analysieren",
+            "✅ Trait vs. State unterscheiden",
+            "✅ Methodische Limitationen reflektieren"
+        ]
+        
+        for competency in competencies:
+            st.write(competency)
+        
+        # Entwicklungsempfehlungen
+        st.markdown("---")
+        st.subheader("🚀 Empfohlene Weiterentwicklung")
+        
+        if percentage >= 85:
+            st.success("**🎉 Exzellentes Clinical Reasoning!** Nächste Schritte: Supervision komplexer Fälle")
+        elif percentage >= 70:
+            st.success("**👍 Sehr gutes Clinical Reasoning!** Nächste Schritte: Komplexere Fälle")
+        elif percentage >= 50:
+            st.warning("**📚 Gute Grundlagen - Entwicklungspotenzial!** Nächste Schritte: Mehr Übung mit komplexen Mustern")
+        else:
+            st.info("**💡 Grundverständnis - Weiteres Training empfohlen!** Nächste Schritte: Basis-Übungen wiederholen")
+        
+        st.markdown("---")
+        st.subheader("🔁 Training wiederholen oder vertiefen")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("🔄 Neues Training starten", use_container_width=True):
+                for key in list(st.session_state.keys()):
+                    if key != 'clinical_initialized':
+                        del st.session_state[key]
+                st.rerun()
+        
+        with col2:
+            if st.button("📚 Theorie vertiefen", use_container_width=True):
+                st.info("Studieren Sie die bereitgestellten Dokumente zur Vertiefung Ihrer Kenntnisse.")
+
+# Hauptprogramm
+def main():
+    quiz = ClinicalReasoningQuiz()
+    quiz.display_quiz()
+
+if __name__ == "__main__":
+    main()
