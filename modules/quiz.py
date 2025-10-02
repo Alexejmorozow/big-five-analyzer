@@ -3,7 +3,6 @@ import random
 import time
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 from typing import List, Dict, Any
 
 class ClinicalReasoningQuiz:
@@ -128,12 +127,6 @@ class ClinicalReasoningQuiz:
     
     def display_quiz(self):
         """Hauptmethode zur Anzeige des Clinical Reasoning Trainings"""
-        st.set_page_config(
-            page_title="Big Five Clinical Reasoning Training",
-            page_icon="🧠",
-            layout="wide"
-        )
-        
         st.header("🧠 Big Five Clinical Reasoning Training")
         st.markdown("**Training des diagnostischen Urteilsvermögens in mehrdeutigen Situationen**")
         
@@ -723,10 +716,16 @@ class ClinicalReasoningQuiz:
             if st.button("📚 Theorie vertiefen", use_container_width=True):
                 st.info("Studieren Sie die bereitgestellten Dokumente zur Vertiefung Ihrer Kenntnisse.")
 
-# Hauptprogramm
 def main():
-    quiz = ClinicalReasoningQuiz()
-    quiz.display_quiz()
+    st.set_page_config(
+        page_title="Big Five Clinical Reasoning Training",
+        page_icon="🧠",
+        layout="wide"
+    )
+    
+    # Training initialisieren und anzeigen
+    training = ClinicalReasoningQuiz()
+    training.display_quiz()
 
 if __name__ == "__main__":
     main()
