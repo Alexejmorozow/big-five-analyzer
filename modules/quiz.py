@@ -7,9 +7,9 @@ class QuizModule:
         self.all_questions = self.load_questions()
     
     def load_questions(self):
-        """Lädt alle Fragen mit verschiedenen Schwierigkeitsgraden und Fragetypen"""
+        """Lädt alle Fragen inklusive der neuen Erweiterungen"""
         return [
-            # 📊 EINFACH - Eindeutige Fälle (Schwierigkeitsgrad 1)
+            # 📊 BASIS-FRAGEN (bestehende Typen)
             {
                 "id": 1, "difficulty": 1,
                 "type": "likert_interpretation",
@@ -47,131 +47,145 @@ class QuizModule:
                 "learning_point": "Extraversion ≠ nur Geselligkeit, sondern auch Energiegewinn aus Sozialkontakten."
             },
             
-            # 📈 MITTEL - Mehrdeutige Fälle (Schwierigkeitsgrad 2)
+            # 🔮 PHÄNOMEN-DEUTUNG (Konjunktivisch)
             {
-                "id": 3, "difficulty": 2, 
-                "type": "behavioral_interpretation",
-                "question": "Eine Person zieht sich in sozialen Situationen häufig zurück und spricht wenig. Wie könnte dieses Verhalten gedeutet werden?",
-                "scenario": "Team-Meeting: Maria sitzt meist still in der Ecke, spricht nur wenn direkt angesprochen, und verlässt die Räumlichkeiten schnell nach dem Meeting.",
-                "options": [
-                    "Könnte auf niedrige Extraversion hindeuten (introvertierte Tendenzen)",
-                    "Könnte Ausdruck hoher Verträglichkeit sein (Konfliktvermeidung)", 
-                    "Könnte durch hohen Neurotizismus erklärbar sein (soziale Ängstlichkeit)",
-                    "Könnte schlicht situativ bedingt sein (Müdigkeit, Kontext)"
+                "id": 101, "difficulty": 2,
+                "type": "phenomenon_interpretation",
+                "question": "Wie könnte dieses Verhalten im Rahmen der Big Five gedeutet werden?",
+                "scenario": "Eine Patientin in der Therapie vermeidet Blickkontakt, spricht sehr leise und zögert lange vor Antworten. Sie wirkt angespannt, aber kooperativ.",
+                "phenomenon": "Sozialer Rückzug + gehemmte Kommunikation",
+                "possible_interpretations": [
+                    "Hoher Neurotizismus (soziale Ängstlichkeit, Unsicherheit)",
+                    "Niedrige Extraversion (introvertierte Grundtendenz)", 
+                    "Hohe Verträglichkeit (unterwürfiges, konfliktscheues Verhalten)",
+                    "Situative Reaktion (Scham, akute Belastung, Therapieangst)",
+                    "Kombination aus Neurotizismus und niedriger Extraversion"
                 ],
-                "valid_interpretations": [0, 1, 2, 3],
-                "most_likely": [0, 2],
-                "probabilistic_feedback": {
-                    "Extraversion": "70%",
-                    "Neurotizismus": "65%",
-                    "Situativ": "40%", 
-                    "Verträglichkeit": "25%"
-                },
-                "explanation": "🔍 **Mehrdeutige Verhaltensdeutung:** Sozialer Rückzug kann verschiedene Ursachen haben. Bei häufiger Wiederholung deutet es am ehesten auf niedrige Extraversion oder hohen Neurotizismus hin.",
-                "learning_point": "Verhalten ist selten monokausal - die Big Five bieten Interpretationsrahmen, keine absoluten Wahrheiten."
-            },
-            {
-                "id": 4, "difficulty": 2,
-                "type": "combination_question", 
-                "question": "Welche 2 Dimensionen zusammengenommen erklären das Verhalten am besten?",
-                "scenario": "Ein Mitarbeiter arbeitet extrem detailversessen, korrigiert ständig Kleinigkeiten, wirkt dabei aber angespannt und unzufrieden.",
-                "options": [
-                    "Gewissenhaftigkeit + Neurotizismus (ängstlicher Perfektionismus)",
-                    "Gewissenhaftigkeit + niedrige Offenheit (Rigidität)",
-                    "Neurotizismus + niedrige Verträglichkeit (Reizbarkeit)", 
-                    "Gewissenhaftigkeit + Extraversion (sichtbare Leistung)"
-                ],
-                "correct_combination": [0],
-                "explanation": "💼 **Interaktive Wirkung:** Gewissenhaftigkeit allein erklärt die Sorgfalt, aber erst mit Neurotizismus wird daraus ängstlicher Perfektionismus mit innerer Anspannung.",
-                "learning_point": "Dimensionen wirken oft interaktiv - Kombinationen können qualitativ neue Muster erzeugen."
+                "valid_hypotheses": [0, 1, 2, 3, 4],
+                "most_plausible": [0, 4, 3],
+                "explanation": "🔍 **Mehrdeutige Phänomendeutung:** Dieses Verhaltensmuster könnte auf soziale Ängstlichkeit (Neurotizismus) ODER introvertierte Grundtendenz ODER situative Scham hindeuten. Entscheidend: Wie verhält sich die Person in anderen Kontexten?",
+                "learning_point": "Identische Verhaltensmuster können unterschiedliche Ursachen haben - Kontext und Verlaufsbeobachtung sind entscheidend."
             },
             
-            # 🎯 SCHWER - Ambivalente Fälle (Schwierigkeitsgrad 3)
+            # ⏱️ FALLVERLÄUFE (Trait vs. State)
             {
-                "id": 5, "difficulty": 3,
-                "type": "trick_scenario", 
-                "question": "Trick-Frage: Warum verhält sich diese normalerweise extrovertierte Person heute so zurückgezogen?",
-                "scenario": "Die sonst sehr gesellige und energische Teamleiterin Sarah wirkt heute abwesend, spricht kaum und meidet Blickkontakt. Das Team ist besorgt.",
-                "options": [
-                    "Akute situative Belastung (privater Stress, Krankheit)",
-                    "Längerfristige Persönlichkeitsänderung", 
-                    "Strategisches Verhalten (bewusste Zurückhaltung)",
-                    "Burnout-Entwicklung"
+                "id": 102, "difficulty": 3,
+                "type": "case_progression",
+                "question": "Handelt es sich um einen Persönlichkeitsstil oder einen situativen Zustand?",
+                "scenario": "**Woche 1-4:** Herr Meyer wirkt im Team ruhig, aber kompetent. Er spricht wenig, aber wenn, dann präzise.\n\n**Woche 5-8:** Seit einem gescheiterten Projekt wirkt er zunehmend gereizt, kritisiert Kollegen, wirkt misstrauisch.\n\n**Woche 9-12:** Das Verhalten normalisiert sich langsam, aber die grundlegende Zurückhaltung bleibt.",
+                "timeline": [
+                    {"phase": "Baseline", "verhalten": "Ruhig, kompetent, präzise"},
+                    {"phase": "Akutphase", "verhalten": "Gereizt, kritisch, misstrauisch"}, 
+                    {"phase": "Erholung", "verhalten": "Normalisierung, aber grundsätzlich zurückhaltend"}
                 ],
-                "correct_interpretation": 0,
-                "explanation": "🎭 **Situative Überlagerung:** Wenn etablierte Persönlichkeitsmuster plötzlich brechen, sind fast immer akute situative Faktoren verantwortlich. Erst bei längerer Dauer wäre eine Persönlichkeitsänderung zu erwägen.",
-                "learning_point": "Situative Faktoren können etablierte Persönlichkeitsmuster kurzfristig komplett überlagern."
-            },
-            {
-                "id": 6, "difficulty": 3,
-                "type": "ranking_task",
-                "question": "Ordnen Sie die Erklärungen nach ihrer wissenschaftlichen Plausibilität:",
-                "scenario": "Eine Person wechselt häufig den Job, beginnt viele Projekte aber vollendet wenige, und hat unkonventionelle Lebensvorstellungen.",
+                "interpretation_task": "Bewerten Sie die Stabilität vs. Situativität:",
                 "options": [
-                    "Hohe Offenheit + niedrige Gewissenhaftigkeit (kreativer Unruhegeist)",
-                    "Hoher Neurotizismus + niedrige Verträglichkeit (soziale Instabilität)",
-                    "Niedrige Gewissenhaftigkeit + hohe Extraversion (Stimulationssuche)",
-                    "Hohe Offenheit + hoher Neurotizismus (ängstliche Kreativität)"
+                    "Stabiler Persönlichkeitsstil (niedrige Extraversion) mit situativer Überlagerung",
+                    "Primär situative Reaktion (Projektstress) auf normalerweise extravertierter Basis",
+                    "Entwicklung einer Persönlichkeitsänderung (erhöhter Neurotizismus)",
+                    "Kombination aus stabiler Introversion + akuter Belastungsreaktion"
                 ],
-                "correct_ranking": [0, 2, 3, 1],
-                "probabilistic_feedback": {
-                    "Offenheit+Gewissenhaftigkeit": "75%",
-                    "Gewissenhaftigkeit+Extraversion": "60%", 
-                    "Offenheit+Neurotizismus": "45%",
-                    "Neurotizismus+Verträglichkeit": "20%"
-                },
-                "explanation": "📊 **Komplexes Profil:** Offenheit erklärt die Neugier und Unkonventionalität, niedrige Gewissenhaftigkeit die mangelnde Durchhaltefähigkeit. Extraversion könnte zusätzlich Stimulationssuche erklären.",
-                "learning_point": "Bei komplexen Verhaltensmustern sind Interaktionen zwischen 2-3 Dimensionen oft die beste Erklärung."
+                "correct_interpretation": [0, 3],
+                "explanation": "⏱️ **Verlaufsdiagnostik:** Die stabile Grundtendenz (Zurückhaltung) spricht für niedrige Extraversion. Die akute Veränderung deutet auf situative Überlagerung (Stressreaktion) hin. Die Rückkehr zur Baseline spricht gegen dauerhafte Persönlichkeitsänderung.",
+                "learning_point": "Verlaufsbeobachtung unterscheidet stabile Traits von state-abhängigen Reaktionen."
             },
             
-            # 🧠 FORSCHUNGSFRAGEN (Schwierigkeitsgrad 3)
+            # ⚠️ DIAGNOSTISCHE FEHLERFALLEN
             {
-                "id": 7, "difficulty": 3,
-                "type": "research_question", 
-                "question": "Welche methodischen Probleme können bei Big-Five-Screenings auftreten?",
-                "scenario": "Kritische Reflexion der diagnostischen Praxis...",
-                "options": [
-                    "Soziale Erwünschtheit (response bias)",
-                    "Kulturelle Fairness der Items",
-                    "Situative Stimmungsabhängigkeit",
-                    "Übergeneralisierung von Laborbefunden"
+                "id": 103, "difficulty": 3, 
+                "type": "diagnostic_pitfall",
+                "question": "Welche diagnostische Fehlerfalle wird hier provoziert?",
+                "scenario": "Ein Therapeut liest im Assessment: 'Hohe Offenheit, niedrige Verträglichkeit'. In der Sitzung berichtet der Klient von Konflikten mit Autoritätspersonen. Der Therapeut interpretiert: 'Typisch bei niedriger Verträglichkeit - da müssen wir an Ihrer Kooperationsfähigkeit arbeiten.'",
+                "pitfall_type": "Confirmation Bias + Overpathologizing",
+                "critical_elements": [
+                    "Vorschnelle Verknüpfung von Assessment und Einzelverhalten",
+                    "Ignorieren situativer Faktoren (berechtigte Kritik?)", 
+                    "Pathologisierung normaler Verhaltensvarianz",
+                    "Fehlende Berücksichtigung des Kontexts"
                 ],
-                "correct_answers": [0, 1, 2, 3],
-                "explanation": "🔬 **Methodenkritik:** Alle genannten Probleme sind wissenschaftlich belegt. Big-Five-Messung ist robust, aber nicht fehlerfrei. Kulturelle Fairness und soziale Erwünschtheit sind besonders relevante Limitationen.",
-                "learning_point": "Wissenschaftliche Diagnostik erfordert methodenkritisches Bewusstsein."
+                "options": [
+                    "Confirmation Bias (Suche nach bestätigenden Informationen)",
+                    "Overpathologizing (Normalvariation als Problem sehen)",
+                    "Fundamental Attribution Error (dispositional überschätzen)",
+                    "Alle genannten Fehlerfallen"
+                ],
+                "correct_answers": [3],
+                "explanation": "🎯 **Diagnostische Fallstricke:** Hier wirken mehrere Biases: Confirmation Bias (Assessment-Daten dominieren), Overpathologizing (Konfliktverhalten ≠ Störung), Fundamental Attribution Error (situative Faktoren ignorieren). Wichtig: Assessment-Daten sind Hypothesen, keine Diagnosen!",
+                "learning_point": "Assessment-Daten generieren Hypothesen - keine vorschnellen Kausalzuschreibungen!"
             },
+            
+            # 📈 INTERAKTIVE LIKELIHOOD-SCHÄTZUNGEN  
             {
-                "id": 8, "difficulty": 3,
-                "type": "combination_question",
-                "question": "Welche Dimensionen-Kombination würde dieses ungewöhnliche Muster am besten erklären?",
-                "scenario": "Jemand ist sehr kreativ und ideenreich, aber gleichzeitig extrem pingelig und regelorientiert - scheinbar ein Widerspruch?",
-                "options": [
-                    "Hohe Offenheit + hohe Gewissenhaftigkeit (kreativer Perfektionist)",
-                    "Hohe Offenheit + niedrige Verträglichkeit (egozentrischer Innovator)", 
-                    "Hohe Gewissenhaftigkeit + niedrige Extraversion (introvertierter Systematiker)",
-                    "Neurotizismus + Offenheit (ängstliche Kreativität)"
+                "id": 104, "difficulty": 2,
+                "type": "probability_estimation",
+                "question": "Schätzen Sie die Wahrscheinlichkeit jeder Hypothese (in %):",
+                "scenario": "Ein sonst zuverlässiger Mitarbeiter liefert plötzlich unvollständige Arbeiten ab, wirkt unkonzentriert und vergesslich. Dies seit 3 Wochen.",
+                "hypotheses": [
+                    "Akute private Belastung (Familie, Gesundheit)",
+                    "Beginnendes Burnout (berufliche Überlastung)",
+                    "Nachlassende Gewissenhaftigkeit (Persönlichkeitsänderung)", 
+                    "Situative Demotivation (Konflikte, fehlende Anerkennung)"
                 ],
-                "correct_combination": [0],
-                "explanation": "🎨 **Scheinbarer Widerspruch:** Offenheit (Kreativität) und Gewissenhaftigkeit (Struktur) sind statistisch unabhängig und können gemeinsam auftreten. Dies ergibt das Profil des 'kreativen Perfektionisten'.",
-                "learning_point": "Big Five sind orthogonal - scheinbare Widersprüche sind oft Kombinationen unabhängiger Dimensionen."
+                "expert_probabilities": [45, 25, 10, 20],
+                "tolerance_range": 15,
+                "explanation": "📈 **Probabilistisches Reasoning:** Akute private Belastung ist am wahrscheinlichsten (plötzliche Veränderung bei vorher stabiler Person). Burnout und situative Faktoren sind möglich. Reine Persönlichkeitsänderung ist unwahrscheinlich (zu kurzer Zeitraum).",
+                "learning_point": "Klinisches Urteilen erfordert Wahrscheinlichkeitsabwägungen, nicht binäre Entscheidungen."
+            },
+            
+            # 💡 STRATEGIE-FRAGEN (Umgangsleitlinien)
+            {
+                "id": 105, "difficulty": 2,
+                "type": "intervention_strategy", 
+                "question": "Welche Reaktion wäre hier am angemessensten?",
+                "scenario": "Im Team fällt eine Mitarbeiterin durch extrem detaillierte, aber sehr langsame Arbeit auf. Projekte verzögern sich, Kollegen werden ungeduldig. Die Mitarbeiterin wirkt dabei nicht ängstlich, sondern konzentriert und zufrieden.",
+                "personality_profile": "Hohe Gewissenhaftigkeit (Perfektionismus) bei normalem Neurotizismus",
+                "strategic_options": [
+                    "Klare Deadlines setzen + Qualitätskriterien definieren (Struktur geben)",
+                    "Perfektionismus thematisieren + psychologische Unterstützung anbieten",
+                    "Aufgaben an Stärken anpassen (Qualitätskontrolle statt Zeitdruck)",
+                    "Team-Feedback einholen + Gruppendruck nutzen"
+                ],
+                "recommended_strategies": [0, 2],
+                "explanation": "💼 **Personzentrierte Intervention:** Da kein Leidensdruck (kein Neurotizismus) besteht, sind strukturelle Lösungen besser als Pathologisierung. Deadlines setzen + Stärken nutzen (Qualitätsarbeit) statt 'Therapieren' eines funktionalen Persönlichkeitsmerkmals.",
+                "learning_point": "Interventionen sollten zum Persönlichkeitsprofil passen - nicht jedes Merkmal muss 'behandelt' werden."
+            },
+            
+            # 🧩 ERWEITERTE KOMBINATIONSFRAGEN
+            {
+                "id": 106, "difficulty": 3,
+                "type": "complex_combination", 
+                "question": "Welche Dimensionen-Kombination erklärt dieses komplexe Muster?",
+                "scenario": "Eine Person initiiert intensiven philosophischen Austausch (tiefe Gespräche), zeigt aber wenig Interesse an oberflächlichem Smalltalk. In Gruppen dominant bei intellektuellen Themen, aber zurückhaltend bei persönlichen Themen. Sehr wertorientiert in Entscheidungen.",
+                "behavior_pattern": "Selektive Soziabilität + intellektuelle Dominanz + Wertorientierung",
+                "dimension_combinations": [
+                    "Hohe Offenheit + niedrige Extraversion (intellektuell interessierter Introvertierter)",
+                    "Hohe Offenheit + hohe Gewissenhaftigkeit (prinzipienorientierter Intellektueller)", 
+                    "Hohe Offenheit + niedrige Verträglichkeit (egozentrischer Denker)",
+                    "Hohe Offenheit + hohe Extraversion + hohe Gewissenhaftigkeit (komplexes Profil)"
+                ],
+                "correct_combination": [0, 1],
+                "explanation": "🎭 **Komplexes Interaktionsmuster:** Hohe Offenheit erklärt das intellektuelle Interesse. Die selektive Soziabilität (tiefe vs. oberflächliche Gespräche) deutet auf introvertierte Tendenzen hin. Die Wertorientierung spricht für Gewissenhaftigkeit. Keine Hinweise auf niedrige Verträglichkeit.",
+                "learning_point": "Komplexe Verhaltensmuster erfordern oft Mehrfach-Kombinationen von Dimensionen."
             }
         ]
     
     def display_quiz(self):
         """Zeigt das Quiz mit Auswahlmöglichkeit für Größe"""
-        st.header("🧠 Big Five Clinical Reasoning Quiz")
+        st.header("🧠 Big Five Clinical Reasoning Master Quiz")
         
-        if 'quiz_configurated' not in st.session_state:
-            self.show_quiz_configuration()
-            return
-        
-        if 'quiz_started' not in st.session_state:
+        # Initialisierung des Session States
+        if 'quiz_initialized' not in st.session_state:
+            st.session_state.quiz_initialized = True
+            st.session_state.quiz_configurated = False
             st.session_state.quiz_started = False
             st.session_state.current_question = 0
             st.session_state.score = 0
             st.session_state.user_answers = {}
             st.session_state.show_results = False
-            st.session_state.start_time = time.time()
+        
+        if not st.session_state.quiz_configurated:
+            self.show_quiz_configuration()
+            return
         
         if not st.session_state.quiz_started:
             self.show_quiz_intro()
@@ -194,19 +208,19 @@ class QuizModule:
         with col1:
             st.subheader("🔬 Kleines Quiz")
             st.markdown("""
-            - **8 Fragen** (ca. 15 Minuten)
-            - **Gemischt**: Einfach + Mittel + Schwer
+            - **4 Fragen** (ca. 10 Minuten)
+            - **Gemischt**: Verschiedene Fragetypen
             """)
-            if st.button("Kleines Quiz starten", use_container_width=True):
+            if st.button("Kleines Quiz starten", use_container_width=True, key="btn_small"):
                 self.setup_quiz("small")
         
         with col2:
             st.subheader("🎓 Großes Quiz") 
             st.markdown("""
-            - **12 Fragen** (ca. 25 Minuten)
+            - **8 Fragen** (ca. 20 Minuten)
             - **Vollständig**: Alle Fragetypen
             """)
-            if st.button("Großes Quiz starten", use_container_width=True):
+            if st.button("Großes Quiz starten", use_container_width=True, key="btn_large"):
                 self.setup_quiz("large")
     
     def setup_quiz(self, quiz_size):
@@ -215,9 +229,9 @@ class QuizModule:
         random.shuffle(all_questions)
         
         if quiz_size == "small":
-            questions = all_questions[:8]
+            questions = all_questions[:4]
         else:
-            questions = all_questions[:12]
+            questions = all_questions[:8]
         
         random.shuffle(questions)
         st.session_state.quiz_questions = questions
@@ -230,14 +244,20 @@ class QuizModule:
         question_count = len(st.session_state.quiz_questions)
         
         st.success(f"**🎯 Quiz konfiguriert: {question_count} Fragen**")
-        st.info("**📚 Denken Sie in Wahrscheinlichkeiten, nicht in Gewissheiten**")
+        st.info("""
+        **📚 Denken Sie in:**
+        - Wahrscheinlichkeiten, nicht Gewissheiten
+        - Mehreren Interpretationen, nicht einer Wahrheit  
+        - Konjunktiv: *"könnte hindeuten auf..."*
+        """)
         
-        if st.button("🎯 Quiz jetzt starten", type="primary", use_container_width=True):
+        if st.button("🎯 Quiz jetzt starten", type="primary", use_container_width=True, key="btn_start_quiz"):
             st.session_state.quiz_started = True
+            st.session_state.start_time = time.time()
             st.rerun()
     
     def show_question(self):
-        """Zeigt die aktuelle Frage"""
+        """Zeigt die aktuelle Frage - KORRIGIERTE VERSION"""
         question_data = st.session_state.quiz_questions[st.session_state.current_question]
         
         # Fortschrittsanzeige
@@ -245,31 +265,40 @@ class QuizModule:
         st.progress(progress)
         st.caption(f"Frage {st.session_state.current_question + 1} von {len(st.session_state.quiz_questions)}")
         
-        st.markdown(f"**{question_data['question']}**")
+        # Schwierigkeitsgrad
+        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
+        st.write(f"{difficulty_icons[question_data['difficulty']]} **Schwierigkeitsgrad {question_data['difficulty']}/3**")
+        
+        st.markdown(f"### {question_data['question']}")
         
         if question_data.get('scenario'):
             with st.expander("📋 Fallvignette anzeigen", expanded=True):
                 st.write(question_data['scenario'])
         
         # Fragetyp-spezifische Anzeige
-        if question_data['type'] == 'likert_interpretation':
-            self.show_likert_question(question_data)
-        elif question_data['type'] == 'behavioral_interpretation':
-            self.show_behavioral_question(question_data)
-        elif question_data['type'] == 'combination_question':
-            self.show_combination_question(question_data)
-        elif question_data['type'] == 'trick_scenario':
-            self.show_trick_question(question_data)
-        elif question_data['type'] == 'ranking_task':
-            self.show_ranking_question(question_data)
-        elif question_data['type'] == 'multiple_correct':
-            self.show_multiple_correct_question(question_data)
-        elif question_data['type'] == 'research_question':
-            self.show_research_question(question_data)
+        question_type_handlers = {
+            'likert_interpretation': self.show_likert_question,
+            'multiple_correct': self.show_multiple_correct_question,
+            'phenomenon_interpretation': self.show_phenomenon_interpretation,
+            'case_progression': self.show_case_progression,
+            'diagnostic_pitfall': self.show_diagnostic_pitfall,
+            'probability_estimation': self.show_probability_estimation,
+            'intervention_strategy': self.show_intervention_strategy,
+            'complex_combination': self.show_complex_combination
+        }
+        
+        handler = question_type_handlers.get(question_data['type'])
+        if handler:
+            handler(question_data)
+        else:
+            st.error(f"Unbekannter Fragetyp: {question_data['type']}")
+    
+    # ========== FRAGETYP-METHODEN ==========
     
     def show_likert_question(self, question_data):
         """Zeigt Likert-Skalen Fragen"""
         st.write("**Bewerten Sie auf einer Skala von 1-5:**")
+        st.caption("1 = sehr unwahrscheinlich, 3 = neutral, 5 = sehr wahrscheinlich")
         
         user_ratings = []
         for i, interpretation in enumerate(question_data['interpretations']):
@@ -282,64 +311,6 @@ class QuizModule:
         
         if st.button("📊 Bewertungen analysieren", type="primary", key=f"btn_likert_{question_data['id']}"):
             self.evaluate_likert_question(user_ratings, question_data)
-    
-    def show_behavioral_question(self, question_data):
-        """Zeigt Verhaltensdeutungs-Fragen"""
-        st.write("**Welche Deutungen sind plausibel?**")
-        
-        user_answers = st.multiselect(
-            "Mehrfachauswahl:",
-            question_data["options"],
-            key=f"behavioral_{question_data['id']}"
-        )
-        
-        if st.button("🔍 Interpretationen bewerten", type="primary", key=f"btn_behavioral_{question_data['id']}"):
-            self.evaluate_behavioral_question(user_answers, question_data)
-    
-    def show_combination_question(self, question_data):
-        """Zeigt Kombinations-Fragen"""
-        st.write("**Wählen Sie die beste Kombination:**")
-        
-        user_answer = st.radio(
-            "Auswahl:",
-            question_data["options"],
-            key=f"combo_{question_data['id']}"
-        )
-        
-        if st.button("🔗 Kombination bewerten", type="primary", key=f"btn_combo_{question_data['id']}"):
-            self.evaluate_combination_question(user_answer, question_data)
-    
-    def show_trick_question(self, question_data):
-        """Zeigt Trick-Fragen"""
-        st.write("**Achtung - situatives Bewusstsein!**")
-        
-        user_answer = st.radio(
-            "Auswahl:",
-            question_data["options"],
-            key=f"trick_{question_data['id']}"
-        )
-        
-        if st.button("🎭 Lösung analysieren", type="primary", key=f"btn_trick_{question_data['id']}"):
-            self.evaluate_trick_question(user_answer, question_data)
-    
-    def show_ranking_question(self, question_data):
-        """Zeigt Ranking-Aufgaben"""
-        st.write("**Ordnen Sie nach Wahrscheinlichkeit:**")
-        
-        options = question_data["options"].copy()
-        ranked_options = []
-        
-        for i in range(len(options)):
-            available_options = [opt for opt in options if opt not in ranked_options]
-            selected = st.selectbox(
-                f"Platz {i+1}:",
-                available_options,
-                key=f"rank_{question_data['id']}_{i}"
-            )
-            ranked_options.append(selected)
-        
-        if st.button("📊 Ranking bewerten", type="primary", key=f"btn_rank_{question_data['id']}"):
-            self.evaluate_ranking_question(ranked_options, question_data)
     
     def show_multiple_correct_question(self, question_data):
         """Zeigt Multiple-Choice-Fragen"""
@@ -354,20 +325,106 @@ class QuizModule:
         if st.button("✅ Antworten prüfen", type="primary", key=f"btn_multiple_{question_data['id']}"):
             self.evaluate_multiple_correct_question(user_answers, question_data)
     
-    def show_research_question(self, question_data):
-        """Zeigt Forschungsfragen"""
-        st.write("**Kritische Reflexion:**")
+    def show_phenomenon_interpretation(self, question_data):
+        """Zeigt Phänomen-Deutungs-Fragen"""
+        st.write("**Welche Interpretationen sind wissenschaftlich plausibel?**")
+        st.caption("Mehrere Antworten können richtig sein - denken Sie im Konjunktiv!")
         
         user_answers = st.multiselect(
-            "Mehrfachauswahl:",
-            question_data["options"],
-            key=f"research_{question_data['id']}"
+            "Wählen Sie plausible Hypothesen:",
+            question_data["possible_interpretations"],
+            key=f"phenomenon_{question_data['id']}"
         )
         
-        if st.button("🔬 Antworten prüfen", type="primary", key=f"btn_research_{question_data['id']}"):
-            self.evaluate_research_question(user_answers, question_data)
+        if st.button("🔮 Hypothesen bewerten", type="primary", key=f"btn_phenomenon_{question_data['id']}"):
+            self.evaluate_phenomenon_interpretation(user_answers, question_data)
+    
+    def show_case_progression(self, question_data):
+        """Zeigt Fallverlaufs-Fragen"""
+        st.write("**Analyse des Verhaltens über Zeit:**")
+        
+        # Timeline anzeigen
+        for event in question_data["timeline"]:
+            st.write(f"**{event['phase']}:** {event['verhalten']}")
+        
+        st.write(f"**{question_data['interpretation_task']}**")
+        
+        user_answers = st.multiselect(
+            "Wählen Sie zutreffende Interpretationen:",
+            question_data["options"],
+            key=f"case_{question_data['id']}"
+        )
+        
+        if st.button("⏱️ Verlaufsanalyse", type="primary", key=f"btn_case_{question_data['id']}"):
+            self.evaluate_case_progression(user_answers, question_data)
+    
+    def show_diagnostic_pitfall(self, question_data):
+        """Zeigt diagnostische Fehlerfallen"""
+        st.warning("⚠️ **Achtung - diese Frage testet Ihre methodische Kritikfähigkeit!**")
+        
+        st.write("**Kritische Elemente in dieser Situation:**")
+        for element in question_data["critical_elements"]:
+            st.write(f"• {element}")
+        
+        user_answers = st.multiselect(
+            "Welche Fehlerfallen wirken hier?",
+            question_data["options"],
+            key=f"pitfall_{question_data['id']}"
+        )
+        
+        if st.button("🎯 Fallen analysieren", type="primary", key=f"btn_pitfall_{question_data['id']}"):
+            self.evaluate_diagnostic_pitfall(user_answers, question_data)
+    
+    def show_probability_estimation(self, question_data):
+        """Zeigt Likelihood-Schätzungen"""
+        st.write("**Schätzen Sie die Wahrscheinlichkeit jeder Hypothese (0-100%):**")
+        
+        user_probabilities = []
+        for i, hypothesis in enumerate(question_data["hypotheses"]):
+            prob = st.slider(
+                f"{hypothesis}",
+                min_value=0, max_value=100, value=25,
+                key=f"prob_{question_data['id']}_{i}"
+            )
+            user_probabilities.append(prob)
+        
+        # Prüfen ob Summe ~100%
+        total = sum(user_probabilities)
+        if total != 100:
+            st.warning(f"⚠️ Summe: {total}% (sollte 100% ergeben)")
+        
+        if st.button("📈 Schätzung analysieren", type="primary", key=f"btn_prob_{question_data['id']}"):
+            self.evaluate_probability_estimation(user_probabilities, question_data)
+    
+    def show_intervention_strategy(self, question_data):
+        """Zeigt Strategie-Fragen"""
+        st.write("**Welche Umgangsstrategie wäre angemessen?**")
+        st.info(f"**Persönlichkeitsprofil:** {question_data['personality_profile']}")
+        
+        user_answers = st.multiselect(
+            "Wählen Sie passende Interventionen:",
+            question_data["strategic_options"],
+            key=f"strategy_{question_data['id']}"
+        )
+        
+        if st.button("💡 Strategien bewerten", type="primary", key=f"btn_strategy_{question_data['id']}"):
+            self.evaluate_intervention_strategy(user_answers, question_data)
+    
+    def show_complex_combination(self, question_data):
+        """Zeigt erweiterte Kombinationsfragen"""
+        st.write("**Komplexes Verhaltensmuster analysieren:**")
+        st.info(f"**Muster:** {question_data['behavior_pattern']}")
+        
+        user_answers = st.multiselect(
+            "Welche Dimensionen-Kombinationen erklären dieses Muster?",
+            question_data["dimension_combinations"],
+            key=f"complex_{question_data['id']}"
+        )
+        
+        if st.button("🧩 Kombination analysieren", type="primary", key=f"btn_complex_{question_data['id']}"):
+            self.evaluate_complex_combination(user_answers, question_data)
 
-    # ========== EVALUATION METHODS ==========
+    # ========== EVALUATIONS-METHODEN ==========
     
     def evaluate_likert_question(self, user_ratings, question_data):
         """Bewertet Likert-Skalen Fragen"""
@@ -383,80 +440,6 @@ class QuizModule:
             st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}%)")
         else:
             st.error(f"📚 Abweichungen ({accuracy:.1f}%)")
-        
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
-        
-        self.show_next_button(question_data)
-    
-    def evaluate_behavioral_question(self, user_answers, question_data):
-        """Bewertet Verhaltensdeutungs-Fragen"""
-        user_indices = [question_data["options"].index(ans) for ans in user_answers]
-        correct_selections = len(set(user_indices) & set(question_data["valid_interpretations"]))
-        
-        st.subheader("🔍 Auswertung")
-        
-        if correct_selections == len(question_data["valid_interpretations"]):
-            st.success("🎉 Vollständiges Interpretationsspektrum!")
-        else:
-            st.warning("👍 Gute Auswahl")
-        
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
-        
-        self.show_next_button(question_data)
-    
-    def evaluate_combination_question(self, user_answer, question_data):
-        """Bewertet Kombinations-Fragen"""
-        user_index = question_data["options"].index(user_answer)
-        correct_index = question_data["correct_combination"][0]
-        
-        st.subheader("🔗 Auswertung")
-        
-        if user_index == correct_index:
-            st.success("🎉 Perfekte Kombinationswahl!")
-            st.session_state.score += 1
-        else:
-            st.error("❌ Nicht die optimale Kombination.")
-        
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
-        
-        self.show_next_button(question_data)
-    
-    def evaluate_trick_question(self, user_answer, question_data):
-        """Bewertet Trick-Fragen"""
-        user_index = question_data["options"].index(user_answer)
-        correct_index = question_data["correct_interpretation"]
-        
-        st.subheader("🎭 Auswertung")
-        
-        if user_index == correct_index:
-            st.success("🎉 Situative Überlagerung erkannt!")
-            st.session_state.score += 1
-        else:
-            st.error("❌ Situative Dynamik unterschätzt.")
-        
-        with st.expander("📚 Erklärung", expanded=True):
-            st.info(question_data["explanation"])
-        
-        self.show_next_button(question_data)
-    
-    def evaluate_ranking_question(self, ranked_options, question_data):
-        """Bewertet Ranking-Aufgaben"""
-        user_ranking = [question_data["options"].index(opt) for opt in ranked_options]
-        correct_ranking = question_data["correct_ranking"]
-        matches = sum(1 for i, (user, correct) in enumerate(zip(user_ranking, correct_ranking)) if user == correct)
-        similarity = matches / len(correct_ranking)
-        
-        st.subheader("📊 Auswertung")
-        
-        if similarity >= 0.8:
-            st.success(f"🎉 Nahezu perfekte Rangfolge! ({similarity*100:.1f}%)")
-        elif similarity >= 0.6:
-            st.warning(f"👍 Gute Einschätzung ({similarity*100:.1f}%)")
-        else:
-            st.error(f"📚 Abweichung ({similarity*100:.1f}%)")
         
         with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
@@ -485,30 +468,143 @@ class QuizModule:
         
         self.show_next_button(question_data)
     
-    def evaluate_research_question(self, user_answers, question_data):
-        """Bewertet Forschungsfragen"""
-        user_indices = [question_data["options"].index(ans) for ans in user_answers]
-        correct_indices = question_data["correct_answers"]
-        correct_selected = len(set(user_indices) & set(correct_indices))
+    def evaluate_phenomenon_interpretation(self, user_answers, question_data):
+        """Bewertet Phänomen-Deutungen"""
+        user_indices = [question_data["possible_interpretations"].index(ans) for ans in user_answers]
+        correct_selections = len(set(user_indices) & set(question_data["valid_hypotheses"]))
         
-        st.subheader("🔬 Auswertung")
+        st.subheader("🔮 Mehrdeutige Phänomendeutung")
         
-        if correct_selected == len(correct_indices):
-            st.success("🎉 Ausgezeichnete Kompetenz!")
+        if correct_selections == len(question_data["valid_hypotheses"]):
+            st.success("🎉 Vollständiges Hypothesenspektrum erkannt!")
             st.session_state.score += 1
         else:
-            st.warning("👍 Gutes Bewusstsein.")
+            st.warning("👍 Gute Auswahl - mehrere Perspektiven bedacht")
         
-        with st.expander("📚 Erklärung", expanded=True):
+        st.write("**Wahrscheinlichste Hypothesen:**")
+        for idx in question_data["most_plausible"]:
+            st.write(f"• {question_data['possible_interpretations'][idx]}")
+        
+        with st.expander("📚 Wissenschaftliche Einordnung", expanded=True):
+            st.info(question_data["explanation"])
+        
+        self.show_next_button(question_data)
+    
+    def evaluate_case_progression(self, user_answers, question_data):
+        """Bewertet Fallverlaufs-Analysen"""
+        user_indices = [question_data["options"].index(ans) for ans in user_answers]
+        correct_indices = question_data["correct_interpretation"]
+        
+        st.subheader("⏱️ Verlaufsdiagnostik")
+        
+        if set(user_indices) == set(correct_indices):
+            st.success("🎉 Exzellente Verlaufsanalyse!")
+            st.session_state.score += 1
+        else:
+            st.error("❌ Differenzierung zwischen Trait und State verbesserungsfähig")
+        
+        with st.expander("📚 Verlaufsinterpretation", expanded=True):
+            st.info(question_data["explanation"])
+        
+        self.show_next_button(question_data)
+    
+    def evaluate_diagnostic_pitfall(self, user_answers, question_data):
+        """Bewertet Fehlerfallen-Erkennung"""
+        user_indices = [question_data["options"].index(ans) for ans in user_answers]
+        correct_indices = question_data["correct_answers"]
+        
+        st.subheader("⚠️ Methodenkritische Reflexion")
+        
+        if set(user_indices) == set(correct_indices):
+            st.success("🎉 Exzellente Fehlerfallen-Erkennung!")
+            st.session_state.score += 1
+        else:
+            st.warning("📚 Diagnostische Biases nicht vollständig erkannt")
+        
+        with st.expander("📚 Kritische Reflexion", expanded=True):
+            st.info(question_data["explanation"])
+        
+        self.show_next_button(question_data)
+    
+    def evaluate_probability_estimation(self, user_probabilities, question_data):
+        """Bewertet Wahrscheinlichkeitsschätzungen"""
+        expert_probs = question_data["expert_probabilities"]
+        tolerance = question_data["tolerance_range"]
+        
+        deviations = [abs(user - expert) for user, expert in zip(user_probabilities, expert_probs)]
+        within_tolerance = sum(1 for dev in deviations if dev <= tolerance)
+        accuracy = (within_tolerance / len(deviations)) * 100
+        
+        st.subheader("📈 Probabilistisches Clinical Reasoning")
+        
+        if accuracy >= 80:
+            st.success(f"🎉 Exzellente Wahrscheinlichkeitseinschätzung! ({accuracy:.1f}%)")
+            st.session_state.score += 1
+        elif accuracy >= 60:
+            st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}%)")
+        else:
+            st.error(f"📚 Deutliche Abweichungen ({accuracy:.1f}%)")
+        
+        # Vergleich anzeigen
+        st.write("**Vergleich mit Experteneinschätzung:**")
+        for i, (user, expert) in enumerate(zip(user_probabilities, expert_probs)):
+            diff = abs(user - expert)
+            marker = "✅" if diff <= tolerance else "❌"
+            st.write(f"{marker} **{question_data['hypotheses'][i]}** - Sie: {user}% | Experte: {expert}%")
+        
+        with st.expander("📚 Probabilistische Begründung", expanded=True):
+            st.info(question_data["explanation"])
+        
+        self.show_next_button(question_data)
+    
+    def evaluate_intervention_strategy(self, user_answers, question_data):
+        """Bewertet Interventions-Strategien"""
+        user_indices = [question_data["strategic_options"].index(ans) for ans in user_answers]
+        correct_indices = question_data["recommended_strategies"]
+        
+        st.subheader("💡 Personzentrierte Intervention")
+        
+        if set(user_indices) == set(correct_indices):
+            st.success("🎉 Optimales Interventionsverständnis!")
+            st.session_state.score += 1
+        else:
+            st.warning("👍 Gute Ansätze - Feinabstimmung möglich")
+        
+        with st.expander("📚 Interventionslogik", expanded=True):
+            st.info(question_data["explanation"])
+        
+        self.show_next_button(question_data)
+    
+    def evaluate_complex_combination(self, user_answers, question_data):
+        """Bewertet komplexe Kombinationsfragen"""
+        user_indices = [question_data["dimension_combinations"].index(ans) for ans in user_answers]
+        correct_indices = question_data["correct_combination"]
+        
+        st.subheader("🧩 Komplexe Dimensions-Interaktion")
+        
+        if set(user_indices) == set(correct_indices):
+            st.success("🎉 Exzellente Analyse komplexer Muster!")
+            st.session_state.score += 1
+        else:
+            st.warning("📚 Interaktionseffekte noch vertiefen")
+        
+        with st.expander("📚 Interaktionsanalyse", expanded=True):
             st.info(question_data["explanation"])
         
         self.show_next_button(question_data)
     
     def show_next_button(self, question_data):
-        """Zeigt den Next-Button - KORRIGIERTE VERSION"""
+        """Zeigt den Next-Button - KORRIGIERTE UND FUNKTIONIERENDE VERSION"""
         st.markdown("---")
-        if st.button("➡️ **Weiter zur nächsten Frage**", type="primary", use_container_width=True, key=f"next_{question_data['id']}"):
+        
+        # WICHTIG: Ein eindeutiger Key für jeden Next-Button
+        next_key = f"next_btn_{question_data['id']}_{st.session_state.current_question}"
+        
+        if st.button("➡️ **Weiter zur nächsten Frage**", type="primary", use_container_width=True, key=next_key):
+            # Zustand sicher aktualisieren
             st.session_state.current_question += 1
+            
+            # Expliziter Rerun - das ist der Schlüssel!
             st.rerun()
     
     def show_results(self):
@@ -519,21 +615,53 @@ class QuizModule:
         score = st.session_state.score
         percentage = (score / total) * 100
         
-        col1, col2 = st.columns(2)
+        # Zeitberechnung
+        if 'start_time' in st.session_state:
+            time_used = time.time() - st.session_state.start_time
+            minutes = int(time_used // 60)
+            seconds = int(time_used % 60)
+            time_str = f"{minutes:02d}:{seconds:02d}"
+        else:
+            time_str = "Unbekannt"
+        
+        col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Richtige Antworten", f"{score}/{total}")
         with col2:
             st.metric("Erfolgsquote", f"{percentage:.1f}%")
+        with col3:
+            st.metric("Bearbeitungszeit", time_str)
+        
+        # Qualitatives Feedback
+        st.subheader("🎯 Diagnostische Urteilsfähigkeit")
         
         if percentage >= 80:
-            st.success("**🏆 Exzellente diagnostische Kompetenz!**")
+            st.success("""
+            **🏆 Exzellente diagnostische Kompetenz!**
+            - Sie denken in Wahrscheinlichkeiten und Mehrdeutigkeiten
+            - Berücksichtigen situative Faktoren systematisch  
+            - Haben ein differenziertes Verständnis komplexer Muster
+            """)
         elif percentage >= 60:
-            st.warning("**⭐ Gute Urteilsfähigkeit!**")
+            st.warning("""
+            **⭐ Gute klinische Urteilsfähigkeit!**
+            - Sie erkennen multiple Interpretationsmöglichkeiten
+            - Haben Grundverständnis für Person-Situation-Interaktionen
+            - Vertiefen Sie sich in komplexere Fallkonstellationen
+            """)
         else:
-            st.error("**📚 Entwicklungsbereich**")
+            st.error("""
+            **📚 Entwicklungsbereich: Differenzierte Verhaltensdeutung**
+            - Üben Sie, in Wahrscheinlichkeiten statt Gewissheiten zu denken
+            - Achten Sie stärker auf situative Überlagerungen
+            - Trainieren Sie das Erkennen von Dimensions-Interaktionen
+            """)
         
-        if st.button("🔄 Quiz neu starten", type="primary", use_container_width=True):
-            for key in ['quiz_configurated', 'quiz_started', 'current_question', 'score', 'user_answers', 'show_results']:
-                if key in st.session_state:
+        # Neustart-Button
+        st.markdown("---")
+        if st.button("🔄 Quiz neu starten", type="primary", use_container_width=True, key="btn_restart"):
+            # Session State komplett zurücksetzen
+            for key in list(st.session_state.keys()):
+                if key != 'quiz_initialized':
                     del st.session_state[key]
             st.rerun()
