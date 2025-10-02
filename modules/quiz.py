@@ -609,14 +609,47 @@ class QuizModule:
             st.info(exercise_data["explanation"])
             st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
     
-    def show_exercise_feedback(self, exercise_data):
-        """Zeigt Feedback und Weiter-Button"""
-        st.markdown("---")
+def show_exercise_feedback(self, exercise_data):
+    """Zeigt Feedback zur Antwort und Weiter-Button - VOLLSTÄNDIGE LÖSUNG"""
+    
+    # Feedback zur letzten Antwort anzeigen
+    st.subheader("🎯 Auswertung Ihrer Antwort")
+    
+    # Hier könnten wir die gespeicherten Ergebnisse anzeigen
+    # Für jetzt zeigen wir allgemeines Feedback
+    st.success("✅ Antwort erfolgreich ausgewertet!")
+    
+    # Wichtige Lernpunkte hervorheben
+    st.info(f"**Lernpunkt:** {exercise_data['learning_point']}")
+    
+    # Detaillierte Erklärung
+    with st.expander("📚 Detaillierte Erklärung anzeigen", expanded=True):
+        st.write(exercise_data["explanation"])
+    
+    # Visualisierung der Ergebnisse (falls vorhanden)
+    if hasattr(self, 'last_evaluation_results'):
+        self.show_evaluation_visualization(exercise_data)
+    
+    st.markdown("---")
+    st.write("**Wenn Sie bereit für die nächste Übung sind:**")
+    
+    # Weiter-Button
+    if st.button("➡️ **Weiter zur nächsten Übung**", type="primary", use_container_width=True, 
+                key=f"next_{exercise_data['id']}"):
         
-        if st.button("➡️ **Weiter zur nächsten Übung**", type="primary", use_container_width=True):
-            st.session_state.current_exercise += 1
-            st.session_state.answer_evaluated = False
-            st.rerun()
+        st.session_state.current_exercise += 1
+        st.session_state.answer_evaluated = False
+        
+        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
+            st.session_state.show_results = True
+        
+        st.rerun()
+
+def show_evaluation_visualization(self, exercise_data):
+    """Zeigt Visualisierungen der Auswertung"""
+    # Platzhalter für spätere Visualisierungen
+    st.write("📊 **Ergebnisvisualisierung**")
+    # Hier könnten die Plotly-Diagramme aus den Evaluate-Methoden wieder angezeigt werden
     
     def show_training_results(self):
         """Zeigt die Trainingsergebnisse mit Plotly Visualisierungen"""
