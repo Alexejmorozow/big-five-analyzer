@@ -11,12 +11,14 @@ class PersonalityScreener:
             'N': 'Neurotizismus'
         }
         
-# Vereinfachte Initialisierung - keine ML-Daten nötig
-def setup_sample_data(self):
-    """Vereinfachte Dateninitialisierung - ohne numpy/pandas"""
-    # Keine komplexen Datenstrukturen mehr nötig
-    # Die Similarity-Berechnung verwendet jetzt einfache Logik
-    pass
+        # Vereinfachte Initialisierung
+        self.setup_sample_data()
+    
+    def setup_sample_data(self):
+        """Vereinfachte Dateninitialisierung - ohne numpy/pandas"""
+        # Keine komplexen Datenstrukturen mehr nötig
+        # Die Similarity-Berechnung verwendet jetzt einfache Logik
+        pass
     
     def behavioral_questionnaire(self):
         """Fragebogen für verhaltensbasierte Einschätzung"""
@@ -113,24 +115,24 @@ def setup_sample_data(self):
         
         return profile
     
-def calculate_similarity(self, user_scores):
-    """Berechnet Ähnlichkeit mit typischen Profilen - vereinfachte Version"""
-    similarities = {}
-    typical_profiles = {
-        "Kreativer Innovator": {"O": 80, "C": 60, "E": 65, "A": 55, "N": 45},
-        "Zuverlässiger Organisator": {"O": 45, "C": 85, "E": 50, "A": 60, "N": 40},
-        "Sozialer Netzwerker": {"O": 60, "C": 50, "E": 80, "A": 70, "N": 35},
-        "Teamplayer": {"O": 50, "C": 60, "E": 55, "A": 80, "N": 45},
-        "Stabiler Problemlöser": {"O": 55, "C": 65, "E": 45, "A": 60, "N": 25}
-    }
-    
-    for profile_name, typical_scores in typical_profiles.items():
-        total_diff = 0
-        for dim in self.dimensions:
-            diff = abs(user_scores[dim] - typical_scores[dim])
-            total_diff += diff
-        # Umrechnung in Ähnlichkeit (0-100%)
-        similarity = max(0, 100 - (total_diff / 5))
-        similarities[profile_name] = similarity
-    
-    return similarities
+    def calculate_similarity(self, user_scores):
+        """Berechnet Ähnlichkeit mit typischen Profilen - vereinfachte Version"""
+        similarities = {}
+        typical_profiles = {
+            "Kreativer Innovator": {"O": 80, "C": 60, "E": 65, "A": 55, "N": 45},
+            "Zuverlässiger Organisator": {"O": 45, "C": 85, "E": 50, "A": 60, "N": 40},
+            "Sozialer Netzwerker": {"O": 60, "C": 50, "E": 80, "A": 70, "N": 35},
+            "Teamplayer": {"O": 50, "C": 60, "E": 55, "A": 80, "N": 45},
+            "Stabiler Problemlöser": {"O": 55, "C": 65, "E": 45, "A": 60, "N": 25}
+        }
+        
+        for profile_name, typical_scores in typical_profiles.items():
+            total_diff = 0
+            for dim in self.dimensions:
+                diff = abs(user_scores[dim] - typical_scores[dim])
+                total_diff += diff
+            # Umrechnung in Ähnlichkeit (0-100%)
+            similarity = max(0, 100 - (total_diff / 5))
+            similarities[profile_name] = similarity
+        
+        return similarities
