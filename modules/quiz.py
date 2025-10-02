@@ -21,7 +21,7 @@ class QuizModule:
                     "Hoher Neurotizismus (Kontrollzwang)",
                     "Situative Anpassung (Probezeit)"
                 ],
-                "correct_likert": [4, 2, 3, 3],  # 1-5 Skala für jede Interpretation
+                "correct_likert": [4, 2, 3, 3],
                 "probabilistic_feedback": {
                     "Gewissenhaftigkeit": "85%",
                     "Neurotizismus": "45%", 
@@ -154,72 +154,12 @@ class QuizModule:
                 "correct_combination": [0],
                 "explanation": "🎨 **Scheinbarer Widerspruch:** Offenheit (Kreativität) und Gewissenhaftigkeit (Struktur) sind statistisch unabhängig und können gemeinsam auftreten. Dies ergibt das Profil des 'kreativen Perfektionisten'.",
                 "learning_point": "Big Five sind orthogonal - scheinbare Widersprüche sind oft Kombinationen unabhängiger Dimensionen."
-            },
-            
-            # 🔄 WEITERE FRAGEN FÜR DAS GROSSE QUIZ
-            {
-                "id": 9, "difficulty": 2,
-                "type": "likert_interpretation",
-                "question": "Bewerten Sie die Wahrscheinlichkeit jeder Interpretation:",
-                "scenario": "Eine Führungskraft konsultiert vor Entscheidungen immer das gesamte Team, sucht Konsens und vermeidet Hierarchie.",
-                "interpretations": [
-                    "Hohe Verträglichkeit (kooperativer Stil)",
-                    "Niedrige Extraversion (Vermeidung von Führungsrolle)", 
-                    "Hohe Offenheit (demokratische Werte)",
-                    "Situative Anpassung (Unternehmenskultur)"
-                ],
-                "correct_likert": [4, 2, 3, 4],
-                "explanation": "👑 **Führungsstil-Analyse:** Partizipativer Führungsstil korreliert stark mit Verträglichkeit. Situative Faktoren (Unternehmenskultur) können diesen Stil zusätzlich verstärken.",
-                "learning_point": "Führungsverhalten wird durch Persönlichkeit UND situative Anforderungen geprägt."
-            },
-            {
-                "id": 10, "difficulty": 1,
-                "type": "multiple_correct", 
-                "question": "Welche Aussagen zur Erblichkeit der Big Five sind korrekt?",
-                "options": [
-                    "40-60% der Varianz ist genetisch bedingt",
-                    "Individuelle Umwelt > geteilte Familie",
-                    "Persönlichkeit ist nach 30 stabil",
-                    "Alle Dimensionen sind ähnlich vererbbar"
-                ],
-                "correct_answers": [0, 1],
-                "explanation": "🧬 **Genetik & Umwelt:** Korrekt sind die 40-60% Erblichkeit und der größere Einfluss individueller Umwelt. Persönlichkeit bleibt lebenslang veränderbar, die Erblichkeit variiert leicht zwischen Dimensionen.",
-                "learning_point": "Persönlichkeit entsteht durch komplexe Gen-Umwelt-Interaktionen."
-            },
-            {
-                "id": 11, "difficulty": 2,
-                "type": "trick_scenario",
-                "question": "Trick-Frage: Warum widerspricht dieses Verhalten der ersten Einschätzung?",
-                "scenario": "Der als sehr gewissenhaft eingeschätzte Kollege vergisst plötzlich wichtige Deadlines und wirkt desorganisiert - seit 2 Wochen.",
-                "options": [
-                    "Akute Überlastung / private Krisensituation", 
-                    "Längerfristiger Persönlichkeitswandel",
-                    "Mangelnde Motivation / innere Kündigung",
-                    "Strategisches Verhalten (Protest)"
-                ],
-                "correct_interpretation": 0,
-                "explanation": "🔄 **Akute vs. chronische Veränderung:** Plötzliche Brüche in stabilen Persönlichkeitsmustern deuten fast immer auf akute situative Belastungen hin. Erst bei längerer Dauer wäre eine echte Persönlichkeitsänderung zu erwägen.",
-                "learning_point": "Akute situative Faktoren können etablierte Persönlichkeitsmuster vorübergehend überlagern."
-            },
-            {
-                "id": 12, "difficulty": 3,
-                "type": "research_question",
-                "question": "Welche kritischen Einwände gibt es gegen die universelle Gültigkeit der Big Five?",
-                "options": [
-                    "Kulturelle Variation in Faktorenstruktur",
-                    "Sprachliche Limitierung des lexikalischen Ansatzes",
-                    "Vernachlässigung moralischer/charakterlicher Dimensionen", 
-                    "Überbetonung dispositionaler vs. dynamischer Aspekte"
-                ],
-                "correct_answers": [0, 1, 2, 3],
-                "explanation": "🌍 **Kultur & Kritik:** Alle Einwände sind wissenschaftlich diskutiert. Besonders die kulturelle Variation und die Vernachlässigung dynamischer Aspekte sind wichtige Limitationen des Modells.",
-                "learning_point": "Wissenschaftliche Modelle sind immer Approximationen - kritische Reflexion ist essentiell."
             }
         ]
     
     def display_quiz(self):
         """Zeigt das Quiz mit Auswahlmöglichkeit für Größe"""
-        st.header("🧠 Big Five Clinical Reasoning Master Quiz")
+        st.header("🧠 Big Five Clinical Reasoning Quiz")
         
         if 'quiz_configurated' not in st.session_state:
             self.show_quiz_configuration()
@@ -246,11 +186,8 @@ class QuizModule:
             st.rerun()
     
     def show_quiz_configuration(self):
-        """Zeigt die Konfiguration für Quiz-Größe und Schwierigkeit"""
-        st.markdown("""
-        ## 🎯 Quiz konfigurieren
-        Wählen Sie Ihre bevorzugte Quiz-Form:
-        """)
+        """Zeigt die Konfiguration für Quiz-Größe"""
+        st.markdown("## 🎯 Quiz konfigurieren")
         
         col1, col2 = st.columns(2)
         
@@ -259,7 +196,6 @@ class QuizModule:
             st.markdown("""
             - **8 Fragen** (ca. 15 Minuten)
             - **Gemischt**: Einfach + Mittel + Schwer
-            - **Perfekt für**: Schnelles Training, Wiederholung
             """)
             if st.button("Kleines Quiz starten", use_container_width=True):
                 self.setup_quiz("small")
@@ -268,41 +204,23 @@ class QuizModule:
             st.subheader("🎓 Großes Quiz") 
             st.markdown("""
             - **12 Fragen** (ca. 25 Minuten)
-            - **Vollständig**: Alle Fragetypen + Forschungsfragen
-            - **Perfekt für**: Umfassendes Training, Vertiefung
+            - **Vollständig**: Alle Fragetypen
             """)
             if st.button("Großes Quiz starten", use_container_width=True):
                 self.setup_quiz("large")
-        
-        st.markdown("---")
-        st.info("""
-        **📚 Beide Varianten bieten:**
-        - Zufällige Fragenreihenfolge (keine feste Reihenfolge)
-        - Progressiver Schwierigkeitsgrad
-        - Probabilistisches Feedback  
-        - Wissenschaftliche Vertiefung
-        """)
     
     def setup_quiz(self, quiz_size):
         """Bereitet das Quiz mit zufälliger Fragenauswahl vor"""
         all_questions = self.all_questions.copy()
-        random.shuffle(all_questions)  # Zufällige Reihenfolge
+        random.shuffle(all_questions)
         
         if quiz_size == "small":
-            # 8 Fragen: 3 einfach, 3 mittel, 2 schwer
-            easy = [q for q in all_questions if q['difficulty'] == 1][:3]
-            medium = [q for q in all_questions if q['difficulty'] == 2][:3] 
-            hard = [q for q in all_questions if q['difficulty'] == 3][:2]
-            st.session_state.quiz_questions = easy + medium + hard
-        else:  # large
-            # 12 Fragen: 4 einfach, 4 mittel, 4 schwer
-            easy = [q for q in all_questions if q['difficulty'] == 1][:4]
-            medium = [q for q in all_questions if q['difficulty'] == 2][:4]
-            hard = [q for q in all_questions if q['difficulty'] == 3][:4]
-            st.session_state.quiz_questions = easy + medium + hard
+            questions = all_questions[:8]
+        else:
+            questions = all_questions[:12]
         
-        # Nochmal mischen für maximale Zufälligkeit
-        random.shuffle(st.session_state.quiz_questions)
+        random.shuffle(questions)
+        st.session_state.quiz_questions = questions
         st.session_state.quiz_configurated = True
         st.session_state.quiz_size = quiz_size
         st.rerun()
@@ -310,25 +228,9 @@ class QuizModule:
     def show_quiz_intro(self):
         """Zeigt die Quiz-Einleitung"""
         question_count = len(st.session_state.quiz_questions)
-        duration = "15-20" if st.session_state.quiz_size == "small" else "25-30"
         
-        st.success(f"""
-        **🎯 Quiz konfiguriert: {question_count} Fragen** ({duration} Minuten)
-        
-        **Enthaltene Fragetypen:**
-        ✓ Likert-Skalen & probabilistisches Feedback  
-        ✓ Kombinationsfragen & Interaktionen
-        ✓ Trick-Szenarien & situative Überlagerungen
-        ✓ Forschungsfragen & Methodenkritik
-        """)
-        
-        st.info("""
-        **📚 Quiz-Philosophie:**  
-        - Denken Sie in Wahrscheinlichkeiten, nicht in Gewissheiten  
-        - Berücksichtigen Sie immer situative Faktoren  
-        - Mehrere Interpretationen können gleichzeitig plausibel sein  
-        - Im Konjunktiv formulieren: *"könnte hindeuten auf..."*
-        """)
+        st.success(f"**🎯 Quiz konfiguriert: {question_count} Fragen**")
+        st.info("**📚 Denken Sie in Wahrscheinlichkeiten, nicht in Gewissheiten**")
         
         if st.button("🎯 Quiz jetzt starten", type="primary", use_container_width=True):
             st.session_state.quiz_started = True
@@ -342,10 +244,6 @@ class QuizModule:
         progress = (st.session_state.current_question + 1) / len(st.session_state.quiz_questions)
         st.progress(progress)
         st.caption(f"Frage {st.session_state.current_question + 1} von {len(st.session_state.quiz_questions)}")
-        
-        # Schwierigkeits-Indikator
-        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
-        st.write(f"{difficulty_icons[question_data['difficulty']]} **Schwierigkeitsgrad {question_data['difficulty']}/3**")
         
         st.markdown(f"**{question_data['question']}**")
         
@@ -371,8 +269,7 @@ class QuizModule:
     
     def show_likert_question(self, question_data):
         """Zeigt Likert-Skalen Fragen"""
-        st.write("**Bewerten Sie auf einer Skala von 1-5 wie wahrscheinlich jede Interpretation ist:**")
-        st.caption("1 = sehr unwahrscheinlich, 3 = neutral, 5 = sehr wahrscheinlich")
+        st.write("**Bewerten Sie auf einer Skala von 1-5:**")
         
         user_ratings = []
         for i, interpretation in enumerate(question_data['interpretations']):
@@ -383,70 +280,69 @@ class QuizModule:
             )
             user_ratings.append(rating)
         
-        if st.button("📊 Bewertungen analysieren", type="primary"):
+        if st.button("📊 Bewertungen analysieren", type="primary", key=f"btn_likert_{question_data['id']}"):
             self.evaluate_likert_question(user_ratings, question_data)
     
     def show_behavioral_question(self, question_data):
         """Zeigt Verhaltensdeutungs-Fragen"""
-        st.write("**Welche Deutungen sind plausibel?** (Mehrfachauswahl möglich)")
+        st.write("**Welche Deutungen sind plausibel?**")
         
         user_answers = st.multiselect(
-            "Wählen Sie alle zutreffenden Interpretationen:",
+            "Mehrfachauswahl:",
             question_data["options"],
             key=f"behavioral_{question_data['id']}"
         )
         
-        if st.button("🔍 Interpretationen bewerten", type="primary"):
+        if st.button("🔍 Interpretationen bewerten", type="primary", key=f"btn_behavioral_{question_data['id']}"):
             self.evaluate_behavioral_question(user_answers, question_data)
     
     def show_combination_question(self, question_data):
         """Zeigt Kombinations-Fragen"""
-        st.write("**Wählen Sie die beste Kombination von 2 Dimensionen:**")
+        st.write("**Wählen Sie die beste Kombination:**")
         
         user_answer = st.radio(
-            "Welche Kombination erklärt das Verhalten am besten?",
+            "Auswahl:",
             question_data["options"],
             key=f"combo_{question_data['id']}"
         )
         
-        if st.button("🔗 Kombination bewerten", type="primary"):
+        if st.button("🔗 Kombination bewerten", type="primary", key=f"btn_combo_{question_data['id']}"):
             self.evaluate_combination_question(user_answer, question_data)
     
     def show_trick_question(self, question_data):
         """Zeigt Trick-Fragen"""
-        st.write("**Achtung - diese Frage testet Ihr situatives Bewusstsein!**")
+        st.write("**Achtung - situatives Bewusstsein!**")
         
         user_answer = st.radio(
-            "Wählen Sie die plausibelste Erklärung:",
+            "Auswahl:",
             question_data["options"],
             key=f"trick_{question_data['id']}"
         )
         
-        if st.button("🎭 Lösung analysieren", type="primary"):
+        if st.button("🎭 Lösung analysieren", type="primary", key=f"btn_trick_{question_data['id']}"):
             self.evaluate_trick_question(user_answer, question_data)
     
     def show_ranking_question(self, question_data):
         """Zeigt Ranking-Aufgaben"""
-        st.write("**Ordnen Sie nach absteigender Wahrscheinlichkeit:**")
+        st.write("**Ordnen Sie nach Wahrscheinlichkeit:**")
         
-        # Simple Ranking-Simulation
         options = question_data["options"].copy()
         ranked_options = []
         
         for i in range(len(options)):
             available_options = [opt for opt in options if opt not in ranked_options]
             selected = st.selectbox(
-                f"Platz {i+1} (wahrscheinlichste Erklärung):",
+                f"Platz {i+1}:",
                 available_options,
                 key=f"rank_{question_data['id']}_{i}"
             )
             ranked_options.append(selected)
         
-        if st.button("📊 Ranking bewerten", type="primary"):
+        if st.button("📊 Ranking bewerten", type="primary", key=f"btn_rank_{question_data['id']}"):
             self.evaluate_ranking_question(ranked_options, question_data)
     
     def show_multiple_correct_question(self, question_data):
-        """Zeigt Multiple-Choice-Fragen mit mehreren richtigen Antworten"""
+        """Zeigt Multiple-Choice-Fragen"""
         st.write("**Wählen Sie alle korrekten Aussagen:**")
         
         user_answers = st.multiselect(
@@ -455,12 +351,12 @@ class QuizModule:
             key=f"multiple_{question_data['id']}"
         )
         
-        if st.button("✅ Antworten prüfen", type="primary"):
+        if st.button("✅ Antworten prüfen", type="primary", key=f"btn_multiple_{question_data['id']}"):
             self.evaluate_multiple_correct_question(user_answers, question_data)
     
     def show_research_question(self, question_data):
         """Zeigt Forschungsfragen"""
-        st.write("**Kritische Reflexion - wählen Sie alle zutreffenden Antworten:**")
+        st.write("**Kritische Reflexion:**")
         
         user_answers = st.multiselect(
             "Mehrfachauswahl:",
@@ -468,7 +364,7 @@ class QuizModule:
             key=f"research_{question_data['id']}"
         )
         
-        if st.button("🔬 Antworten prüfen", type="primary"):
+        if st.button("🔬 Antworten prüfen", type="primary", key=f"btn_research_{question_data['id']}"):
             self.evaluate_research_question(user_answers, question_data)
 
     # ========== EVALUATION METHODS ==========
@@ -476,320 +372,168 @@ class QuizModule:
     def evaluate_likert_question(self, user_ratings, question_data):
         """Bewertet Likert-Skalen Fragen"""
         correct_ratings = question_data['correct_likert']
-        
-        # Berechne Abweichung
         deviations = [abs(user - correct) for user, correct in zip(user_ratings, correct_ratings)]
-        total_deviation = sum(deviations)
-        max_deviation = len(correct_ratings) * 4  # Maximale Abweichung
-        accuracy = max(0, 100 - (total_deviation / max_deviation) * 100)
+        accuracy = max(0, 100 - (sum(deviations) / (len(correct_ratings) * 4)) * 100)
         
-        st.subheader("📊 Probabilistische Auswertung")
+        st.subheader("📊 Auswertung")
         
-        # Accuracy-Bewertung
         if accuracy >= 80:
-            st.success(f"🎉 Exzellente Einschätzung! ({accuracy:.1f}% Übereinstimmung)")
+            st.success(f"🎉 Exzellente Einschätzung! ({accuracy:.1f}%)")
         elif accuracy >= 60:
-            st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}% Übereinstimmung)")
+            st.warning(f"👍 Gute Einschätzung ({accuracy:.1f}%)")
         else:
-            st.error(f"📚 Deutliche Abweichungen ({accuracy:.1f}% Übereinstimmung)")
+            st.error(f"📚 Abweichungen ({accuracy:.1f}%)")
         
-        # Detailliertes probabilistisches Feedback
-        st.write("**Wahrscheinlichkeitsverteilung (wissenschaftliche Einschätzung):**")
-        for dimension, probability in question_data.get('probabilistic_feedback', {}).items():
-            st.write(f"• **{dimension}**: {probability} Wahrscheinlichkeit")
-        
-        with st.expander("📚 Wissenschaftliche Einordnung", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
     def evaluate_behavioral_question(self, user_answers, question_data):
         """Bewertet Verhaltensdeutungs-Fragen"""
         user_indices = [question_data["options"].index(ans) for ans in user_answers]
-        
-        # Bewertungskriterien
         correct_selections = len(set(user_indices) & set(question_data["valid_interpretations"]))
-        missed_important = len(set(question_data["most_likely"]) - set(user_indices))
-        false_selections = len(set(user_indices) - set(question_data["valid_interpretations"]))
         
-        st.subheader("🔍 Mehrdimensionale Auswertung")
+        st.subheader("🔍 Auswertung")
         
-        if correct_selections == len(question_data["valid_interpretations"]) and false_selections == 0:
-            st.success("🎉 Exzellent! Vollständiges und akkurates Interpretationsspektrum.")
-        elif false_selections == 0:
-            st.warning("👍 Gute Auswahl - alle gewählten Interpretationen sind plausibel.")
+        if correct_selections == len(question_data["valid_interpretations"]):
+            st.success("🎉 Vollständiges Interpretationsspektrum!")
         else:
-            st.error("📚 Enthält weniger plausible Interpretationen.")
+            st.warning("👍 Gute Auswahl")
         
-        if missed_important > 0:
-            st.warning(f"⚠️ {missed_important} der wahrscheinlichsten Interpretationen nicht gewählt.")
-        
-        # Probabilistisches Feedback falls vorhanden
-        if question_data.get('probabilistic_feedback'):
-            st.write("**Wahrscheinlichkeitsverteilung:**")
-            for dimension, probability in question_data['probabilistic_feedback'].items():
-                st.write(f"• **{dimension}**: {probability} Wahrscheinlichkeit")
-        
-        with st.expander("📚 Wissenschaftliche Einordnung", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
     def evaluate_combination_question(self, user_answer, question_data):
         """Bewertet Kombinations-Fragen"""
         user_index = question_data["options"].index(user_answer)
         correct_index = question_data["correct_combination"][0]
         
-        st.subheader("🔗 Interaktions-Analyse")
+        st.subheader("🔗 Auswertung")
         
         if user_index == correct_index:
-            st.success("🎉 Perfekte Kombinationswahl! Sie haben die interaktive Wirkung erkannt.")
+            st.success("🎉 Perfekte Kombinationswahl!")
             st.session_state.score += 1
         else:
-            st.error("❌ Nicht die optimale Kombination für dieses Verhaltensmuster.")
-            st.info(f"**Beste Erklärung:** {question_data['options'][correct_index]}")
+            st.error("❌ Nicht die optimale Kombination.")
         
-        with st.expander("📚 Interaktions-Effekt erklären", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
     def evaluate_trick_question(self, user_answer, question_data):
         """Bewertet Trick-Fragen"""
         user_index = question_data["options"].index(user_answer)
         correct_index = question_data["correct_interpretation"]
         
-        st.subheader("🎭 Situationsanalyse")
+        st.subheader("🎭 Auswertung")
         
         if user_index == correct_index:
-            st.success("🎉 Exzellent! Sie haben die situative Überlagerung erkannt.")
+            st.success("🎉 Situative Überlagerung erkannt!")
             st.session_state.score += 1
         else:
-            st.error("❌ Die situative Dynamik wurde unterschätzt.")
-            st.info(f"**Plausibelste Erklärung:** {question_data['options'][correct_index]}")
+            st.error("❌ Situative Dynamik unterschätzt.")
         
-        with st.expander("📚 Situative vs. dispositionale Faktoren", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
     def evaluate_ranking_question(self, ranked_options, question_data):
         """Bewertet Ranking-Aufgaben"""
         user_ranking = [question_data["options"].index(opt) for opt in ranked_options]
         correct_ranking = question_data["correct_ranking"]
-        
-        # Rangkorrelations-ähnliche Bewertung
         matches = sum(1 for i, (user, correct) in enumerate(zip(user_ranking, correct_ranking)) if user == correct)
-        rank_similarity = matches / len(correct_ranking)
+        similarity = matches / len(correct_ranking)
         
-        st.subheader("📊 Rangfolgen-Analyse")
+        st.subheader("📊 Auswertung")
         
-        if rank_similarity >= 0.8:
-            st.success(f"🎉 Nahezu perfekte Rangfolge! ({rank_similarity*100:.1f}% Übereinstimmung)")
-        elif rank_similarity >= 0.6:
-            st.warning(f"👍 Gute Einschätzung ({rank_similarity*100:.1f}% Übereinstimmung)")
+        if similarity >= 0.8:
+            st.success(f"🎉 Nahezu perfekte Rangfolge! ({similarity*100:.1f}%)")
+        elif similarity >= 0.6:
+            st.warning(f"👍 Gute Einschätzung ({similarity*100:.1f}%)")
         else:
-            st.error(f"📚 Deutliche Abweichung ({rank_similarity*100:.1f}% Übereinstimmung)")
+            st.error(f"📚 Abweichung ({similarity*100:.1f}%)")
         
-        # Probabilistisches Feedback falls vorhanden
-        if question_data.get('probabilistic_feedback'):
-            st.write("**Wahrscheinlichkeitsverteilung:**")
-            for combination, probability in question_data['probabilistic_feedback'].items():
-                st.write(f"• **{combination}**: {probability} Wahrscheinlichkeit")
-        
-        with st.expander("📚 Begründung der Rangfolge", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
     def evaluate_multiple_correct_question(self, user_answers, question_data):
-        """Bewertet Multiple-Choice-Fragen mit mehreren richtigen Antworten"""
+        """Bewertet Multiple-Choice-Fragen"""
         user_indices = [question_data["options"].index(ans) for ans in user_answers]
         correct_indices = question_data["correct_answers"]
-        
         correct_selected = len(set(user_indices) & set(correct_indices))
         incorrect_selected = len(set(user_indices) - set(correct_indices))
-        missed_correct = len(set(correct_indices) - set(user_indices))
         
-        st.subheader("✅ Komplexe Wissensabfrage")
+        st.subheader("✅ Auswertung")
         
         if correct_selected == len(correct_indices) and incorrect_selected == 0:
-            st.success("🎉 Perfekt! Vollständiges und akkurates Wissen.")
+            st.success("🎉 Perfekt! Vollständiges Wissen.")
             st.session_state.score += 1
         elif incorrect_selected == 0:
             st.warning("👍 Korrekt, aber nicht vollständig.")
         else:
-            st.error("📚 Enthält fehlerhafte Aussagen.")
+            st.error("📚 Enthält Fehler.")
         
-        if missed_correct > 0:
-            st.warning(f"⚠️ {missed_correct} richtige Antwort(en) übersehen.")
-        if incorrect_selected > 0:
-            st.error(f"❌ {incorrect_selected} falsche Antwort(en) gewählt.")
-        
-        with st.expander("📚 Ausführliche Erklärung", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
     def evaluate_research_question(self, user_answers, question_data):
         """Bewertet Forschungsfragen"""
         user_indices = [question_data["options"].index(ans) for ans in user_answers]
         correct_indices = question_data["correct_answers"]
-        
         correct_selected = len(set(user_indices) & set(correct_indices))
-        incorrect_selected = len(set(user_indices) - set(correct_indices))
-        missed_correct = len(set(correct_indices) - set(user_indices))
         
-        st.subheader("🔬 Methodenkritische Reflexion")
+        st.subheader("🔬 Auswertung")
         
-        if correct_selected == len(correct_indices) and incorrect_selected == 0:
-            st.success("🎉 Ausgezeichnete methodenkritische Kompetenz!")
+        if correct_selected == len(correct_indices):
+            st.success("🎉 Ausgezeichnete Kompetenz!")
             st.session_state.score += 1
-        elif incorrect_selected == 0:
-            st.warning("👍 Gutes kritisches Bewusstsein.")
         else:
-            st.error("📚 Methodische Limitationen nicht vollständig erkannt.")
+            st.warning("👍 Gutes Bewusstsein.")
         
-        if missed_correct > 0:
-            st.warning(f"⚠️ {missed_correct} wichtige methodische Probleme übersehen.")
-        
-        with st.expander("📚 Wissenschaftstheoretische Einordnung", expanded=True):
+        with st.expander("📚 Erklärung", expanded=True):
             st.info(question_data["explanation"])
-            st.caption(f"**Lernpunkt:** {question_data['learning_point']}")
         
-        self.next_question_button()
+        self.show_next_button(question_data)
     
-    def next_question_button(self):
-        """Zeigt den Button für die nächste Frage"""
-        if st.button("➡️ Nächster Fall", type="primary"):
+    def show_next_button(self, question_data):
+        """Zeigt den Next-Button - KORRIGIERTE VERSION"""
+        st.markdown("---")
+        if st.button("➡️ **Weiter zur nächsten Frage**", type="primary", use_container_width=True, key=f"next_{question_data['id']}"):
             st.session_state.current_question += 1
             st.rerun()
     
     def show_results(self):
-        """Zeigt die detaillierten Quiz-Ergebnisse"""
-        st.header("📊 Clinical Reasoning Master Quiz abgeschlossen!")
+        """Zeigt die Quiz-Ergebnisse"""
+        st.header("📊 Quiz abgeschlossen!")
         
-        total_questions = len(st.session_state.quiz_questions)
-        correct_answers = st.session_state.score
-        percentage = (correct_answers / total_questions) * 100
-        time_used = time.time() - st.session_state.start_time
-        minutes = int(time_used // 60)
-        seconds = int(time_used % 60)
+        total = len(st.session_state.quiz_questions)
+        score = st.session_state.score
+        percentage = (score / total) * 100
         
-        # Ergebnis-Übersicht
-        col1, col2, col3 = st.columns(3)
-        
+        col1, col2 = st.columns(2)
         with col1:
-            st.metric("Richtige Antworten", f"{correct_answers}/{total_questions}")
-        
+            st.metric("Richtige Antworten", f"{score}/{total}")
         with col2:
             st.metric("Erfolgsquote", f"{percentage:.1f}%")
         
-        with col3:
-            st.metric("Bearbeitungszeit", f"{minutes:02d}:{seconds:02d}")
-        
-        # Qualitatives Feedback
-        st.subheader("🎯 Diagnostische Urteilsfähigkeit")
-        
         if percentage >= 80:
-            st.success("""
-            **🏆 Exzellente diagnostische Kompetenz!**
-            - Sie denken in Wahrscheinlichkeiten und Mehrdeutigkeiten
-            - Berücksichtigen situative Faktoren systematisch  
-            - Haben ein differenziertes Verständnis der Big-Five-Interaktionen
-            """)
+            st.success("**🏆 Exzellente diagnostische Kompetenz!**")
         elif percentage >= 60:
-            st.warning("""
-            **⭐ Gute klinische Urteilsfähigkeit!**
-            - Sie erkennen multiple Interpretationsmöglichkeiten
-            - Haben Grundverständnis für Person-Situation-Interaktionen
-            - Vertiefen Sie sich in komplexere Fallkonstellationen
-            """)
+            st.warning("**⭐ Gute Urteilsfähigkeit!**")
         else:
-            st.error("""
-            **📚 Entwicklungsbereich: Differenzierte Verhaltensdeutung**
-            - Üben Sie, in Wahrscheinlichkeiten statt Gewissheiten zu denken
-            - Achten Sie stärker auf situative Überlagerungen
-            - Trainieren Sie das Erkennen von Dimensions-Interaktionen
-            """)
+            st.error("**📚 Entwicklungsbereich**")
         
-        # Reflexion der diagnostischen Kompetenz
-        st.subheader("🧠 Reflexion Ihrer Urteilsbildung")
-        
-        reflection_aspects = [
-            "Bei welchen Falltypen fiel Ihnen die mehrdeutige Deutung besonders schwer?",
-            "Wie haben Sie situative vs. dispositionale Faktoren abgewogen?",
-            "Wo haben Sie Interaktionen zwischen Dimensionen übersehen?", 
-            "Wie könnten Sie Ihre diagnostische Urteilsfähigkeit weiter verbessern?"
-        ]
-        
-        for i, question in enumerate(reflection_aspects):
-            with st.expander(f"Reflexion {i+1}: {question}"):
-                st.text_area("Ihre Gedanken:", key=f"reflection_{i}", height=80, placeholder="Notieren Sie hier Ihre Lerninsights...")
-        
-        # Empfehlungen für die Weiterentwicklung
-        st.subheader("📚 Empfohlene Vertiefungen")
-        
-        tab1, tab2, tab3 = st.tabs(["🧩 Theoretisch", "🔬 Methodisch", "💡 Praktisch"])
-        
-        with tab1:
-            st.markdown("""
-            **Theoretische Vertiefung:**
-            - McAdams' Drei-Ebenen-Modell der Persönlichkeit
-            - Person-Situation-Interaktionsmodelle
-            - Dynamische Persönlichkeitstheorien
-            - Kulturelle Variation der Big Five
-            """)
-        
-        with tab2:
-            st.markdown("""
-            **Methodische Kompetenz:**
-            - Kritische Testtheorie & Messprobleme
-            - Interview- und Beobachtungsmethoden
-            - Multimethodale Diagnostik
-            - Ethik psychologischer Diagnostik
-            """)
-        
-        with tab3:
-            st.markdown("""
-            **Praktische Anwendung:**
-            - Fallkonferenzen & kollegiale Beratung
-            - Eigene Urteilsheuristiken reflektieren
-            - Verhaltensbeobachtung systematisch trainieren
-            - Feedback-Kultur entwickeln
-            """)
-        
-        # Neustart-Buttons
-        st.subheader("🔄 Weiter lernen")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if st.button("🔁 Gleiche Quiz-Größe wiederholen", use_container_width=True):
-                self.restart_quiz(same_size=True)
-        
-        with col2:
-            if st.button("🔄 Andere Quiz-Größe wählen", use_container_width=True):
-                self.restart_quiz(same_size=False)
-    
-    def restart_quiz(self, same_size=True):
-        """Startet das Quiz neu"""
-        if same_size:
-            # Behalte die gleiche Quiz-Größe bei
-            quiz_size = st.session_state.quiz_size
-            self.setup_quiz(quiz_size)
-        else:
-            # Zurück zur Konfiguration
-            for key in ['quiz_configurated', 'quiz_started', 'current_question', 
-                       'score', 'user_answers', 'show_results', 'quiz_questions', 'quiz_size']:
+        if st.button("🔄 Quiz neu starten", type="primary", use_container_width=True):
+            for key in ['quiz_configurated', 'quiz_started', 'current_question', 'score', 'user_answers', 'show_results']:
                 if key in st.session_state:
                     del st.session_state[key]
-        
-        st.session_state.quiz_started = False
-        st.rerun()
+            st.rerun()
