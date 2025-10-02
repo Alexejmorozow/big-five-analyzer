@@ -625,11 +625,7 @@ def show_exercise_feedback(self, exercise_data):
     # Detaillierte Erklärung
     with st.expander("📚 Detaillierte Erklärung anzeigen", expanded=True):
         st.write(exercise_data["explanation"])
-    
-    # Visualisierung der Ergebnisse (falls vorhanden)
-    if hasattr(self, 'last_evaluation_results'):
-        self.show_evaluation_visualization(exercise_data)
-    
+
     st.markdown("---")
     st.write("**Wenn Sie bereit für die nächste Übung sind:**")
     
