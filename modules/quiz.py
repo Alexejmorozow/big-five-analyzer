@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from typing import List, Dict, Any
 
-class ClinicalReasoningQuiz:
+class QuizModule:
     def __init__(self):
         self.all_questions = self.load_questions()
     
