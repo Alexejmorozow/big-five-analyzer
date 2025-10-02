@@ -317,6 +317,19 @@ class QuizModule:
             }
         ]
 
+        # Antworten shufflen für jede Basis-Frage
+        for question in basic_questions:
+            if 'options' in question and 'correct_answer' in question:
+                correct_index = question['correct_answer']
+                correct_answer = question['options'][correct_index]
+                
+                # Options mischen
+                random.shuffle(question['options'])
+                
+                # Neuen Index der korrekten Antwort finden
+                new_correct_index = question['options'].index(correct_answer)
+                question['correct_answer'] = new_correct_index
+
         advanced_questions = [
             # 📊 LIKERT-INTERPRETATION (ALTE FRAGEN - KOMPLETT)
             {
@@ -476,46 +489,7 @@ class QuizModule:
         if user_index == correct_index:
             st.session_state.reasoning_score += 1
 
-    # ERWEITERTE show_current_exercise METHODE
-    def show_current_exercise(self):
-        """Zeigt die aktuelle Übung"""
-        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
-            st.session_state.show_results = True
-            st.rerun()
-            return
-            
-        exercise_data = st.session_state.exercise_questions[st.session_state.current_exercise]
-        
-        # Fortschrittsanzeige
-        progress = (st.session_state.current_exercise + 1) / len(st.session_state.exercise_questions)
-        st.progress(progress)
-        st.caption(f"Übung {st.session_state.current_exercise + 1} von {len(st.session_state.exercise_questions)}")
-        
-        # Schwierigkeitsgrad
-        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
-        st.write(f"{difficulty_icons[exercise_data['difficulty']]} **Schwierigkeitsgrad {exercise_data['difficulty']}/3**")
-        
-        # ERWEITERTE Übungstyp-Handler
-        exercise_handlers = {
-            'likert_interpretation': self.show_likert_exercise,
-            'multiple_correct_behavioral': self.show_multiple_behavioral_exercise,
-            'combination_question': self.show_combination_exercise,
-            'trick_scenario': self.show_trick_scenario_exercise,
-            'ranking_task': self.show_ranking_exercise,
-            'research_critical': self.show_research_critical_exercise,
-            # NEUE HANDLER FÜR BASIS-FRAGEN
-            'basic_knowledge': self.show_basic_knowledge_exercise,
-            'application_basic': self.show_application_basic_exercise,
-            'science_basic': self.show_science_basic_exercise
-        }
-        
-        handler = exercise_handlers.get(exercise_data['type'])
-        if handler:
-            handler(exercise_data)
-        else:
-            st.error(f"Unbekannter Übungstyp: {exercise_data['type']}")
-
-    # NEUE VERGLEICHSMETHODE FÜR BASIS-FRAGEN
+    # VERGLEICHSMETHODEN MÜSSEN VOR show_exercise_feedback KOMMEN!
     def _show_basic_comparison(self, user_response, exercise_data):
         """Vergleich für Basis-Fragen (Single Choice)"""
         if not user_response or 'user_choice' not in user_response:
@@ -547,7 +521,225 @@ class QuizModule:
             st.write(f"**{exercise_data['options'][correct_choice]}**")
             st.success("✅ Das ist die korrekte Antwort")
 
-    # ERWEITERTE show_exercise_feedback METHODE
+    def _show_multiple_choice_comparison(self, user_response, exercise_data):
+        """Vergleich für Multiple-Choice Fragen"""
+        if not user_response or 'user_answers' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_choices = user_response['user_answers']
+        correct_choices = exercise_data['correct_answers']
+        
+        # Bewertung
+        correct_selected = set(user_choices) & set(correct_choices)
+        incorrect_selected = set(user_choices) - set(correct_choices)
+        missed_correct = set(correct_choices) - set(user_choices)
+        
+        # Gesamtbewertung
+        if not incorrect_selected and not missed_correct:
+            evaluation = "✅ **VOLLSTÄNDIG RICHTIG**"
+            color = "green"
+        elif not incorrect_selected:
+            evaluation = "⚠️ **TEILWEISE RICHTIG** (Einige plausible Interpretationen übersehen)"
+            color = "orange"
+        else:
+            evaluation = "❌ **ENTHÄLT FEHLER** (Unplausible Interpretationen gewählt)"
+            color = "red"
+        
+        st.markdown(f"### {evaluation}")
+        
+        # Gegenüberstellung in Columns
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**🎯 Deine Auswahl:**")
+            for i, interpretation in enumerate(exercise_data['interpretations']):
+                if i in user_choices:
+                    status = "✅" if i in correct_choices else "❌"
+                    st.write(f"{status} {interpretation}")
+        
+        with col2:
+            st.markdown("**🏆 Optimale Auswahl:**")
+            for i, interpretation in enumerate(exercise_data['interpretations']):
+                if i in correct_choices:
+                    status = "✅" if i in user_choices else "🔸"
+                    st.write(f"{status} {interpretation}")
+
+    def _show_likert_comparison(self, user_response, exercise_data):
+        """Vergleich für Likert-Skalen Fragen"""
+        if not user_response or 'user_ratings' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_ratings = user_response['user_ratings']
+        expert_ratings = exercise_data['expert_ratings']
+        tolerance = exercise_data['tolerance']
+        
+        # Bewertung berechnen
+        deviations = [abs(user - expert) for user, expert in zip(user_ratings, expert_ratings)]
+        within_tolerance = sum(1 for dev in deviations if dev <= tolerance)
+        accuracy = (within_tolerance / len(deviations)) * 100
+        
+        if accuracy >= 80:
+            evaluation = "✅ **SEHR GUTE EINSCHÄTZUNG**"
+        elif accuracy >= 60:
+            evaluation = "⚠️ **GUTE EINSCHÄTZUNG** (Leichte Abweichungen)"
+        else:
+            evaluation = "❌ **DEUTLICHE ABWEICHUNGEN**"
+        
+        st.markdown(f"### {evaluation} ({accuracy:.1f}% im Toleranzbereich)")
+        
+        # Detailierter Vergleich
+        for i, (interpretation, user_rating, expert_rating) in enumerate(zip(
+            exercise_data['interpretations'], user_ratings, expert_ratings
+        )):
+            deviation = abs(user_rating - expert_rating)
+            status = "✅" if deviation <= tolerance else "❌"
+            
+            col1, col2, col3 = st.columns([3, 1, 1])
+            with col1:
+                st.write(f"**{interpretation}**")
+            with col2:
+                st.write(f"Deine Bewertung: **{user_rating}**")
+            with col3:
+                st.write(f"Experten: **{expert_rating}** {status}")
+
+    def _show_combination_comparison(self, user_response, exercise_data):
+        """Vergleich für Kombinations-Fragen"""
+        if not user_response or 'user_choice' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_choice = user_response['user_choice']
+        correct_choice = exercise_data['correct_combination']
+        
+        if user_choice == correct_choice:
+            evaluation = "✅ **RICHTIGE KOMBINATION**"
+        else:
+            evaluation = "❌ **SUBOPTIMALE KOMBINATION**"
+        
+        st.markdown(f"### {evaluation}")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**🎯 Deine Wahl:**")
+            st.write(f"**{exercise_data['combinations'][user_choice]}**")
+        
+        with col2:
+            st.markdown("**🏆 Optimale Erklärung:**")
+            st.write(f"**{exercise_data['combinations'][correct_choice]}**")
+
+    def _show_trick_comparison(self, user_response, exercise_data):
+        """Vergleich für Trick-Szenario Fragen"""
+        if not user_response or 'user_answers' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_choices = set(user_response['user_answers'])
+        correct_choices = set(exercise_data['correct_answers'])
+        
+        if user_choices == correct_choices:
+            evaluation = "✅ **VOLLSTÄNDIG RICHTIG**"
+        elif user_choices.issubset(correct_choices):
+            evaluation = "⚠️ **TEILWEISE RICHTIG** (Einige States übersehen)"
+        elif correct_choices.issubset(user_choices):
+            evaluation = "⚠️ **ZUVEL AUSGEWÄHLT** (Auch Traits gewählt)"
+        else:
+            evaluation = "❌ **FEHLERHAFTE ANALYSE**"
+        
+        st.markdown(f"### {evaluation}")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**🎯 Deine Analyse:**")
+            for i, option in enumerate(exercise_data['options']):
+                if i in user_choices:
+                    status = "✅" if i in correct_choices else "❌"
+                    st.write(f"{status} {option}")
+        
+        with col2:
+            st.markdown("**🏆 Korrekte Analyse:**")
+            for i, option in enumerate(exercise_data['options']):
+                if i in correct_choices:
+                    status = "✅" if i in user_choices else "🔸"
+                    st.write(f"{status} {option}")
+
+    def _show_ranking_comparison(self, user_response, exercise_data):
+        """Vergleich für Ranking-Fragen"""
+        if not user_response or 'user_ranking' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_ranking = user_response['user_ranking']
+        correct_ranking = exercise_data['correct_ranking']
+        
+        # Berechne Ranking-Korrelation
+        ranking_distance = sum(abs(user - correct) for user, correct in zip(user_ranking, correct_ranking))
+        max_distance = len(user_ranking) * (len(user_ranking) - 1) / 2
+        accuracy = max(0, 100 - (ranking_distance / max_distance) * 100)
+        
+        if accuracy >= 90:
+            evaluation = "✅ **EXZELLENTE PRIORISIERUNG**"
+        elif accuracy >= 70:
+            evaluation = "⚠️ **GUTE PRIORISIERUNG** (Leichte Abweichungen)"
+        else:
+            evaluation = "❌ **DEUTLICHE ABWEICHUNGEN**"
+        
+        st.markdown(f"### {evaluation} ({accuracy:.1f}% Übereinstimmung)")
+        
+        # Detailierter Vergleich
+        st.markdown("**📊 Rangfolgen-Vergleich:**")
+        for i, (user_idx, correct_idx) in enumerate(zip(user_ranking, correct_ranking)):
+            user_hyp = exercise_data['hypotheses'][user_idx]
+            correct_hyp = exercise_data['hypotheses'][correct_idx]
+            status = "✅" if user_idx == correct_idx else "❌"
+            
+            col1, col2, col3 = st.columns([1, 3, 3])
+            with col1:
+                st.write(f"**Platz {i+1}:** {status}")
+            with col2:
+                st.write(f"Deine Wahl: {user_hyp}")
+            with col3:
+                if user_idx != correct_idx:
+                    st.write(f"Optimal: {correct_hyp}")
+
+    def _show_research_comparison(self, user_response, exercise_data):
+        """Vergleich für Forschungs-Kritik Fragen"""
+        if not user_response or 'user_answers' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_choices = set(user_response['user_answers'])
+        correct_choices = set(exercise_data['correct_answers'])
+        
+        if user_choices == correct_choices:
+            evaluation = "✅ **UMFASSENDE METHODENKRITIK**"
+        elif user_choices.issubset(correct_choices):
+            evaluation = "⚠️ **TEILWEISE KRITISCH** (Einige Probleme übersehen)"
+        else:
+            evaluation = "❌ **UNVOLLSTÄNDIGE ANALYSE**"
+        
+        st.markdown(f"### {evaluation}")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**🎯 Deine Kritikpunkte:**")
+            for i, issue in enumerate(exercise_data['critical_issues']):
+                if i in user_choices:
+                    status = "✅" if i in correct_choices else "❌"
+                    st.write(f"{status} {issue}")
+        
+        with col2:
+            st.markdown("**🏆 Alle relevanten Probleme:**")
+            for i, issue in enumerate(exercise_data['critical_issues']):
+                if i in correct_choices:
+                    status = "✅" if i in user_choices else "🔸"
+                    st.write(f"{status} {issue}")
+
+    # JETZT ERST show_exercise_feedback (nach allen Vergleichsmethoden)
     def show_exercise_feedback(self, exercise_data):
         """Zeigt klare Gegenüberstellung der Antworten mit Bewertung"""
         
@@ -556,7 +748,7 @@ class QuizModule:
         
         st.subheader("📊 Deine Auswertung")
         
-        # ERWEITERTE Übungstyp-Auswertung
+        # Übungstyp-spezifische Auswertung
         if exercise_data['type'] in ['basic_knowledge', 'application_basic', 'science_basic']:
             self._show_basic_comparison(user_response, exercise_data)
         elif exercise_data['type'] == 'multiple_correct_behavioral':
@@ -595,7 +787,44 @@ class QuizModule:
             
             st.rerun()
 
-    # MODIFIZIERTE setup_training METHODE
+    # REST DES CODES (unverändert)
+    def show_current_exercise(self):
+        """Zeigt die aktuelle Übung"""
+        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
+            st.session_state.show_results = True
+            st.rerun()
+            return
+            
+        exercise_data = st.session_state.exercise_questions[st.session_state.current_exercise]
+        
+        # Fortschrittsanzeige
+        progress = (st.session_state.current_exercise + 1) / len(st.session_state.exercise_questions)
+        st.progress(progress)
+        st.caption(f"Übung {st.session_state.current_exercise + 1} von {len(st.session_state.exercise_questions)}")
+        
+        # Schwierigkeitsgrad
+        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
+        st.write(f"{difficulty_icons[exercise_data['difficulty']]} **Schwierigkeitsgrad {exercise_data['difficulty']}/3**")
+        
+        # Übungstyp-Handler
+        exercise_handlers = {
+            'likert_interpretation': self.show_likert_exercise,
+            'multiple_correct_behavioral': self.show_multiple_behavioral_exercise,
+            'combination_question': self.show_combination_exercise,
+            'trick_scenario': self.show_trick_scenario_exercise,
+            'ranking_task': self.show_ranking_exercise,
+            'research_critical': self.show_research_critical_exercise,
+            'basic_knowledge': self.show_basic_knowledge_exercise,
+            'application_basic': self.show_application_basic_exercise,
+            'science_basic': self.show_science_basic_exercise
+        }
+        
+        handler = exercise_handlers.get(exercise_data['type'])
+        if handler:
+            handler(exercise_data)
+        else:
+            st.error(f"Unbekannter Übungstyp: {exercise_data['type']}")
+
     def setup_training(self, training_level):
         """Bereitet das Training vor"""
         all_exercises = self.all_questions.copy()
@@ -617,8 +846,6 @@ class QuizModule:
         st.session_state.training_level = training_level
         st.rerun()
 
-    # ===== AB HIER KOMPLETT UNVERÄNDERTE ALTE METHODEN =====
-    
     def display_quiz(self):
         """Hauptmethode zur Anzeige des Clinical Reasoning Trainings"""
         st.header("🧠 Big Five Clinical Reasoning Training")
@@ -1042,191 +1269,6 @@ class QuizModule:
         if set(user_indices) == set(correct_indices):
             st.session_state.reasoning_score += 1
 
-    # VERGLEICHSMETHODEN FÜR COMPLEX-FRAGEN (UNVERÄNDERT)
-    def _show_multiple_choice_comparison(self, user_response, exercise_data):
-        """Vergleich für Multiple-Choice Fragen"""
-        if not user_response or 'user_answers' not in user_response:
-            st.error("Keine Benutzerantwort gefunden")
-            return
-            
-        user_choices = user_response['user_answers']
-        correct_choices = exercise_data['correct_answers']
-        
-        # Bewertung
-        correct_selected = set(user_choices) & set(correct_choices)
-        incorrect_selected = set(user_choices) - set(correct_choices)
-        missed_correct = set(correct_choices) - set(user_choices)
-        
-        # Gesamtbewertung
-        if not incorrect_selected and not missed_correct:
-            evaluation = "✅ **VOLLSTÄNDIG RICHTIG**"
-            color = "green"
-        elif not incorrect_selected:
-            evaluation = "⚠️ **TEILWEISE RICHTIG** (Einige plausible Interpretationen übersehen)"
-            color = "orange"
-        else:
-            evaluation = "❌ **ENTHÄLT FEHLER** (Unplausible Interpretationen gewählt)"
-            color = "red"
-        
-        st.markdown(f"### {evaluation}")
-        
-        # Gegenüberstellung in Columns
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**🎯 Deine Auswahl:**")
-            for i, interpretation in enumerate(exercise_data['interpretations']):
-                if i in user_choices:
-                    status = "✅" if i in correct_choices else "❌"
-                    st.write(f"{status} {interpretation}")
-        
-        with col2:
-            st.markdown("**🏆 Optimale Auswahl:**")
-            for i, interpretation in enumerate(exercise_data['interpretations']):
-                if i in correct_choices:
-                    status = "✅" if i in user_choices else "🔸"
-                    st.write(f"{status} {interpretation}")
-
-    def _show_likert_comparison(self, user_response, exercise_data):
-        """Vergleich für Likert-Skalen Fragen"""
-        if not user_response or 'user_ratings' not in user_response:
-            st.error("Keine Benutzerantwort gefunden")
-            return
-            
-        user_ratings = user_response['user_ratings']
-        expert_ratings = exercise_data['expert_ratings']
-        tolerance = exercise_data['tolerance']
-        
-        # Bewertung berechnen
-        deviations = [abs(user - expert) for user, expert in zip(user_ratings, expert_ratings)]
-        within_tolerance = sum(1 for dev in deviations if dev <= tolerance)
-        accuracy = (within_tolerance / len(deviations)) * 100
-        
-        if accuracy >= 80:
-            evaluation = "✅ **SEHR GUTE EINSCHÄTZUNG**"
-        elif accuracy >= 60:
-            evaluation = "⚠️ **GUTE EINSCHÄTZUNG** (Leichte Abweichungen)"
-        else:
-            evaluation = "❌ **DEUTLICHE ABWEICHUNGEN**"
-        
-        st.markdown(f"### {evaluation} ({accuracy:.1f}% im Toleranzbereich)")
-        
-        # Detailierter Vergleich
-        for i, (interpretation, user_rating, expert_rating) in enumerate(zip(
-            exercise_data['interpretations'], user_ratings, expert_ratings
-        )):
-            deviation = abs(user_rating - expert_rating)
-            status = "✅" if deviation <= tolerance else "❌"
-            
-            col1, col2, col3 = st.columns([3, 1, 1])
-            with col1:
-                st.write(f"**{interpretation}**")
-            with col2:
-                st.write(f"Deine Bewertung: **{user_rating}**")
-            with col3:
-                st.write(f"Experten: **{expert_rating}** {status}")
-
-    def _show_combination_comparison(self, user_response, exercise_data):
-        """Vergleich für Kombinations-Fragen"""
-        if not user_response or 'user_choice' not in user_response:
-            st.error("Keine Benutzerantwort gefunden")
-            return
-            
-        user_choice = user_response['user_choice']
-        correct_choice = exercise_data['correct_combination']
-        
-        if user_choice == correct_choice:
-            evaluation = "✅ **RICHTIGE KOMBINATION**"
-        else:
-            evaluation = "❌ **SUBOPTIMALE KOMBINATION**"
-        
-        st.markdown(f"### {evaluation}")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**🎯 Deine Wahl:**")
-            st.write(f"**{exercise_data['combinations'][user_choice]}**")
-        
-        with col2:
-            st.markdown("**🏆 Optimale Erklärung:**")
-            st.write(f"**{exercise_data['combinations'][correct_choice]}**")
-
-    def _show_trick_comparison(self, user_response, exercise_data):
-        """Vergleich für Trick-Szenario Fragen"""
-        if not user_response or 'user_answers' not in user_response:
-            st.error("Keine Benutzerantwort gefunden")
-            return
-            
-        user_choices = set(user_response['user_answers'])
-        correct_choices = set(exercise_data['correct_answers'])
-        
-        if user_choices == correct_choices:
-            evaluation = "✅ **VOLLSTÄNDIG RICHTIG**"
-        elif user_choices.issubset(correct_choices):
-            evaluation = "⚠️ **TEILWEISE RICHTIG** (Einige States übersehen)"
-        elif correct_choices.issubset(user_choices):
-            evaluation = "⚠️ **ZUVEL AUSGEWÄHLT** (Auch Traits gewählt)"
-        else:
-            evaluation = "❌ **FEHLERHAFTE ANALYSE**"
-        
-        st.markdown(f"### {evaluation}")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**🎯 Deine Analyse:**")
-            for i, option in enumerate(exercise_data['options']):
-                if i in user_choices:
-                    status = "✅" if i in correct_choices else "❌"
-                    st.write(f"{status} {option}")
-        
-        with col2:
-            st.markdown("**🏆 Korrekte Analyse:**")
-            for i, option in enumerate(exercise_data['options']):
-                if i in correct_choices:
-                    status = "✅" if i in user_choices else "🔸"
-                    st.write(f"{status} {option}")
-
-    def _show_ranking_comparison(self, user_response, exercise_data):
-        """Vergleich für Ranking-Fragen"""
-        if not user_response or 'user_ranking' not in user_response:
-            st.error("Keine Benutzerantwort gefunden")
-            return
-            
-        user_ranking = user_response['user_ranking']
-        correct_ranking = exercise_data['correct_ranking']
-        
-        # Berechne Ranking-Korrelation
-        ranking_distance = sum(abs(user - correct) for user, correct in zip(user_ranking, correct_ranking))
-        max_distance = len(user_ranking) * (len(user_ranking) - 1) / 2
-        accuracy = max(0, 100 - (ranking_distance / max_distance) * 100)
-        
-        if accuracy >= 90:
-            evaluation = "✅ **EXZELLENTE PRIORISIERUNG**"
-        elif accuracy >= 70:
-            evaluation = "⚠️ **GUTE PRIORISIERUNG** (Leichte Abweichungen)"
-        else:
-            evaluation = "❌ **DEUTLICHE ABWEICHUNGEN**"
-        
-        st.markdown(f"### {evaluation} ({accuracy:.1f}% Übereinstimmung)")
-        
-        # Detailierter Vergleich
-        st.markdown("**📊 Rangfolgen-Vergleich:**")
-        for i, (user_idx, correct_idx) in enumerate(zip(user_ranking, correct_ranking)):
-            user_hyp = exercise_data['hypotheses'][user_idx]
-            correct_hyp = exercise_data['hypotheses'][correct_idx]
-            status = "✅" if user_idx == correct_idx else "❌"
-            
-            col1, col2, col3 = st.columns([1, 3, 3])
-            with col1:
-                st.write(f"**Platz {i+1}:** {status}")
-            with col2:
-                st.write(f"Deine Wahl: {user_hyp}")
-            with col3:
-                if user_idx != correct_idx:
-                    st.write(f"Optimal: {correct_hyp}")
-
     def show_training_results(self):
         """Zeigt die Trainingsergebnisse mit Plotly Visualisierungen"""
         st.header("📊 Clinical Reasoning Training abgeschlossen!")
@@ -1337,3 +1379,8 @@ class QuizModule:
         with col2:
             if st.button("📚 Theorie vertiefen", use_container_width=True):
                 st.info("Studieren Sie die bereitgestellten Dokumente zur Vertiefung Ihrer Kenntnisse.")
+
+# Am ENDE der Datei:
+if __name__ == "__main__":
+    quiz = QuizModule()
+    quiz.display_quiz()
