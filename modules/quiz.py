@@ -11,8 +11,314 @@ class QuizModule:
     
     def load_questions(self) -> List[Dict[str, Any]]:
         """Lädt alle Fragen für das Clinical Reasoning Training"""
-        return [
-            # 📊 LIKERT-INTERPRETATION
+        basic_questions = [
+            # 🎯 BASISWISSEN FRAGEN (NEU)
+            {
+                "id": 101,
+                "type": "basic_knowledge",
+                "difficulty": 1,
+                "question": "Wofür steht das Akronym OCEAN im Big-Five-Modell?",
+                "options": [
+                    "Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism",
+                    "Organization, Creativity, Energy, Ambition, Nervousness", 
+                    "Optimism, Confidence, Empathy, Awareness, Normality",
+                    "Observation, Concentration, Efficiency, Adaptation, Neutrality"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **OCEAN** steht für die fünf Hauptdimensionen: Openness (Offenheit), Conscientiousness (Gewissenhaftigkeit), Extraversion, Agreeableness (Verträglichkeit), Neuroticism (Neurotizismus).",
+                "learning_point": "Das OCEAN-Modell ist die internationale Bezeichnung für das Fünf-Faktoren-Modell."
+            },
+            {
+                "id": 102,
+                "type": "basic_knowledge", 
+                "difficulty": 1,
+                "question": "Welche Dimension beschreibt emotionale Stabilität und Resilienz?",
+                "options": [
+                    "Niedriger Neurotizismus",
+                    "Hohe Gewissenhaftigkeit",
+                    "Hohe Extraversion", 
+                    "Hohe Verträglichkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Niedriger Neurotizismus** bedeutet emotionale Stabilität. Der Gegenpol (hoher Neurotizismus) beschreibt emotionale Labilität.",
+                "learning_point": "Neurotizismus = emotionale Labilität; niedriger Neurotizismus = emotionale Stabilität"
+            },
+            {
+                "id": 103,
+                "type": "basic_knowledge",
+                "difficulty": 1, 
+                "question": "Auf welchem wissenschaftlichen Ansatz basiert die Entwicklung der Big Five?",
+                "options": [
+                    "Lexikalischer Ansatz",
+                    "Behavioristischer Ansatz",
+                    "Psychoanalytischer Ansatz",
+                    "Humanistischer Ansatz"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Der **lexikalische Ansatz** geht davon aus, dass sich alle wichtigen Persönlichkeitsmerkmale in der Sprache niedergeschlagen haben.",
+                "learning_point": "Allport & Odbert identifizierten 1936 über 18.000 Persönlichkeitsbegriffe als Grundlage."
+            },
+            {
+                "id": 104,
+                "type": "basic_knowledge",
+                "difficulty": 1,
+                "question": "Welche Big-Five-Dimension korreliert am stärksten mit beruflichem Erfolg?",
+                "options": [
+                    "Gewissenhaftigkeit",
+                    "Extraversion", 
+                    "Offenheit für Erfahrungen",
+                    "Verträglichkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Gewissenhaftigkeit** ist der robusteste Prädiktor für Arbeitsleistung über fast alle Berufsgruppen hinweg.",
+                "learning_point": "Strukturiertheit, Zuverlässigkeit und Zielstrebigkeit führen zu besserer Arbeitsleistung."
+            },
+            {
+                "id": 105, 
+                "type": "basic_knowledge",
+                "difficulty": 1,
+                "question": "Was bedeutet hohe Ausprägung in 'Offenheit für Erfahrungen'?",
+                "options": [
+                    "Kreativ, neugierig, vielseitig interessiert",
+                    "Pünktlich, organisiert, zuverlässig",
+                    "Gesellig, energisch, gesprächig", 
+                    "Hilfsbereit, mitfühlend, vertrauensvoll"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Hohe Offenheit** charakterisiert kreative, neugierige Personen, die offen für neue Ideen und Erfahrungen sind.",
+                "learning_point": "Offenheit = Intellektuelle Neugier + Kreativität + Experimentierfreude"
+            },
+            {
+                "id": 106,
+                "type": "basic_knowledge",
+                "difficulty": 1,
+                "question": "Welches Instrument gilt als Goldstandard in der Big-Five-Forschung?",
+                "options": [
+                    "NEO-PI-R (NEO Persönlichkeitsinventar)",
+                    "Myers-Briggs Typenindikator (MBTI)",
+                    "DISG-Persönlichkeitsmodell", 
+                    "Big-Five-Inventory-10 (BFI-10)"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Der **NEO-PI-R** von Costa & McCrae ist der wissenschaftliche Goldstandard mit 240 Items und 30 Facetten.",
+                "learning_point": "NEO-PI-R erfasst 5 Domänen + 6 Facetten pro Domäne = umfassendste Erfassung"
+            },
+            {
+                "id": 107,
+                "type": "basic_knowledge", 
+                "difficulty": 1,
+                "question": "Welcher genetische Einfluss wird für die Big Five angenommen?",
+                "options": [
+                    "40-60% Erblichkeit",
+                    "10-20% Erblichkeit", 
+                    "70-80% Erblichkeit",
+                    "90-100% Erblichkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Zwillingsstudien zeigen **40-60% Erblichkeit** für Persönlichkeitsmerkmale, der Rest durch individuelle Umwelt.",
+                "learning_point": "Persönlichkeit ist etwa zur Hälfte genetisch, zur Hälfte umweltbedingt."
+            },
+            {
+                "id": 108,
+                "type": "basic_knowledge",
+                "difficulty": 1,
+                "question": "Was beschreibt die Dimension 'Verträglichkeit'?",
+                "options": [
+                    "Kooperationsbereitschaft, Mitgefühl, Altruismus",
+                    "Emotionale Stabilität, Gelassenheit, Resilienz", 
+                    "Strukturiertheit, Organisation, Zielstrebigkeit",
+                    "Geselligkeit, Energie, positive Emotionalität"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Verträglichkeit** umfasst Altruismus, Mitgefühl, Kooperationsbereitschaft und zwischenmenschliches Vertrauen.",
+                "learning_point": "Hohe Verträglichkeit = hilfsbereit, mitfühlend; niedrige Verträglichkeit = wettbewerbsorientiert, skeptisch"
+            },
+            {
+                "id": 109,
+                "type": "basic_knowledge",
+                "difficulty": 1,
+                "question": "Welche Aussage zu Geschlechterstereotypen ist korrekt?",
+                "options": [
+                    "Frauen werden höhere Verträglichkeit zugeschrieben",
+                    "Männer werden höhere emotionale Labilität zugeschrieben",
+                    "Frauen werden niedrigere Gewissenhaftigkeit zugeschrieben", 
+                    "Männer werden höhere Offenheit zugeschrieben"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Studien zeigen: Frauen wird stereotypisch **höhere Verträglichkeit** zugeschrieben (Löckenhoff et al., 2014).",
+                "learning_point": "Geschlechterstereotype entsprechen oft tatsächlichen, kleinen Geschlechtsunterschieden."
+            },
+            {
+                "id": 110,
+                "type": "basic_knowledge",
+                "difficulty": 1, 
+                "question": "Was kritisierte Dan McAdams am Big-Five-Modell?",
+                "options": [
+                    "Es erklärt menschliches Verhalten nur unzureichend",
+                    "Es hat zu viele Dimensionen",
+                    "Es ist kulturell nicht übertragbar", 
+                    "Es misst nur vorübergehende Zustände"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **McAdams** kritisiert die geringe Erklärungstiefe: Das Modell könne Verhalten weder umfassend erklären noch vorhersagen.",
+                "learning_point": "Big Five beschreiben WAS jemand ist, aber nicht WIE oder WARUM jemand so handelt."
+            },
+            # 🎯 ANWENDUNGSFRAGEN (NEU)
+            {
+                "id": 111,
+                "type": "application_basic", 
+                "difficulty": 1,
+                "question": "Eine Person geht gerne auf Partys, ist gesellig und initiiert Gespräche. Welche Dimension?",
+                "options": [
+                    "Hohe Extraversion",
+                    "Hohe Offenheit",
+                    "Niedriger Neurotizismus",
+                    "Hohe Verträglichkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Hohe Extraversion** zeigt sich in Geselligkeit, Gesprächigkeit und Energie in sozialen Situationen.",
+                "learning_point": "Extraversion = Soziale Energie, Geselligkeit, positive Emotionalität"
+            },
+            {
+                "id": 112,
+                "type": "application_basic",
+                "difficulty": 1,
+                "question": "Jemand plant seinen Tag minutiös durch, dokumentiert akribisch und korrigiert Fehler. Welche Dimension?",
+                "options": [
+                    "Hohe Gewissenhaftigkeit", 
+                    "Hohe Offenheit",
+                    "Niedriger Neurotizismus", 
+                    "Hohe Verträglichkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Hohe Gewissenhaftigkeit** äußert sich in Strukturiertheit, Organisation und Sorgfalt.",
+                "learning_point": "Gewissenhaftigkeit = Organisation + Zuverlässigkeit + Zielstrebigkeit"
+            },
+            {
+                "id": 113,
+                "type": "application_basic",
+                "difficulty": 1,
+                "question": "Eine Person ist leicht gestresst, besorgt und emotional. Welche Dimension?",
+                "options": [
+                    "Hoher Neurotizismus",
+                    "Niedrige Extraversion", 
+                    "Niedrige Verträglichkeit",
+                    "Hohe Offenheit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Hoher Neurotizismus** bedeutet emotionale Labilität mit häufigen negativen Emotionen wie Angst und Besorgnis.",
+                "learning_point": "Neurotizismus = Anfälligkeit für negative Emotionen + emotionale Labilität"
+            },
+            {
+                "id": 114, 
+                "type": "application_basic",
+                "difficulty": 1,
+                "question": "Eine Person hilft Kollegen, zeigt Mitgefühl und vermeidet Konflikte. Welche Dimension?",
+                "options": [
+                    "Hohe Verträglichkeit",
+                    "Hohe Gewissenhaftigkeit",
+                    "Niedrige Extraversion",
+                    "Hohe Offenheit" 
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Hohe Verträglichkeit** zeigt sich in Altruismus, Kooperation und Konfliktvermeidung.",
+                "learning_point": "Verträglichkeit = Mitgefühl + Hilfsbereitschaft + Kooperationsorientierung"
+            },
+            {
+                "id": 115,
+                "type": "application_basic",
+                "difficulty": 1,
+                "question": "Jemand liest gerne Science-Fiction, besucht Museen und diskutiert philosophische Themen. Welche Dimension?",
+                "options": [
+                    "Hohe Offenheit für Erfahrungen",
+                    "Hohe Extraversion",
+                    "Hohe Gewissenhaftigkeit",
+                    "Niedrige Verträglichkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Hohe Offenheit** charakterisiert intellektuelle Neugier, Fantasie und Interesse an abstrakten Ideen.",
+                "learning_point": "Offenheit = Intellektuelle Neugier + Ästhetisches Empfinden + Fantasie"
+            },
+            # 🎯 WISSENSCHAFTLICHE GRUNDLAGEN (NEU)
+            {
+                "id": 116,
+                "type": "science_basic", 
+                "difficulty": 1,
+                "question": "Was bedeutet 'kriteriumsvalidität' bei Persönlichkeitstests?",
+                "options": [
+                    "Zusammenhang mit externen Erfolgskriterien",
+                    "Interne Konsistenz der Items",
+                    "Kulturelle Fairness des Tests",
+                    "Objektive Auswertbarkeit"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Kriteriumsvalidität** misst den Zusammenhang zwischen Testergebnissen und externen Kriterien wie Berufserfolg.",
+                "learning_point": "Validität = Misst der Test das, was er messen soll?"
+            },
+            {
+                "id": 117,
+                "type": "science_basic",
+                "difficulty": 1,
+                "question": "Welche Aussage zur hierarchischen Struktur der Big Five ist korrekt?",
+                "options": [
+                    "Jede Dimension hat multiple Facetten",
+                    "Es gibt nur die 5 Hauptdimensionen",
+                    "Facetten sind wichtiger als Dimensionen", 
+                    "Die Struktur ist flach ohne Ebenen"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Das Big-Five-Modell ist **hierarchisch**: 5 Domänen → 2 Aspekte pro Domäne → 6 Facetten pro Domäne.",
+                "learning_point": "Hierarchie ermöglicht differenzierte Persönlichkeitsbeschreibung"
+            },
+            {
+                "id": 118,
+                "type": "science_basic", 
+                "difficulty": 1,
+                "question": "Was ist das 'Bandbreiten-Fidelitäts-Dilemma'?",
+                "options": [
+                    "Kompromiss zwischen Breite und Genauigkeit der Messung",
+                    "Konflikt zwischen Validität und Reliabilität",
+                    "Widerspruch zwischen Theorie und Praxis", 
+                    "Dilemma bei kultureller Anpassung"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Das **Bandbreiten-Fidelitäts-Dilemma** beschreibt den Zielkonflikt zwischen breiter Erfassung (Bandbreite) und präziser Messung (Fidelität).",
+                "learning_point": "Breite vs. Tiefe: Soll der Test allgemein oder spezifisch sein?"
+            },
+            {
+                "id": 119,
+                "type": "science_basic",
+                "difficulty": 1,
+                "question": "Welche Validität haben Persönlichkeitstests für Berufserfolg?",
+                "options": [
+                    "Moderate Validität (r ≈ 0.3)",
+                    "Sehr hohe Validität (r ≈ 0.8)", 
+                    "Keine Validität (r ≈ 0.0)",
+                    "Negative Validität (r ≈ -0.2)"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ Persönlichkeitstests zeigen **moderate Validität** um r=0.3, besonders Gewissenhaftigkeit für Arbeitsleistung.",
+                "learning_point": "Kombination mit Intelligenztests erhöht Vorhersagekraft um 18%"
+            },
+            {
+                "id": 120,
+                "type": "science_basic",
+                "difficulty": 1,
+                "question": "Was bedeutet 'inkrementelle Validität'?",
+                "options": [
+                    "Mehrwert zusätzlicher Testverfahren",
+                    "Verbesserung der Reliabilität",
+                    "Kulturelle Anpassung von Tests", 
+                    "Automatisierte Testauswertung"
+                ],
+                "correct_answer": 0,
+                "explanation": "✅ **Inkrementelle Validität** beschreibt, wie sehr ein zusätzliches Verfahren die Vorhersagekraft verbessert.",
+                "learning_point": "Multimodale Diagnostik (Test + Interview) ist besser als einzelne Verfahren"
+            }
+        ]
+
+        advanced_questions = [
+            # 📊 LIKERT-INTERPRETATION (ALTE FRAGEN - KOMPLETT)
             {
                 "id": 1,
                 "type": "likert_interpretation",
@@ -124,6 +430,194 @@ class QuizModule:
                 "learning_point": "Wissenschaftliche Diagnostik erfordert kritische Reflexion methodischer Grenzen."
             }
         ]
+
+        return basic_questions + advanced_questions
+
+    # NEUE METHODEN FÜR BASIS-FRAGEN
+    def show_basic_knowledge_exercise(self, exercise_data):
+        """Zeigt Basis-Wissensfragen (Single Choice)"""
+        st.markdown(f"### 🎯 {exercise_data['question']}")
+        
+        if not st.session_state.answer_evaluated:
+            user_choice = st.radio(
+                "Wählen Sie die richtige Antwort:",
+                exercise_data["options"],
+                key=f"basic_{exercise_data['id']}"
+            )
+            
+            if st.button("📝 Antwort überprüfen", type="primary", key=f"submit_{exercise_data['id']}"):
+                user_index = exercise_data["options"].index(user_choice)
+                # Speichere Benutzerantwort
+                st.session_state.user_responses.append({
+                    'exercise_id': exercise_data['id'],
+                    'type': exercise_data['type'],
+                    'user_choice': user_index,
+                    'timestamp': time.time()
+                })
+                self.evaluate_basic_question(user_index, exercise_data)
+                st.session_state.answer_evaluated = True
+                st.rerun()
+        else:
+            self.show_exercise_feedback(exercise_data)
+
+    def show_application_basic_exercise(self, exercise_data):
+        """Zeigt Basis-Anwendungsfragen"""
+        self.show_basic_knowledge_exercise(exercise_data)  # Gleiches Format
+
+    def show_science_basic_exercise(self, exercise_data):
+        """Zeigt Basis-Wissenschaftsfragen""" 
+        self.show_basic_knowledge_exercise(exercise_data)  # Gleiches Format
+
+    def evaluate_basic_question(self, user_index, exercise_data):
+        """Bewertet Basis-Fragen"""
+        correct_index = exercise_data["correct_answer"]
+        
+        # Scoring für Gesamtergebnis
+        if user_index == correct_index:
+            st.session_state.reasoning_score += 1
+
+    # ERWEITERTE show_current_exercise METHODE
+    def show_current_exercise(self):
+        """Zeigt die aktuelle Übung"""
+        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
+            st.session_state.show_results = True
+            st.rerun()
+            return
+            
+        exercise_data = st.session_state.exercise_questions[st.session_state.current_exercise]
+        
+        # Fortschrittsanzeige
+        progress = (st.session_state.current_exercise + 1) / len(st.session_state.exercise_questions)
+        st.progress(progress)
+        st.caption(f"Übung {st.session_state.current_exercise + 1} von {len(st.session_state.exercise_questions)}")
+        
+        # Schwierigkeitsgrad
+        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
+        st.write(f"{difficulty_icons[exercise_data['difficulty']]} **Schwierigkeitsgrad {exercise_data['difficulty']}/3**")
+        
+        # ERWEITERTE Übungstyp-Handler
+        exercise_handlers = {
+            'likert_interpretation': self.show_likert_exercise,
+            'multiple_correct_behavioral': self.show_multiple_behavioral_exercise,
+            'combination_question': self.show_combination_exercise,
+            'trick_scenario': self.show_trick_scenario_exercise,
+            'ranking_task': self.show_ranking_exercise,
+            'research_critical': self.show_research_critical_exercise,
+            # NEUE HANDLER FÜR BASIS-FRAGEN
+            'basic_knowledge': self.show_basic_knowledge_exercise,
+            'application_basic': self.show_application_basic_exercise,
+            'science_basic': self.show_science_basic_exercise
+        }
+        
+        handler = exercise_handlers.get(exercise_data['type'])
+        if handler:
+            handler(exercise_data)
+        else:
+            st.error(f"Unbekannter Übungstyp: {exercise_data['type']}")
+
+    # NEUE VERGLEICHSMETHODE FÜR BASIS-FRAGEN
+    def _show_basic_comparison(self, user_response, exercise_data):
+        """Vergleich für Basis-Fragen (Single Choice)"""
+        if not user_response or 'user_choice' not in user_response:
+            st.error("Keine Benutzerantwort gefunden")
+            return
+            
+        user_choice = user_response['user_choice']
+        correct_choice = exercise_data['correct_answer']
+        
+        if user_choice == correct_choice:
+            evaluation = "✅ **RICHTIG**"
+            color = "green"
+        else:
+            evaluation = "❌ **FALSCH**"
+            color = "red"
+        
+        st.markdown(f"### {evaluation}")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**🎯 Deine Antwort:**")
+            st.write(f"**{exercise_data['options'][user_choice]}**")
+            if user_choice != correct_choice:
+                st.error("❌ Diese Antwort ist nicht korrekt")
+        
+        with col2:
+            st.markdown("**🏆 Richtige Antwort:**")
+            st.write(f"**{exercise_data['options'][correct_choice]}**")
+            st.success("✅ Das ist die korrekte Antwort")
+
+    # ERWEITERTE show_exercise_feedback METHODE
+    def show_exercise_feedback(self, exercise_data):
+        """Zeigt klare Gegenüberstellung der Antworten mit Bewertung"""
+        
+        # Hole die gespeicherte Benutzerantwort
+        user_response = st.session_state.user_responses[-1] if st.session_state.user_responses else None
+        
+        st.subheader("📊 Deine Auswertung")
+        
+        # ERWEITERTE Übungstyp-Auswertung
+        if exercise_data['type'] in ['basic_knowledge', 'application_basic', 'science_basic']:
+            self._show_basic_comparison(user_response, exercise_data)
+        elif exercise_data['type'] == 'multiple_correct_behavioral':
+            self._show_multiple_choice_comparison(user_response, exercise_data)
+        elif exercise_data['type'] == 'likert_interpretation':
+            self._show_likert_comparison(user_response, exercise_data)
+        elif exercise_data['type'] == 'combination_question':
+            self._show_combination_comparison(user_response, exercise_data)
+        elif exercise_data['type'] == 'trick_scenario':
+            self._show_trick_comparison(user_response, exercise_data)
+        elif exercise_data['type'] == 'ranking_task':
+            self._show_ranking_comparison(user_response, exercise_data)
+        elif exercise_data['type'] == 'research_critical':
+            self._show_research_comparison(user_response, exercise_data)
+        
+        # Wissenschaftliche Begründung
+        st.markdown("---")
+        st.subheader("🔬 Wissenschaftliche Einordnung")
+        
+        with st.expander("📚 **Detaillierte Erklärung**", expanded=True):
+            st.info(exercise_data["explanation"])
+            st.caption(f"💡 **Lernpunkt:** {exercise_data['learning_point']}")
+        
+        # Weiter-Button
+        st.markdown("---")
+        if st.button("➡️ **Weiter zur nächsten Übung**", 
+                    type="primary", 
+                    use_container_width=True,
+                    key=f"next_{exercise_data['id']}"):
+            
+            st.session_state.current_exercise += 1
+            st.session_state.answer_evaluated = False
+            
+            if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
+                st.session_state.show_results = True
+            
+            st.rerun()
+
+    # MODIFIZIERTE setup_training METHODE
+    def setup_training(self, training_level):
+        """Bereitet das Training vor"""
+        all_exercises = self.all_questions.copy()
+        random.shuffle(all_exercises)
+        
+        if training_level == "basic":
+            # Für Basic-Training: 8 einfache + 2 komplexe Fragen
+            basic_questions = [q for q in all_exercises if q['difficulty'] == 1]
+            advanced_questions = [q for q in all_exercises if q['difficulty'] > 1]
+            exercises = basic_questions[:8] + advanced_questions[:2]
+        else:
+            # Für Expert-Training: 5 einfache + 10 komplexe Fragen  
+            basic_questions = [q for q in all_exercises if q['difficulty'] == 1]
+            advanced_questions = [q for q in all_exercises if q['difficulty'] > 1]
+            exercises = basic_questions[:5] + advanced_questions[:10]
+        
+        st.session_state.exercise_questions = exercises
+        st.session_state.quiz_configurated = True
+        st.session_state.training_level = training_level
+        st.rerun()
+
+    # ===== AB HIER KOMPLETT UNVERÄNDERTE ALTE METHODEN =====
     
     def display_quiz(self):
         """Hauptmethode zur Anzeige des Clinical Reasoning Trainings"""
@@ -167,8 +661,8 @@ class QuizModule:
         with col1:
             st.subheader("🔬 Grundlagen-Training")
             st.markdown("""
-            - **3 Übungen** (ca. 10-15 Minuten)
-            - **Fokus:** Basis-Interpretationen und einfache Muster
+            - **10 Übungen** (ca. 15-20 Minuten)
+            - **Fokus:** Basiswissen + einfache Clinical Reasoning Fälle
             - **Perfekt für:** Einstieg in klinisches Reasoning
             """)
             if st.button("Grundlagen starten", use_container_width=True, key="btn_basic"):
@@ -177,27 +671,12 @@ class QuizModule:
         with col2:
             st.subheader("🎓 Experten-Training") 
             st.markdown("""
-            - **6 Übungen** (ca. 20-25 Minuten)
-            - **Umfassend:** Komplexe Muster und kritische Reflexion
+            - **15 Übungen** (ca. 25-30 Minuten)
+            - **Umfassend:** Basiswissen + komplexe Clinical Reasoning Fälle
             - **Vertieft:** Probabilistisches Denken und Methodenkritik
             """)
             if st.button("Experten starten", use_container_width=True, key="btn_expert"):
                 self.setup_training("expert")
-    
-    def setup_training(self, training_level):
-        """Bereitet das Training vor"""
-        all_exercises = self.all_questions.copy()
-        random.shuffle(all_exercises)
-        
-        if training_level == "basic":
-            exercises = all_exercises[:3]
-        else:
-            exercises = all_exercises[:6]
-        
-        st.session_state.exercise_questions = exercises
-        st.session_state.quiz_configurated = True
-        st.session_state.training_level = training_level
-        st.rerun()
     
     def show_training_intro(self):
         """Zeigt die Trainingseinleitung"""
@@ -225,41 +704,8 @@ class QuizModule:
             st.session_state.start_time = time.time()
             st.session_state.answer_evaluated = False
             st.rerun()
-    
-    def show_current_exercise(self):
-        """Zeigt die aktuelle Übung"""
-        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
-            st.session_state.show_results = True
-            st.rerun()
-            return
-            
-        exercise_data = st.session_state.exercise_questions[st.session_state.current_exercise]
-        
-        # Fortschrittsanzeige
-        progress = (st.session_state.current_exercise + 1) / len(st.session_state.exercise_questions)
-        st.progress(progress)
-        st.caption(f"Übung {st.session_state.current_exercise + 1} von {len(st.session_state.exercise_questions)}")
-        
-        # Schwierigkeitsgrad
-        difficulty_icons = {1: "🟢", 2: "🟡", 3: "🔴"}
-        st.write(f"{difficulty_icons[exercise_data['difficulty']]} **Schwierigkeitsgrad {exercise_data['difficulty']}/3**")
-        
-        # Übungstyp-spezifische Anzeige
-        exercise_handlers = {
-            'likert_interpretation': self.show_likert_exercise,
-            'multiple_correct_behavioral': self.show_multiple_behavioral_exercise,
-            'combination_question': self.show_combination_exercise,
-            'trick_scenario': self.show_trick_scenario_exercise,
-            'ranking_task': self.show_ranking_exercise,
-            'research_critical': self.show_research_critical_exercise
-        }
-        
-        handler = exercise_handlers.get(exercise_data['type'])
-        if handler:
-            handler(exercise_data)
-        else:
-            st.error(f"Unbekannter Übungstyp: {exercise_data['type']}")
-    
+
+    # ALTE COMPLEX FRAGEN METHODEN (UNVERÄNDERT)
     def show_likert_exercise(self, exercise_data):
         """Zeigt Likert-Skalen Übung"""
         st.markdown(f"### 📊 {exercise_data['question']}")
@@ -596,51 +1042,7 @@ class QuizModule:
         if set(user_indices) == set(correct_indices):
             st.session_state.reasoning_score += 1
 
-    def show_exercise_feedback(self, exercise_data):
-        """Zeigt klare Gegenüberstellung der Antworten mit Bewertung"""
-        
-        # Hole die gespeicherte Benutzerantwort
-        user_response = st.session_state.user_responses[-1] if st.session_state.user_responses else None
-        
-        st.subheader("📊 Deine Auswertung")
-        
-        # Übungstyp-spezifische Auswertung
-        if exercise_data['type'] == 'multiple_correct_behavioral':
-            self._show_multiple_choice_comparison(user_response, exercise_data)
-        elif exercise_data['type'] == 'likert_interpretation':
-            self._show_likert_comparison(user_response, exercise_data)
-        elif exercise_data['type'] == 'combination_question':
-            self._show_combination_comparison(user_response, exercise_data)
-        elif exercise_data['type'] == 'trick_scenario':
-            self._show_trick_comparison(user_response, exercise_data)
-        elif exercise_data['type'] == 'ranking_task':
-            self._show_ranking_comparison(user_response, exercise_data)
-        elif exercise_data['type'] == 'research_critical':
-            self._show_research_comparison(user_response, exercise_data)
-        
-        # Wissenschaftliche Begründung
-        st.markdown("---")
-        st.subheader("🔬 Wissenschaftliche Einordnung")
-        
-        with st.expander("📚 **Detaillierte Erklärung**", expanded=True):
-            st.info(exercise_data["explanation"])
-            st.caption(f"💡 **Lernpunkt:** {exercise_data['learning_point']}")
-        
-        # Weiter-Button
-        st.markdown("---")
-        if st.button("➡️ **Weiter zur nächsten Übung**", 
-                    type="primary", 
-                    use_container_width=True,
-                    key=f"next_{exercise_data['id']}"):
-            
-            st.session_state.current_exercise += 1
-            st.session_state.answer_evaluated = False
-            
-            if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
-                st.session_state.show_results = True
-            
-            st.rerun()
-
+    # VERGLEICHSMETHODEN FÜR COMPLEX-FRAGEN (UNVERÄNDERT)
     def _show_multiple_choice_comparison(self, user_response, exercise_data):
         """Vergleich für Multiple-Choice Fragen"""
         if not user_response or 'user_answers' not in user_response:
