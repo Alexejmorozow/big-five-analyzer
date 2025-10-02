@@ -1347,13 +1347,26 @@ class QuizModule:
         st.subheader("🔁 Training wiederholen oder vertiefen")
         
         col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("🔄 Neues Training starten", use_container_width=True):
+        # Nur die Quiz-spezifischen Variablen zurücksetzen
+        st.session_state.quiz_configurated = False
+        st.session_state.training_started = False  
+        st.session_state.current_exercise = 0
+        st.session_state.reasoning_score = 0
+        st.session_state.show_results = False
+        st.session_state.answer_evaluated = False
+        st.session_state.exercise_questions = []
+        st.session_state.user_responses = []
         
-        with col1:
-            if st.button("🔄 Neues Training starten", use_container_width=True):
-                for key in list(st.session_state.keys()):
-                    if key != 'clinical_initialized':
-                        del st.session_state[key]
-                st.rerun()
+        # Optionale Variablen löschen falls vorhanden
+        if 'start_time' in st.session_state:
+            del st.session_state.start_time
+        if 'training_level' in st.session_state:
+            del st.session_state.training_level
+            
+        st.rerun()
         
         with col2:
             if st.button("📚 Theorie vertiefen", use_container_width=True):
