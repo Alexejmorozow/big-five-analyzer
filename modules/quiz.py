@@ -715,17 +715,3 @@ class ClinicalReasoningQuiz:
         with col2:
             if st.button("📚 Theorie vertiefen", use_container_width=True):
                 st.info("Studieren Sie die bereitgestellten Dokumente zur Vertiefung Ihrer Kenntnisse.")
-
-def main():
-    st.set_page_config(
-        page_title="Big Five Clinical Reasoning Training",
-        page_icon="🧠",
-        layout="wide"
-    )
-    
-    # Training initialisieren und anzeigen
-    training = ClinicalReasoningQuiz()
-    training.display_quiz()
-
-if __name__ == "__main__":
-    main()
