@@ -80,7 +80,7 @@ class QuizModule:
                     "Persönlichkeitsänderung (dauerhafte Introversion)",
                     "Akute private Belastung (Situativer State)", 
                     "Burnout-Entwicklung (berufliche Überlastung)",
-                    "Strategische Anpassung (bewusste Verhaltensänderung)"
+                    "Strategische Anpassung (bewusste Verhaltensänderation)"
                 ],
                 "correct_answers": [1, 2],
                 "explanation": "⏱️ **Trait vs. State:** Plötzliche Verhaltensänderungen deuten auf akute Zustände (States) als auf Persönlichkeitsänderungen (Traits) hin.",
@@ -608,44 +608,33 @@ class QuizModule:
         with st.expander("📚 Kritische Reflexion", expanded=True):
             st.info(exercise_data["explanation"])
             st.caption(f"**Lernpunkt:** {exercise_data['learning_point']}")
-    
-def show_exercise_feedback(self, exercise_data):
-    """Zeigt Feedback zur Antwort und Weiter-Button - VOLLSTÄNDIGE LÖSUNG"""
-    
-    # Feedback zur letzten Antwort anzeigen
-    st.subheader("🎯 Auswertung Ihrer Antwort")
-    
-    # Hier könnten wir die gespeicherten Ergebnisse anzeigen
-    # Für jetzt zeigen wir allgemeines Feedback
-    st.success("✅ Antwort erfolgreich ausgewertet!")
-    
-    # Wichtige Lernpunkte hervorheben
-    st.info(f"**Lernpunkt:** {exercise_data['learning_point']}")
-    
-    # Detaillierte Erklärung
-    with st.expander("📚 Detaillierte Erklärung anzeigen", expanded=True):
-        st.write(exercise_data["explanation"])
 
-    st.markdown("---")
-    st.write("**Wenn Sie bereit für die nächste Übung sind:**")
-    
-    # Weiter-Button
-    if st.button("➡️ **Weiter zur nächsten Übung**", type="primary", use_container_width=True, 
-                key=f"next_{exercise_data['id']}"):
+    def show_exercise_feedback(self, exercise_data):
+        """Zeigt Feedback zur Antwort und Weiter-Button - KORRIGIERTE VERSION"""
         
-        st.session_state.current_exercise += 1
-        st.session_state.answer_evaluated = False
+        # Feedback zur letzten Antwort anzeigen
+        st.subheader("🎯 Auswertung Ihrer Antwort")
         
-        if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
-            st.session_state.show_results = True
+        st.success("✅ Antwort erfolgreich ausgewertet!")
+        st.info(f"**Lernpunkt:** {exercise_data['learning_point']}")
         
-        st.rerun()
+        with st.expander("📚 Detaillierte Erklärung anzeigen", expanded=True):
+            st.write(exercise_data["explanation"])
 
-def show_evaluation_visualization(self, exercise_data):
-    """Zeigt Visualisierungen der Auswertung"""
-    # Platzhalter für spätere Visualisierungen
-    st.write("📊 **Ergebnisvisualisierung**")
-    # Hier könnten die Plotly-Diagramme aus den Evaluate-Methoden wieder angezeigt werden
+        st.markdown("---")
+        st.write("**Wenn Sie bereit für die nächste Übung sind:**")
+        
+        # Weiter-Button
+        if st.button("➡️ **Weiter zur nächsten Übung**", type="primary", use_container_width=True, 
+                    key=f"next_{exercise_data['id']}"):
+            
+            st.session_state.current_exercise += 1
+            st.session_state.answer_evaluated = False
+            
+            if st.session_state.current_exercise >= len(st.session_state.exercise_questions):
+                st.session_state.show_results = True
+            
+            st.rerun()
     
     def show_training_results(self):
         """Zeigt die Trainingsergebnisse mit Plotly Visualisierungen"""
