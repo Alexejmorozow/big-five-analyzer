@@ -1227,40 +1227,6 @@ class QuizModule:
                 if user_idx != correct_idx:
                     st.write(f"Optimal: {correct_hyp}")
 
-    def _show_research_comparison(self, user_response, exercise_data):
-        """Vergleich für Forschungs-Kritik Fragen"""
-        if not user_response or 'user_answers' not in user_response:
-            st.error("Keine Benutzerantwort gefunden")
-            return
-            
-        user_choices = set(user_response['user_answers'])
-        correct_choices = set(exercise_data['correct_answers'])
-        
-        if user_choices == correct_choices:
-            evaluation = "✅ **UMFASSENDE METHODENKRITIK**"
-        elif user_choices.issubset(correct_choices):
-            evaluation = "⚠️ **TEILWEISE KRITISCH** (Einige Probleme übersehen)"
-        else:
-            evaluation = "❌ **UNVOLLSTÄNDIGE ANALYSE**"
-        
-        st.markdown(f"### {evaluation}")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**🎯 Deine Kritikpunkte:**")
-            for i, issue in enumerate(exercise_data['critical_issues']):
-                if i in user_choices:
-                    status = "✅" if i in correct_choices else "❌"
-                    st.write(f"{status} {issue}")
-        
-        with col2:
-            st.markdown("**🏆 Alle relevanten Probleme:**")
-            for i, issue in enumerate(exercise_data['critical_issues']):
-                if i in correct_choices:
-                    status = "✅" if i in user_choices else "🔸"
-                    st.write(f"{status} {issue}")
-    
     def show_training_results(self):
         """Zeigt die Trainingsergebnisse mit Plotly Visualisierungen"""
         st.header("📊 Clinical Reasoning Training abgeschlossen!")
@@ -1347,26 +1313,26 @@ class QuizModule:
         st.subheader("🔁 Training wiederholen oder vertiefen")
         
         col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("🔄 Neues Training starten", use_container_width=True):
-        # Nur die Quiz-spezifischen Variablen zurücksetzen
-        st.session_state.quiz_configurated = False
-        st.session_state.training_started = False  
-        st.session_state.current_exercise = 0
-        st.session_state.reasoning_score = 0
-        st.session_state.show_results = False
-        st.session_state.answer_evaluated = False
-        st.session_state.exercise_questions = []
-        st.session_state.user_responses = []
         
-        # Optionale Variablen löschen falls vorhanden
-        if 'start_time' in st.session_state:
-            del st.session_state.start_time
-        if 'training_level' in st.session_state:
-            del st.session_state.training_level
-            
-        st.rerun()
+        with col1:
+            if st.button("🔄 Neues Training starten", use_container_width=True):
+                # Nur die Quiz-spezifischen Variablen zurücksetzen
+                st.session_state.quiz_configurated = False
+                st.session_state.training_started = False  
+                st.session_state.current_exercise = 0
+                st.session_state.reasoning_score = 0
+                st.session_state.show_results = False
+                st.session_state.answer_evaluated = False
+                st.session_state.exercise_questions = []
+                st.session_state.user_responses = []
+                
+                # Optionale Variablen löschen falls vorhanden
+                if 'start_time' in st.session_state:
+                    del st.session_state.start_time
+                if 'training_level' in st.session_state:
+                    del st.session_state.training_level
+                    
+                st.rerun()
         
         with col2:
             if st.button("📚 Theorie vertiefen", use_container_width=True):
