@@ -1,3 +1,4 @@
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 from modules.screening import PersonalityScreener
@@ -5,8 +6,16 @@ from modules.training import TrainingModule
 from modules.quiz import QuizModule
 from modules.recommendations import RecommendationEngine
 
-# 🎨 MODERNES CSS STYLING - Einfach hier einfügen
-st.markdown("""
+# Streamlit Konfiguration MUSS ZUERST kommen!
+st.set_page_config(
+    page_title="Big Five Personality Analyzer",
+    page_icon="🧠",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# 🎨 MODERNES CSS STYLING - KORRIGIERTE VERSION
+css_styles = """
 <style>
     /* Haupt-Hintergrund */
     .main {
@@ -124,15 +133,9 @@ st.markdown("""
         margin: 10px 0;
     }
 </style>
-""", unsafe_allow_html=True)
+"""
 
-# Streamlit Konfiguration
-st.set_page_config(
-    page_title="Big Five Personality Analyzer",
-    page_icon="🧠",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.markdown(css_styles, unsafe_allow_html=True)
 
 class BigFiveApp:
     def __init__(self):
@@ -208,7 +211,7 @@ class BigFiveApp:
             - 🔍 Persönlichkeitsscreening
             - 📚 Wissenschaftliches Training  
             - ❓ Interaktives Quiz
-            - 💡 Personalisierte Empfehlations
+            - 💡 Personalisierte Empfehlungen
             """)
         
         # Navigation über Buttons
