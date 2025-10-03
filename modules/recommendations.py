@@ -307,8 +307,9 @@ class RecommendationEngine:
         for dim, level in profile.items():
             dim_name = self.get_dimension_name(dim)
             
-            with st.expander(f"📊 {dim_name} - {level.capitalize()} Ausprägung", expanded=True):
-                if level in self.recommendations[dim]:
+            # SICHERHEITSCHECK: Prüfen ob Daten für diese Level-Kombination existieren
+            if dim in self.recommendations and level in self.recommendations[dim]:
+                with st.expander(f"📊 {dim_name} - {level.capitalize()} Ausprägung", expanded=True):
                     data = self.recommendations[dim][level]
                     
                     col1, col2 = st.columns(2)
@@ -320,7 +321,6 @@ class RecommendationEngine:
                         
                         st.subheader("🎯 Entwicklungsempfehlungen")
                         for empfehlung in data["entwicklung"]:
-                            # Hervorhebung von wissenschaftlichen Hinweisen
                             if "Wissenschaftlicher Hinweis" in empfehlung:
                                 st.info(empfehlung)
                             else:
@@ -334,6 +334,10 @@ class RecommendationEngine:
                         st.subheader("💼 Passende Berufsfelder")
                         for beruf in data["berufe"]:
                             st.write(f"• {beruf}")
+            else:
+                # Fallback für durchschnittliche Werte
+                with st.expander(f"📊 {dim_name} - {level.capitalize()} Ausprägung"):
+                    st.info(f"**Ausgeglichene Ausprägung**: Ihre {dim_name} ist im durchschnittlichen Bereich - eine gute Basis für verschiedene Anforderungen!")
         
         # Berufliche Gesamtempfehlungen
         self.show_evidence_based_career_recommendations(profile, scores)
@@ -364,17 +368,28 @@ class RecommendationEngine:
         
         career_analysis = []
         
-        # Evidenzbasierte Berufsempfehlungen
+        # Evidenzbasierte Berufsempfehlungen - NUR FÜR HOCH/NIEDRIG
         for dim, level in profile.items():
+            # FILTER: Nur extreme Ausprägungen berücksichtigen
             if level in ["hoch", "niedrig"]:  # Nur bei ausgeprägten Werten
-                dim_data = self.recommendations[dim][level]
-                
-                career_analysis.append({
-                    "dimension": self.get_dimension_name(dim),
-                    "ausprägung": level,
-                    "berufe": dim_data["berufe"],
-                    "wissenschaftliche_notiz": self.get_scientific_note(dim, level)
-                })
+                # SICHERHEITSCHECK: Prüfen ob die Kombination existiert
+                if dim in self.recommendations and level in self.recommendations[dim]:
+                    dim_data = self.recommendations[dim][level]
+                    
+                    career_analysis.append({
+                        "dimension": self.get_dimension_name(dim),
+                        "ausprägung": level,
+                        "berufe": dim_data["berufe"],
+                        "wissenschaftliche_notiz": self.get_scientific_note(dim, level)
+                    })
+        
+        # Wenn keine extremen Ausprägungen vorhanden sind
+        if not career_analysis:
+            st.info("""
+            🎯 **Ihr Profil ist ausgewogen** - Sie haben keine extremen Ausprägungen in den Big Five Dimensionen. 
+            Dies bedeutet, dass Sie in vielen verschiedenen Berufsfeldern erfolgreich sein können!
+            """)
+            return
         
         # Darstellung der Berufsempfehlungen
         for analysis in career_analysis:
@@ -387,6 +402,10 @@ class RecommendationEngine:
                     st.warning(f"**Wissenschaftlicher Hinweis:** {analysis['wissenschaftliche_notiz']}")
         
         # Besondere Hinweise basierend auf Forschung
+        self.show_research_based_insights(profile)
+    
+    def show_research_based_insights(self, profile):
+        """Zeigt forschungsbasierte Erkenntnisse"""
         st.subheader("⚠️ Forschungsbasierte Karrierehinweise")
         
         if profile.get('A') == 'hoch':
