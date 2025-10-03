@@ -1,10 +1,130 @@
-import streamlit as st
 import pandas as pd
 import plotly.express as px
 from modules.screening import PersonalityScreener
 from modules.training import TrainingModule
 from modules.quiz import QuizModule
 from modules.recommendations import RecommendationEngine
+
+# 🎨 MODERNES CSS STYLING - Einfach hier einfügen
+st.markdown("""
+<style>
+    /* Haupt-Hintergrund */
+    .main {
+        background-color: #f8f9fa;
+    }
+    
+    /* 📱 MODERNE BUTTONS */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px 0 rgba(0,0,0,0.1);
+        width: 100%;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px 0 rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    /* 🎯 HEADER STYLING */
+    h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    h2 {
+        color: #34495e;
+        margin-top: 25px !important;
+        font-weight: 600;
+    }
+    
+    h3 {
+        color: #5d6d7e;
+        font-weight: 600;
+    }
+    
+    /* 📊 METRIC CARDS - Schöner gemacht */
+    [data-testid="metric-container"] {
+        background: white;
+        border: 1px solid #e1e8ed;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease;
+    }
+    
+    [data-testid="metric-container"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    
+    /* 📝 TEXT STYLING */
+    .stMarkdown {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* 🔄 PROGRESS BAR */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* 📦 CONTAINER STYLING */
+    .block-container {
+        padding-top: 2rem;
+        max-width: 1200px;
+    }
+    
+    /* 🎪 EXPANDER STYLING */
+    .streamlit-expanderHeader {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e1e8ed;
+        font-weight: 600;
+    }
+    
+    /* 📱 MOBILE OPTIMIERUNG */
+    @media (max-width: 768px) {
+        .stButton > button {
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+    }
+    
+    /* 🌈 FARBIGE INFO-BOXEN */
+    .info-box {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%);
+        border-left: 5px solid #3498db;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+    
+    .success-box {
+        background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%);
+        border-left: 5px solid #27ae60;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+    
+    .warning-box {
+        background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%);
+        border-left: 5px solid #f39c12;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # Streamlit Konfiguration
 st.set_page_config(
