@@ -14,123 +14,202 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 🎨 MODERNES CSS STYLING - KORRIGIERTE VERSION
+# 🎨 ERWEITERTES MODERNES CSS STYLING
 css_styles = """
 <style>
-    /* Haupt-Hintergrund */
+    /* Haupt-Hintergrund mit subtilem Gradient */
     .main {
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
     }
     
-    /* 📱 MODERNE BUTTONS */
+    /* 📱 MODERNE BUTTONS MIT VERSCHIEDENEN FARBEN */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 15px 25px;
-        border-radius: 12px;
+        padding: 18px 25px;
+        border-radius: 15px;
         font-weight: 600;
         font-size: 16px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px 0 rgba(0,0,0,0.1);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
         width: 100%;
+        margin: 8px 0;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px 0 rgba(0,0,0,0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     }
     
-    /* 🎯 HEADER STYLING */
+    /* Spezielle Button-Farben für verschiedene Aktionen */
+    .stButton > button[data-testid="baseButton-secondary"] {
+        background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+        box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+    }
+    
+    /* 🎯 HEADER STYLING MIT GRADIENT */
     h1 {
         color: #2c3e50;
-        border-bottom: 3px solid #667eea;
-        padding-bottom: 10px;
-        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        padding-bottom: 15px;
+        font-weight: 800;
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 30px;
     }
     
     h2 {
         color: #34495e;
-        margin-top: 25px !important;
-        font-weight: 600;
+        margin-top: 30px !important;
+        font-weight: 700;
+        border-left: 5px solid #667eea;
+        padding-left: 15px;
+        background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+        padding: 15px;
+        border-radius: 0 10px 10px 0;
     }
     
     h3 {
         color: #5d6d7e;
         font-weight: 600;
+        margin-top: 25px;
     }
     
-    /* 📊 METRIC CARDS - Schöner gemacht */
+    /* 📊 METRIC CARDS - NOCH SCHÖNER */
     [data-testid="metric-container"] {
-        background: white;
-        border: 1px solid #e1e8ed;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        transition: transform 0.2s ease;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid #667eea;
     }
     
     [data-testid="metric-container"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     }
     
-    /* 📝 TEXT STYLING */
+    /* 📝 TEXT CONTAINER STYLING */
     .stMarkdown {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
     }
     
-    /* 🔄 PROGRESS BAR */
+    /* Schöne Container für Text-Inhalte */
+    .stMarkdown p {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin: 15px 0;
+    }
+    
+    /* 🔄 PROGRESS BAR STYLING */
     .stProgress > div > div {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
     }
     
-    /* 📦 CONTAINER STYLING */
+    /* 📦 HAUPT CONTAINER */
     .block-container {
-        padding-top: 2rem;
+        padding-top: 3rem;
         max-width: 1200px;
     }
     
-    /* 🎪 EXPANDER STYLING */
+    /* 🎪 EXPANDER STYLING - MODERN */
     .streamlit-expanderHeader {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        border: 1px solid #e1e8ed;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 12px;
+        border: none;
         font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin: 10px 0;
+        padding: 20px;
+    }
+    
+    .streamlit-expanderContent {
+        background: white;
+        border-radius: 0 0 12px 12px;
+        padding: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     
     /* 📱 MOBILE OPTIMIERUNG */
     @media (max-width: 768px) {
         .stButton > button {
-            padding: 12px 20px;
-            font-size: 14px;
+            padding: 16px 20px;
+            font-size: 15px;
+        }
+        
+        h1 {
+            font-size: 2em;
         }
     }
     
-    /* 🌈 FARBIGE INFO-BOXEN */
+    /* 🌈 FARBIGE INFO-BOXEN - UPGRADED */
     .info-box {
         background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%);
         border-left: 5px solid #3498db;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
+        padding: 25px;
+        border-radius: 15px;
+        margin: 15px 0;
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
     }
     
     .success-box {
         background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%);
         border-left: 5px solid #27ae60;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
+        padding: 25px;
+        border-radius: 15px;
+        margin: 15px 0;
+        box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
     }
     
     .warning-box {
         background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%);
         border-left: 5px solid #f39c12;
+        padding: 25px;
+        border-radius: 15px;
+        margin: 15px 0;
+        box-shadow: 0 6px 20px rgba(243, 156, 18, 0.2);
+    }
+    
+    /* 🔥 BESONDERE ELEMENTE */
+    
+    /* Radio Buttons stylen */
+    .stRadio > div {
+        background: white;
         padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    
+    /* Selectbox stylen */
+    .stSelectbox > div > div {
+        background: white;
         border-radius: 10px;
-        margin: 10px 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    
+    /* Sidebar (falls verwendet) */
+    .css-1d391kg {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    /* Custom Divider */
+    .custom-divider {
+        height: 3px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        margin: 30px 0;
+        border-radius: 3px;
     }
 </style>
 """
@@ -175,66 +254,84 @@ class BigFiveApp:
             self.show_about()
     
     def show_overview(self):
-        """Startseite mit Überblick und Navigation"""
-        st.header("Willkommen beim Big Five Personality Analyzer")
+        """Startseite mit Überblick und Navigation - VISUELL VERBESSERT"""
         
+        # 📊 INFO CARDS IN ZWEI SPALTEN
         col1, col2 = st.columns([2, 1])
         
         with col1:
             st.markdown("""
-            ### Was sind die Big Five?
-            
-            Das **Fünf-Faktoren-Modell** (Big Five) ist das international anerkannte Standardmodell 
-            in der Persönlichkeitsforschung. Es beschreibt die menschliche Persönlichkeit anhand 
-            von fünf Hauptdimensionen:
-            
-            - **O**ffenheit für Erfahrungen
-            - **G**ewissenhaftigkeit  
-            - **E**xtraversion
-            - **V**erträglichkeit
-            - **N**eurotizismus
-            
-            ### Wissenschaftliche Grundlage
-            
-            - Basierend auf dem lexikalischen Ansatz
-            - Über 3.000 wissenschaftliche Studien
-            - 40-60% genetische Komponente
-            - Kulturübergreifend validiert
-            """)
+            <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Was sind die Big Five?</h3>
+                <p>Das <strong>Fünf-Faktoren-Modell</strong> ist das international anerkannte Standardmodell 
+                in der Persönlichkeitsforschung mit über 3.000 wissenschaftlichen Studien.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0;">
+                    <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); padding: 15px; border-radius: 12px; border-left: 4px solid #3498db;">
+                        <strong>Offenheit</strong><br>Kreativität & Neugier
+                    </div>
+                    <div style="background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%); padding: 15px; border-radius: 12px; border-left: 4px solid #27ae60;">
+                        <strong>Gewissenhaftigkeit</strong><br>Ordnung & Zuverlässigkeit
+                    </div>
+                    <div style="background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%); padding: 15px; border-radius: 12px; border-left: 4px solid #f39c12;">
+                        <strong>Extraversion</strong><br>Geselligkeit & Energie
+                    </div>
+                    <div style="background: linear-gradient(135deg, #fde8e8 0%, #f9d6d6 100%); padding: 15px; border-radius: 12px; border-left: 4px solid #e74c3c;">
+                        <strong>Verträglichkeit</strong><br>Kooperation & Mitgefühl
+                    </div>
+                    <div style="background: linear-gradient(135deg, #f3e8fd 0%, #e9d6fd 100%); padding: 15px; border-radius: 12px; border-left: 4px solid #9b59b6; grid-column: 1 / -1;">
+                        <strong>Neurotizismus</strong><br>Emotionale Stabilität
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         
         with col2:
-            st.image("https://via.placeholder.com/300x200/4B7BEC/FFFFFF?text=Big+Five+Model", 
-                    caption="Das OCEAN-Modell der Persönlichkeit")
-            
-            st.info("""
-            **Funktionen:**
-            - 🔍 Persönlichkeitsscreening
-            - 📚 Wissenschaftliches Training  
-            - ❓ Interaktives Quiz
-            - 💡 Personalisierte Empfehlungen
-            """)
+            st.markdown("""
+            <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); height: 100%;">
+                <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Schnellstart</h3>
+                <p style="color: #5d6d7e;">Wählen Sie eine Funktion um zu starten:</p>
+                
+                <div style="margin-top: 20px;">
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <strong>Screening</strong><br>Ihr Persönlichkeitsprofil
+                    </div>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <strong>Training</strong><br>Wissenschaftliche Grundlagen
+                    </div>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <strong>Empfehlungen</strong><br>Personalisierte Tipps
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         
-        # Navigation über Buttons
-        st.markdown("---")
-        st.subheader("🚀 Starten Sie hier")
+        # 🎮 NAVIGATION MIT CUSTOM DIVIDER
+        st.markdown('<div class="custom-divider"></div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="color: #2c3e50; margin-bottom: 10px;">App Navigation</h2>
+            <p style="color: #5d6d7e; font-size: 1.1em;">Wählen Sie einen Bereich um zu starten</p>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Erste Button-Reihe
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("**🔍 Screening starten**", use_container_width=True, 
+            if st.button("**Screening starten**", use_container_width=True, 
                         help="30 oder 60 Fragen - Ihr persönliches Big Five Profil"):
                 st.session_state.current_page = "screening"
                 st.rerun()
         
         with col2:
-            if st.button("**📚 Training & Wissen**", use_container_width=True, 
+            if st.button("**Training & Wissen**", use_container_width=True, 
                         help="Lernen Sie alles über die Big Five Dimensionen"):
                 st.session_state.current_page = "training"
                 st.rerun()
         
         with col3:
-            if st.button("**❓ Quiz & Test**", use_container_width=True, 
+            if st.button("**Quiz & Test**", use_container_width=True, 
                         help="Testen Sie Ihr Wissen über Persönlichkeitspsychologie"):
                 st.session_state.current_page = "quiz"
                 st.rerun()
@@ -244,7 +341,7 @@ class BigFiveApp:
         
         with col4:
             button_disabled = st.session_state.scores is None
-            if st.button("**💡 Meine Empfehlungen**", 
+            if st.button("**Meine Empfehlungen**", 
                         disabled=button_disabled,
                         use_container_width=True, 
                         help="Evidenzbasierte Entwicklungsempfehlungen" if not button_disabled else "Bitte zuerst Screening durchführen"):
@@ -253,26 +350,28 @@ class BigFiveApp:
                     st.rerun()
         
         with col5:
-            if st.button("**ℹ️ Über die App**", use_container_width=True, 
+            if st.button("**Über die App**", use_container_width=True, 
                         help="Informationen zur wissenschaftlichen Grundlage"):
                 st.session_state.current_page = "about"
                 st.rerun()
         
         with col6:
-            if st.button("**🔄 Zurück zur Startseite**", use_container_width=True, 
+            if st.button("**Startseite**", use_container_width=True, 
                         help="Zurück zur Übersicht"):
                 st.session_state.current_page = "overview"
                 st.rerun()
         
         # Status-Anzeige wenn Screening bereits durchgeführt
         if st.session_state.scores is not None:
-            st.success("""
-            🎉 **Sie haben bereits ein Screening abgeschlossen!**
-            Besuchen Sie die **Empfehlungen** für personalisiertes Feedback.
-            """)
+            st.markdown("""
+            <div class="success-box">
+                <strong>Sie haben bereits ein Screening abgeschlossen!</strong><br>
+                Besuchen Sie die <strong>Empfehlungen</strong> für personalisiertes Feedback.
+            </div>
+            """, unsafe_allow_html=True)
             
             # Mini-Ergebnisvorschau
-            st.subheader("📊 Ihr aktuelles Profil")
+            st.subheader("Ihr aktuelles Profil")
             cols = st.columns(5)
             dimension_names = {
                 'O': 'Offenheit', 'C': 'Gewissenhaftigkeit', 'E': 'Extraversion',
@@ -322,7 +421,11 @@ class BigFiveApp:
     
     def show_screening_results(self, scores, profile):
         """Zeigt die Screening-Ergebnisse"""
-        st.success("🎉 Auswertung abgeschlossen!")
+        st.markdown("""
+        <div class="success-box">
+            <strong>Auswertung abgeschlossen!</strong> Ihr persönliches Big Five Profil wurde erstellt.
+        </div>
+        """, unsafe_allow_html=True)
         
         # Radar-Diagramm
         fig = self.screener.create_radar_chart(scores)
@@ -371,15 +474,17 @@ class BigFiveApp:
             st.plotly_chart(fig, use_container_width=True)
         
         # Nächste Schritte
-        st.info("""
-        **Nächste Schritte:**
-        - Besuchen Sie das **Training**-Modul, um mehr über die Big Five zu lernen
-        - Testen Sie Ihr Wissen im **Quiz**
-        - Holen Sie sich **personalisiertes Feedback** im Empfehlungs-Modul
-        """)
+        st.markdown("""
+        <div class="info-box">
+            <strong>Nächste Schritte:</strong><br>
+            • Besuchen Sie das <strong>Training</strong>-Modul, um mehr über die Big Five zu lernen<br>
+            • Testen Sie Ihr Wissen im <strong>Quiz</strong><br>
+            • Holen Sie sich <strong>personalisiertes Feedback</strong> im Empfehlungs-Modul
+        </div>
+        """, unsafe_allow_html=True)
         
         # Reset Button
-        if st.button("🔄 Neues Screening starten"):
+        if st.button("Neues Screening starten"):
             st.session_state.scores = None
             st.session_state.profile = None
             st.rerun()
@@ -426,21 +531,24 @@ class BigFiveApp:
     def show_model_overview(self):
         """Zeigt einen Überblick über das Big-Five-Modell"""
         st.markdown("""
-        ## Das Fünf-Faktoren-Modell (Big Five)
-        
-        ### Historische Entwicklung
-        
-        Das Big-Five-Modell entwickelte sich aus dem **lexikalischen Ansatz**, der besagt, 
-        dass alle wichtigen Persönlichkeitsmerkmale in der natürlichen Sprache kodiert sind.
-        
-        **Wichtige Meilensteine:**
-        - 1936: Allport & Odbert identifizieren 18.000 Persönlichkeitsbegriffe
-        - 1960er: Cattell reduziert auf 16 Faktoren
-        - 1980er: Fünf stabile Faktoren werden international bestätigt
-        - 1990er: NEO-PI-R etabliert standardisiertes Messinstrument
-        
-        ### Die fünf Dimensionen
-        """)
+        <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <h2 style="color: #2c3e50; margin-top: 0;">Das Fünf-Faktoren-Modell (Big Five)</h2>
+            
+            <h3 style="color: #34495e;">Historische Entwicklung</h3>
+            <p>Das Big-Five-Modell entwickelte sich aus dem <strong>lexikalischen Ansatz</strong>, der besagt, 
+            dass alle wichtigen Persönlichkeitsmerkmale in der natürlichen Sprache kodiert sind.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                <strong>Wichtige Meilensteine:</strong><br>
+                • 1936: Allport & Odbert identifizieren 18.000 Persönlichkeitsbegriffe<br>
+                • 1960er: Cattell reduziert auf 16 Faktoren<br>
+                • 1980er: Fünf stabile Faktoren werden international bestätigt<br>
+                • 1990er: NEO-PI-R etabliert standardisiertes Messinstrument
+            </div>
+            
+            <h3 style="color: #34495e;">Die fünf Dimensionen</h3>
+        </div>
+        """, unsafe_allow_html=True)
         
         dimensions_info = {
             'O': {
@@ -480,9 +588,19 @@ class BigFiveApp:
                 st.write(f"**Beschreibung:** {info['description']}")
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.success(f"**Hohe Ausprägung:** {info['high']}")
+                    st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%); 
+                                padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60;">
+                        <strong>Hohe Ausprägung:</strong><br>{info['high']}
+                    </div>
+                    """, unsafe_allow_html=True)
                 with col2:
-                    st.info(f"**Niedrige Ausprägung:** {info['low']}")
+                    st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); 
+                                padding: 15px; border-radius: 10px; border-left: 4px solid #3498db;">
+                        <strong>Niedrige Ausprägung:</strong><br>{info['low']}
+                    </div>
+                    """, unsafe_allow_html=True)
 
     def show_quiz(self):
         """Quiz-Seite"""
@@ -502,10 +620,12 @@ class BigFiveApp:
         st.header("Personalisiertes Feedback")
         
         if st.session_state.scores is None:
-            st.warning("""
-            ⚠️ Bitte führen Sie zuerst ein Screening durch, um personalisierte 
-            Empfehlungen zu erhalten.
-            """)
+            st.markdown("""
+            <div class="warning-box">
+                <strong>Bitte führen Sie zuerst ein Screening durch</strong>, um personalisierte 
+                Empfehlungen zu erhalten.
+            </div>
+            """, unsafe_allow_html=True)
             
             if st.button("Zum Screening gehen"):
                 st.session_state.current_page = "screening"
@@ -527,7 +647,7 @@ class BigFiveApp:
         )
         
         for goal, actions in development_plan.items():
-            with st.expander(f"🎯 {goal}"):
+            with st.expander(f"{goal}"):
                 for action in actions:
                     st.write(f"• {action}")
     
@@ -579,33 +699,40 @@ class BigFiveApp:
         st.header("Über diese Anwendung")
         
         st.markdown("""
-        ### Wissenschaftliche Grundlage
-        
-        Diese Anwendung basiert auf dem **Fünf-Faktoren-Modell** (Big Five), 
-        dem international anerkannten Standardmodell der Persönlichkeitsforschung.
-        
-        **Wichtige Quellen:**
-        - Costa, P. T., & McCrae, R. R. (1992). NEO-PI-R Professional Manual
-        - Goldberg, L. R. (1993). The structure of phenotypic personality traits
-        - John, O. P., & Srivastava, S. (1999). The Big Five trait taxonomy
-        
-        ### Technische Umsetzung
-        
-        **Funktionen:**
-        - Screening mit verhaltensbasierten Fragebögen
-        - ML-gestützte Profilanalyse
-        - Wissenschaftlich fundiertes Training
-        - Interaktive Wissensüberprüfung
-        - Personalisierte Handlungsempfehlungen
-        
-        **Hinweis:** Diese Anwendung dient Bildungszwecken und ersetzt keine 
-        professionelle psychologische Beratung.
-        
-        ### Entwickler
-        
-        Diese Streamlit-Anwendung wurde entwickelt, um das Big-five-Modell 
-        zugänglich und anwendbar zu machen.
-        """)
+        <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <h3 style="color: #2c3e50; margin-top: 0;">Wissenschaftliche Grundlage</h3>
+            
+            <p>Diese Anwendung basiert auf dem <strong>Fünf-Faktoren-Modell</strong> (Big Five), 
+            dem international anerkannten Standardmodell der Persönlichkeitsforschung.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                <strong>Wichtige Quellen:</strong><br>
+                • Costa, P. T., & McCrae, R. R. (1992). NEO-PI-R Professional Manual<br>
+                • Goldberg, L. R. (1993). The structure of phenotypic personality traits<br>
+                • John, O. P., & Srivastava, S. (1999). The Big Five trait taxonomy
+            </div>
+            
+            <h3 style="color: #2c3e50;">Technische Umsetzung</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); padding: 15px; border-radius: 10px;">
+                    <strong>Funktionen:</strong><br>
+                    • Screening mit Fragebögen<br>
+                    • Profilanalyse<br>
+                    • Wissenschaftliches Training<br>
+                    • Personalisierte Empfehlungen
+                </div>
+                <div style="background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%); padding: 15px; border-radius: 10px;">
+                    <strong>Hinweis:</strong><br>
+                    Diese Anwendung dient Bildungszwecken und ersetzt keine professionelle psychologische Beratung.
+                </div>
+            </div>
+            
+            <h3 style="color: #2c3e50;">Entwickler</h3>
+            <p>Diese Streamlit-Anwendung wurde entwickelt, um das Big-Five-Modell 
+            zugänglich und anwendbar zu machen.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Hauptanwendung ausführen
 if __name__ == "__main__":
