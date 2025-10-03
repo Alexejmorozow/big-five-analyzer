@@ -9,29 +9,17 @@ class PersonalityScreener:
         self.randomized_questions = None
         
     def initialize_dimensions(self):
-        """Initialisiert die NEO PI R Struktur mit Facetten"""
+        """Initialisiert die NEO PI R Struktur mit 30 Facetten"""
         return {
-            'O': {
-                'name': 'Offenheit für Erfahrungen',
+            'N': {
+                'name': 'Neurotizismus',
                 'facets': {
-                    'O1': {'name': 'Fantasie', 'questions': [25, 26], 'score': 0},
-                    'O2': {'name': 'Ästhetik', 'questions': [27, 28], 'score': 0},
-                    'O3': {'name': 'Gefühle', 'questions': [29, 30], 'score': 0},
-                    'O4': {'name': 'Handlungen', 'questions': [31, 32], 'score': 0},
-                    'O5': {'name': 'Ideen', 'questions': [33, 34], 'score': 0},
-                    'O6': {'name': 'Normen und Werte', 'questions': [35, 36], 'score': 0}
-                },
-                'total_score': 0
-            },
-            'C': {
-                'name': 'Gewissenhaftigkeit',
-                'facets': {
-                    'C1': {'name': 'Kompetenz', 'questions': [49, 50], 'score': 0},
-                    'C2': {'name': 'Ordnungsliebe', 'questions': [51, 52], 'score': 0},
-                    'C3': {'name': 'Pflichtbewusstsein', 'questions': [53, 54], 'score': 0},
-                    'C4': {'name': 'Leistungsstreben', 'questions': [55, 56], 'score': 0},
-                    'C5': {'name': 'Selbstdisziplin', 'questions': [57, 58], 'score': 0},
-                    'C6': {'name': 'Besonnenheit', 'questions': [59, 60], 'score': 0}
+                    'N1': {'name': 'Ängstlichkeit', 'questions': [1, 2], 'score': 0},
+                    'N2': {'name': 'Reizbarkeit', 'questions': [3, 4], 'score': 0},
+                    'N3': {'name': 'Depression', 'questions': [5, 6], 'score': 0},
+                    'N4': {'name': 'Soziale Befangenheit', 'questions': [7, 8], 'score': 0},
+                    'N5': {'name': 'Impulsivität', 'questions': [9, 10], 'score': 0},
+                    'N6': {'name': 'Verletzlichkeit', 'questions': [11, 12], 'score': 0}
                 },
                 'total_score': 0
             },
@@ -47,6 +35,18 @@ class PersonalityScreener:
                 },
                 'total_score': 0
             },
+            'O': {
+                'name': 'Offenheit für Erfahrungen',
+                'facets': {
+                    'O1': {'name': 'Fantasie', 'questions': [25, 26], 'score': 0},
+                    'O2': {'name': 'Ästhetik', 'questions': [27, 28], 'score': 0},
+                    'O3': {'name': 'Gefühle', 'questions': [29, 30], 'score': 0},
+                    'O4': {'name': 'Handlungen', 'questions': [31, 32], 'score': 0},
+                    'O5': {'name': 'Ideen', 'questions': [33, 34], 'score': 0},
+                    'O6': {'name': 'Normen und Werte', 'questions': [35, 36], 'score': 0}
+                },
+                'total_score': 0
+            },
             'A': {
                 'name': 'Verträglichkeit',
                 'facets': {
@@ -59,22 +59,22 @@ class PersonalityScreener:
                 },
                 'total_score': 0
             },
-            'N': {
-                'name': 'Neurotizismus',
+            'C': {
+                'name': 'Gewissenhaftigkeit',
                 'facets': {
-                    'N1': {'name': 'Ängstlichkeit', 'questions': [1, 2], 'score': 0},
-                    'N2': {'name': 'Reizbarkeit', 'questions': [3, 4], 'score': 0},
-                    'N3': {'name': 'Depression', 'questions': [5, 6], 'score': 0},
-                    'N4': {'name': 'Soziale Befangenheit', 'questions': [7, 8], 'score': 0},
-                    'N5': {'name': 'Impulsivität', 'questions': [9, 10], 'score': 0},
-                    'N6': {'name': 'Verletzlichkeit', 'questions': [11, 12], 'score': 0}
+                    'C1': {'name': 'Kompetenz', 'questions': [49, 50], 'score': 0},
+                    'C2': {'name': 'Ordnungsliebe', 'questions': [51, 52], 'score': 0},
+                    'C3': {'name': 'Pflichtbewusstsein', 'questions': [53, 54], 'score': 0},
+                    'C4': {'name': 'Leistungsstreben', 'questions': [55, 56], 'score': 0},
+                    'C5': {'name': 'Selbstdisziplin', 'questions': [57, 58], 'score': 0},
+                    'C6': {'name': 'Besonnenheit', 'questions': [59, 60], 'score': 0}
                 },
                 'total_score': 0
             }
         }
     
     def load_questions(self):
-        """Lädt alle 60 Fragen mit der neuen Struktur"""
+        """Lädt alle 60 Fragen korrekt nach Facetten verteilt"""
         questions = [
             # Neurotizismus (N) - Fragen 1-12
             {"id": 1, "text": "Ich mache mir oft Sorgen über Dinge, die schiefgehen könnten.", "dimension": "N", "facet": "N1"},
@@ -149,30 +149,17 @@ class PersonalityScreener:
         
         return questions
 
-    # KOMPATIBILITÄTS-METHODEN für alte app.py
+    # KOMPATIBILITÄTS-METHODEN für alte app.py (FEHLERFREI)
     def quick_screening(self):
         """Kompatibilitätsmethode für alte app.py - Kurzversion mit 10 Fragen"""
         st.info("🚀 **Schnelles Screening mit 10 Fragen**")
-        return self._run_legacy_screening("short")
-    
-    def behavioral_questionnaire(self):
-        """Kompatibilitätsmethode für alte app.py - Vollversion"""
-        st.info("🔬 **Detaillierter Fragebogen mit 60 Fragen**") 
-        return self._run_legacy_screening("long")
-    
-    def _run_legacy_screening(self, version_type):
-        """Führt das Screening im Legacy-Modus durch"""
-        self._initialize_screening_state()
-        st.session_state.screening_version = version_type
-        st.session_state.screening_started = True
-        self.randomize_questions(version_type)
         
-        # Fragebogen anzeigen
-        questions = self.randomized_questions
+        # Erstelle einfache Fragen für Kompatibilität
+        questions = self.create_short_version()
         responses = {}
         
         for i, question in enumerate(questions):
-            st.write(f"**Frage {i+1}/{len(questions)}:** {question['text']}")
+            st.write(f"**{question['text']}**")
             
             response = st.radio(
                 "Wie sehr stimmen Sie zu?",
@@ -184,24 +171,99 @@ class PersonalityScreener:
                     "Stimme eher zu",
                     "Stimme völlig zu"
                 ][x-1],
-                key=f"legacy_{question['id']}"
+                key=f"quick_{question['id']}_{i}"  # EINDEUTIGE Keys
             )
             responses[question['id']] = response
         
-        if st.button("Auswerten", type="primary"):
-            st.session_state.screening_responses = responses
-            st.session_state.screening_complete = True
-            scores = self.calculate_scores()
+        # EINDEUTIGER Button-Key
+        if st.button("Auswerten", type="primary", key="quick_evaluate"):
+            scores = self._calculate_short_scores(responses)
             return scores
         
-        return {dim: 50 for dim in ['O', 'C', 'E', 'A', 'N']}  # Default falls nicht ausgewertet
+        return None  # Keine Default-Werte mehr
+    
+    def behavioral_questionnaire(self):
+        """Kompatibilitätsmethode für alte app.py - Vollversion"""
+        st.info("🔬 **Detaillierter Fragebogen mit 60 Fragen**")
+        
+        questions = self.all_questions
+        responses = {}
+        
+        for i, question in enumerate(questions):
+            st.write(f"**{question['text']}**")
+            
+            response = st.radio(
+                "Wie sehr stimmen Sie zu?",
+                options=[1, 2, 3, 4, 5],
+                format_func=lambda x: [
+                    "Stimme überhaupt nicht zu",
+                    "Stimme eher nicht zu", 
+                    "Neutral / teils-teils",
+                    "Stimme eher zu",
+                    "Stimme völlig zu"
+                ][x-1],
+                key=f"full_{question['id']}_{i}"  # EINDEUTIGE Keys
+            )
+            responses[question['id']] = response
+        
+        # EINDEUTIGER Button-Key
+        if st.button("Auswerten", type="primary", key="full_evaluate"):
+            scores = self._calculate_full_scores(responses)
+            return scores
+        
+        return None  # Keine Default-Werte mehr
 
-    # NEUE METHODEN für erweitertes System
+    def _calculate_short_scores(self, responses):
+        """Berechnet Scores für Kurzversion"""
+        dimension_scores = {dim: 0 for dim in ['O', 'C', 'E', 'A', 'N']}
+        dimension_counts = {dim: 0 for dim in ['O', 'C', 'E', 'A', 'N']}
+        
+        for question in self.create_short_version():
+            if question['id'] in responses:
+                dimension = question['dimension']
+                dimension_scores[dimension] += responses[question['id']]
+                dimension_counts[dimension] += 1
+        
+        # Normalisiere auf 0-100 Skala
+        final_scores = {}
+        for dim in dimension_scores:
+            if dimension_counts[dim] > 0:
+                final_scores[dim] = (dimension_scores[dim] / dimension_counts[dim]) * 20
+            else:
+                final_scores[dim] = 50
+        
+        return final_scores
+
+    def _calculate_full_scores(self, responses):
+        """Berechnet Scores für Vollversion"""
+        # Reset Scores
+        for dim in self.dimensions.values():
+            dim['total_score'] = 0
+            for facet in dim['facets'].values():
+                facet['score'] = 0
+        
+        # Berechne Facet-Scores
+        for question in self.all_questions:
+            if question['id'] in responses:
+                response = responses[question['id']]
+                dimension = question['dimension']
+                facet = question['facet']
+                
+                self.dimensions[dimension]['facets'][facet]['score'] += response
+        
+        # Berechne Dimension-Scores
+        dimension_scores = {}
+        for dim_code, dim_data in self.dimensions.items():
+            facet_scores = [facet['score'] for facet in dim_data['facets'].values()]
+            dim_data['total_score'] = sum(facet_scores) / len(facet_scores) * 10
+            dimension_scores[dim_code] = dim_data['total_score']
+        
+        return dimension_scores
+
     def create_short_version(self):
         """Erstellt eine Kurzversion mit 10 Fragen (2 pro Dimension)"""
         short_questions = []
         
-        # Wähle je 2 repräsentative Fragen pro Dimension
         dimension_representatives = {
             'O': [31, 33],  # Handlungen + Ideen
             'C': [49, 55],  # Kompetenz + Leistungsstreben  
@@ -217,30 +279,11 @@ class PersonalityScreener:
         
         return short_questions
 
-    def randomize_questions(self, version_type):
-        """Mischt Fragen für die gewählte Version"""
-        if version_type == "short":
-            questions = self.create_short_version()
-        else:  # long version
-            questions = self.all_questions.copy()
-        
-        random.shuffle(questions)
-        self.randomized_questions = questions
-        return questions
-
-    # ... (restliche Methoden bleiben gleich wie in der vorherigen Version)
-    def display_questionnaire(self):
-        """Zeigt den Fragebogen für die gewählte Version an"""
-        # Implementation wie vorher
-        pass
-    
-    def calculate_scores(self):
-        """Berechnet die Scores aus den gespeicherten Antworten"""
-        # Implementation wie vorher  
-        pass
-    
     def classify_profile(self, scores):
         """Klassifiziert das Persönlichkeitsprofil"""
+        if scores is None:
+            return {dim: "durchschnittlich" for dim in ['O', 'C', 'E', 'A', 'N']}
+            
         profile = {}
         for dim, score in scores.items():
             if score >= 70:
@@ -250,9 +293,12 @@ class PersonalityScreener:
             else:
                 profile[dim] = "durchschnittlich"
         return profile
-    
+
     def calculate_similarity(self, user_scores):
         """Kompatibilitätsmethode für Ähnlichkeitsanalyse"""
+        if user_scores is None:
+            return {}
+            
         similarities = {}
         typical_profiles = {
             "Kreativer Innovator": {"O": 80, "C": 60, "E": 65, "A": 55, "N": 45},
@@ -265,25 +311,13 @@ class PersonalityScreener:
         for profile_name, typical_scores in typical_profiles.items():
             total_diff = 0
             for dim in ['O', 'C', 'E', 'A', 'N']:
-                diff = abs(user_scores[dim] - typical_scores[dim])
+                diff = abs(user_scores.get(dim, 50) - typical_scores[dim])
                 total_diff += diff
             similarity = max(0, 100 - (total_diff / 5))
             similarities[profile_name] = similarity
         
         return similarities
 
-    def _initialize_screening_state(self):
-        """Initialisiert den Session State für das Screening"""
-        if 'screening_initialized' not in st.session_state:
-            st.session_state.screening_initialized = True
-            st.session_state.screening_started = False
-            st.session_state.screening_complete = False
-            st.session_state.current_question = 0
-            st.session_state.screening_responses = {}
-            st.session_state.show_recommendations = False
-            st.session_state.screening_version = "long"
-
 # Hauptprogramm
 if __name__ == "__main__":
     screener = PersonalityScreener()
-    screener.run_screening()
