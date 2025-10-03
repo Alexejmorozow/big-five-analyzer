@@ -131,13 +131,11 @@ class BigFiveApp:
         else:
             scores = self.screener.behavioral_questionnaire()
         
-        if st.button("Auswerten", type="primary"):
-            # Profil klassifizieren
+        # Ergebnisse automatisch anzeigen wenn scores vorhanden
+        if scores is not None:
             profile = self.screener.classify_profile(scores)
             st.session_state.scores = scores
             st.session_state.profile = profile
-            
-            # Ergebnisse anzeigen
             self.show_screening_results(scores, profile)
     
     def show_screening_results(self, scores, profile):
@@ -146,7 +144,10 @@ class BigFiveApp:
         
         # Radar-Diagramm
         fig = self.screener.create_radar_chart(scores)
-        st.plotly_chart(fig, use_container_width=True)
+        if fig is not None:
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("Radar-Diagramm konnte nicht erstellt werden.")
         
         # Detaillierte Ergebnisse
         st.subheader("Detaillierte Auswertung")
@@ -172,19 +173,20 @@ class BigFiveApp:
         st.subheader("Ähnlichkeitsanalyse")
         similarities = self.screener.calculate_similarity(scores)
         
-        similarity_df = pd.DataFrame(
-            list(similarities.items()),
-            columns=['Profiltyp', 'Ähnlichkeit (%)']
-        )
-        
-        fig = px.bar(
-            similarity_df,
-            x='Ähnlichkeit (%)',
-            y='Profiltyp',
-            orientation='h',
-            title="Ähnlichkeit mit typischen Profilen"
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        if similarities:
+            similarity_df = pd.DataFrame(
+                list(similarities.items()),
+                columns=['Profiltyp', 'Ähnlichkeit (%)']
+            )
+            
+            fig = px.bar(
+                similarity_df,
+                x='Ähnlichkeit (%)',
+                y='Profiltyp',
+                orientation='h',
+                title="Ähnlichkeit mit typischen Profilen"
+            )
+            st.plotly_chart(fig, use_container_width=True)
         
         # Nächste Schritte
         st.info("""
