@@ -1,4 +1,6 @@
 import streamlit as st
+import streamlit as st
+st.write("🔄 NEUE VERSION GELADEN - Screening korrigiert")  # Debug-Line
 import pandas as pd
 import plotly.express as px
 from modules.screening import PersonalityScreener
@@ -122,11 +124,11 @@ class BigFiveApp:
         
         screening_method = st.radio(
             "Wählen Sie eine Screening-Methode:",
-            ["Schnelles Screening (10 Fragen)", "Ausführlicher Fragebogen (30 Fragen)"],
+            ["Schnelles Screening (30 Fragen)", "Ausführlicher Fragebogen (60 Fragen)"],
             horizontal=True
         )
         
-        if screening_method == "Schnelles Screening (10 Fragen)":
+        if screening_method == "Schnelles Screening (30 Fragen)":
             scores = self.screener.quick_screening()
         else:
             scores = self.screener.behavioral_questionnaire()
