@@ -8,6 +8,14 @@ class PersonalityScreener:
         self.dimensions = self.initialize_dimensions()
         self.all_questions = self.load_questions()
         
+        # Session State für Screening initialisieren
+        if 'screening_responses' not in st.session_state:
+            st.session_state.screening_responses = {}
+        if 'screening_completed' not in st.session_state:
+            st.session_state.screening_completed = False
+        if 'current_screening_type' not in st.session_state:
+            st.session_state.current_screening_type = None
+        
     def initialize_dimensions(self):
         """Initialisiert die NEO PI R Struktur mit 30 Facetten"""
         return {
@@ -98,12 +106,23 @@ class PersonalityScreener:
         """Kurzversion mit 30 Fragen"""
         st.info("🚀 **Schnelles Screening mit 30 Fragen**")
         
+        # Screening State setzen
+        st.session_state.current_screening_type = "quick"
+        
         # Erste 30 Fragen für Kurzversion
         short_questions = self.all_questions[:30]
-        responses = {}
+        
+        # Fortschrittsbalken
+        completed_questions = len([qid for qid in st.session_state.screening_responses.keys() if qid <= 30])
+        progress = completed_questions / 30
+        st.progress(progress)
+        st.write(f"Fortschritt: {completed_questions}/30 Fragen beantwortet")
         
         for i, question in enumerate(short_questions):
             st.write(f"**Frage {i+1}/30:** {question['text']}")
+            
+            # Antwort aus Session State laden oder Standardwert setzen
+            current_response = st.session_state.screening_responses.get(question['id'], 3)
             
             response = st.radio(
                 "Wie sehr stimmen Sie zu?",
@@ -115,14 +134,23 @@ class PersonalityScreener:
                     "Stimme eher zu",
                     "Stimme völlig zu"
                 ][x-1],
-                key=f"quick_{question['id']}"
+                key=f"quick_{question['id']}",
+                index=current_response-1  # Index basierend auf gespeicherter Antwort
             )
-            responses[question['id']] = response
+            
+            # Antwort sofort in Session State speichern
+            st.session_state.screening_responses[question['id']] = response
         
-        # NUR EIN Button
-        if st.button("Auswerten", type="primary", key="quick_evaluate_unique"):
-            scores = self._calculate_scores(responses, is_short=True)
-            return scores
+        # Auswerten-Button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🔍 Screening Auswerten", type="primary", use_container_width=True):
+                if len(st.session_state.screening_responses) >= 30:
+                    scores = self._calculate_scores(st.session_state.screening_responses, is_short=True)
+                    st.session_state.screening_completed = True
+                    return scores
+                else:
+                    st.warning("Bitte beantworten Sie alle 30 Fragen bevor Sie auswerten.")
         
         return None
 
@@ -130,11 +158,22 @@ class PersonalityScreener:
         """Vollversion mit 60 Fragen"""
         st.info("🔬 **Detaillierter Fragebogen mit 60 Fragen**")
         
+        # Screening State setzen
+        st.session_state.current_screening_type = "full"
+        
         questions = self.all_questions
-        responses = {}
+        
+        # Fortschrittsbalken
+        completed_questions = len(st.session_state.screening_responses)
+        progress = completed_questions / 60
+        st.progress(progress)
+        st.write(f"Fortschritt: {completed_questions}/60 Fragen beantwortet")
         
         for i, question in enumerate(questions):
             st.write(f"**Frage {i+1}/60:** {question['text']}")
+            
+            # Antwort aus Session State laden oder Standardwert setzen
+            current_response = st.session_state.screening_responses.get(question['id'], 3)
             
             response = st.radio(
                 "Wie sehr stimmen Sie zu?",
@@ -146,14 +185,23 @@ class PersonalityScreener:
                     "Stimme eher zu",
                     "Stimme völlig zu"
                 ][x-1],
-                key=f"full_{question['id']}"
+                key=f"full_{question['id']}",
+                index=current_response-1  # Index basierend auf gespeicherter Antwort
             )
-            responses[question['id']] = response
+            
+            # Antwort sofort in Session State speichern
+            st.session_state.screening_responses[question['id']] = response
         
-        # NUR EIN Button
-        if st.button("Auswerten", type="primary", key="full_evaluate_unique"):
-            scores = self._calculate_scores(responses, is_short=False)
-            return scores
+        # Auswerten-Button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🔍 Vollständiges Screening Auswerten", type="primary", use_container_width=True):
+                if len(st.session_state.screening_responses) >= 60:
+                    scores = self._calculate_scores(st.session_state.screening_responses, is_short=False)
+                    st.session_state.screening_completed = True
+                    return scores
+                else:
+                    st.warning("Bitte beantworten Sie alle 60 Fragen bevor Sie auswerten.")
         
         return None
 
@@ -186,7 +234,7 @@ class PersonalityScreener:
         return final_scores
 
     def create_radar_chart(self, scores):
-        """Erstellt ein Radar-Diagramm für die Big Five Scores - KORRIGIERT"""
+        """Erstellt ein Radar-Diagramm für die Big Five Scores"""
         if scores is None:
             return None
             
@@ -280,3 +328,9 @@ class PersonalityScreener:
             similarities[profile_name] = similarity
         
         return similarities
+
+    def reset_screening(self):
+        """Setzt das Screening zurück"""
+        st.session_state.screening_responses = {}
+        st.session_state.screening_completed = False
+        st.session_state.current_screening_type = None
