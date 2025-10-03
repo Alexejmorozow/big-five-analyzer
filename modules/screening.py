@@ -11,12 +11,12 @@ class PersonalityScreener:
         # Session State für Screening initialisieren
         if 'screening_responses' not in st.session_state:
             st.session_state.screening_responses = {}
-        if 'screening_completed' not in st.session_state:
-            st.session_state.screening_completed = False
         if 'current_screening_type' not in st.session_state:
             st.session_state.current_screening_type = None
-        if 'show_results' not in st.session_state:
-            st.session_state.show_results = False
+        if 'screening_scores' not in st.session_state:
+            st.session_state.screening_scores = None
+        if 'screening_profile' not in st.session_state:
+            st.session_state.screening_profile = None
         
     def initialize_dimensions(self):
         """Initialisiert die NEO PI R Struktur mit 30 Facetten"""
@@ -106,9 +106,9 @@ class PersonalityScreener:
 
     def quick_screening(self):
         """Kurzversion mit 30 Fragen"""
-        # Wenn Ergebnisse bereits gezeigt werden sollen, return None
-        if st.session_state.show_results:
-            return None
+        # Wenn bereits Ergebnisse vorhanden sind, diese zurückgeben
+        if st.session_state.screening_scores is not None and st.session_state.current_screening_type == "quick":
+            return st.session_state.screening_scores
             
         st.info("🚀 **Schnelles Screening mit 30 Fragen**")
         
@@ -143,7 +143,7 @@ class PersonalityScreener:
                         "Stimme völlig zu"
                     ][x-1],
                     key=f"quick_{question['id']}",
-                    index=current_response-1  # Index basierend auf gespeicherter Antwort
+                    index=current_response-1
                 )
                 
                 # Antwort in Session State speichern
@@ -154,7 +154,11 @@ class PersonalityScreener:
             
             if submitted:
                 if len([qid for qid in st.session_state.screening_responses.keys() if qid <= 30]) >= 30:
-                    st.session_state.show_results = True
+                    # Scores berechnen und in Session State speichern
+                    scores = self._calculate_scores(st.session_state.screening_responses, is_short=True)
+                    profile = self.classify_profile(scores)
+                    st.session_state.screening_scores = scores
+                    st.session_state.screening_profile = profile
                     st.rerun()
                 else:
                     st.warning("Bitte beantworten Sie alle 30 Fragen bevor Sie auswerten.")
@@ -163,9 +167,9 @@ class PersonalityScreener:
 
     def behavioral_questionnaire(self):
         """Vollversion mit 60 Fragen"""
-        # Wenn Ergebnisse bereits gezeigt werden sollen, return None
-        if st.session_state.show_results:
-            return None
+        # Wenn bereits Ergebnisse vorhanden sind, diese zurückgeben
+        if st.session_state.screening_scores is not None and st.session_state.current_screening_type == "full":
+            return st.session_state.screening_scores
             
         st.info("🔬 **Detaillierter Fragebogen mit 60 Fragen**")
         
@@ -199,7 +203,7 @@ class PersonalityScreener:
                         "Stimme völlig zu"
                     ][x-1],
                     key=f"full_{question['id']}",
-                    index=current_response-1  # Index basierend auf gespeicherter Antwort
+                    index=current_response-1
                 )
                 
                 # Antwort in Session State speichern
@@ -210,20 +214,16 @@ class PersonalityScreener:
             
             if submitted:
                 if len(st.session_state.screening_responses) >= 60:
-                    st.session_state.show_results = True
+                    # Scores berechnen und in Session State speichern
+                    scores = self._calculate_scores(st.session_state.screening_responses, is_short=False)
+                    profile = self.classify_profile(scores)
+                    st.session_state.screening_scores = scores
+                    st.session_state.screening_profile = profile
                     st.rerun()
                 else:
                     st.warning("Bitte beantworten Sie alle 60 Fragen bevor Sie auswerten.")
         
         return None
-
-    def get_scores(self):
-        """Berechnet die Scores basierend auf den gespeicherten Antworten"""
-        if not st.session_state.screening_responses:
-            return None
-            
-        is_short = st.session_state.current_screening_type == "quick"
-        return self._calculate_scores(st.session_state.screening_responses, is_short)
 
     def _calculate_scores(self, responses, is_short=True):
         """Berechnet Scores für beide Versionen"""
@@ -243,10 +243,8 @@ class PersonalityScreener:
         for dim in dimension_scores:
             if dimension_counts[dim] > 0:
                 if is_short:
-                    # 30 Fragen: 6 Fragen pro Dimension × 5 Punkte max = 30, ×3.33 ≈ 100
                     final_scores[dim] = (dimension_scores[dim] / dimension_counts[dim]) * 20
                 else:
-                    # 60 Fragen: 12 Fragen pro Dimension × 5 Punkte max = 60, ×1.67 ≈ 100
                     final_scores[dim] = (dimension_scores[dim] / dimension_counts[dim]) * 20
             else:
                 final_scores[dim] = 50
@@ -258,8 +256,6 @@ class PersonalityScreener:
         if scores is None:
             return None
             
-        import plotly.graph_objects as go
-        
         # Feste Dimension-Namen
         dimension_names = {
             'O': 'Offenheit', 
@@ -269,7 +265,6 @@ class PersonalityScreener:
             'N': 'Neurotizismus'
         }
         
-        # Sicherstellen, dass alle Dimensionen in korrekter Reihenfolge sind
         categories = ['Offenheit', 'Gewissenhaftigkeit', 'Extraversion', 'Verträglichkeit', 'Neurotizismus']
         values = [
             scores.get('O', 50),
@@ -352,74 +347,6 @@ class PersonalityScreener:
     def reset_screening(self):
         """Setzt das Screening zurück"""
         st.session_state.screening_responses = {}
-        st.session_state.screening_completed = False
         st.session_state.current_screening_type = None
-        st.session_state.show_results = False
-
-    def show_screening_results(self, scores, profile):
-        """Zeigt die Screening-Ergebnisse"""
-        if scores is None or profile is None:
-            return
-            
-        st.markdown("""
-        <div class="custom-card" style='background: linear-gradient(135deg, #00C9A7, #00B4D8); color: white;'>
-            <div style='text-align: center;'>
-                <h2 style='color: white; margin-bottom: 0.5rem;'>🎉 Auswertung abgeschlossen!</h2>
-                <p style='color: white; opacity: 0.9;'>Ihr persönliches Big Five Profil wurde erfolgreich erstellt.</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Radar-Diagramm
-        fig = self.create_radar_chart(scores)
-        if fig is not None:
-            st.plotly_chart(fig, use_container_width=True)
-        
-        # Detaillierte Ergebnisse
-        st.markdown("""
-        <div class="custom-card">
-            <h3>📊 Detaillierte Auswertung</h3>
-            <p style='color: #666;'>Ihre Werte in den fünf Hauptdimensionen:</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        cols = st.columns(5)
-        dimension_names = {
-            'O': 'Offenheit', 'C': 'Gewissenhaftigkeit', 'E': 'Extraversion',
-            'A': 'Verträglichkeit', 'N': 'Neurotizismus'
-        }
-        
-        for i, (dim, score) in enumerate(scores.items()):
-            with cols[i]:
-                level = profile[dim]
-                # Farbe basierend auf Dimension und Level
-                if level == "hoch" and dim != "N":
-                    bg_color = "#00C9A7"
-                    emoji = "📈"
-                elif level == "niedrig" and dim != "N":
-                    bg_color = "#FF8066" 
-                    emoji = "📉"
-                elif level == "hoch" and dim == "N":
-                    bg_color = "#FF8066"
-                    emoji = "📈"
-                else:
-                    bg_color = "#00B4D8"
-                    emoji = "📉"
-                
-                st.markdown(f"""
-                <div style='background: {bg_color}; color: white; padding: 1.5rem; border-radius: 15px; text-align: center;'>
-                    <div style='font-size: 2rem; margin-bottom: 0.5rem;'>{emoji}</div>
-                    <h4 style='color: white; margin: 0;'>{dimension_names[dim]}</h4>
-                    <div style='font-size: 2rem; font-weight: bold; margin: 0.5rem 0;'>{score:.0f}</div>
-                    <div style='background: rgba(255,255,255,0.2); padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.9rem;'>
-                        {level.capitalize()}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        # Reset Button
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("🔄 Neues Screening starten", use_container_width=True):
-                self.reset_screening()
-                st.rerun()
+        st.session_state.screening_scores = None
+        st.session_state.screening_profile = None
