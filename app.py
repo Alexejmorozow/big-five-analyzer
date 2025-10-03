@@ -237,32 +237,39 @@ class BigFiveApp:
                 <p>Das <strong>Fünf-Faktoren-Modell</strong> (Big Five) ist das international anerkannte Standardmodell 
                 in der Persönlichkeitsforschung. Es beschreibt die menschliche Persönlichkeit anhand 
                 von fünf Hauptdimensionen:</p>
-                
-                <div style='background: #F7FAFC; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;'>
-                    <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;'>
-                        <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
-                            <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🧠</div>
-                            <strong>O</strong>ffenheit
-                        </div>
-                        <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
-                            <div style='font-size: 2rem; margin-bottom: 0.5rem;'>📊</div>
-                            <strong>G</strong>ewissenhaftigkeit
-                        </div>
-                        <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
-                            <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🌟</div>
-                            <strong>E</strong>xtraversion
-                        </div>
-                        <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
-                            <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🤝</div>
-                            <strong>V</strong>erträglichkeit
-                        </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Big Five Dimensionen als Grid
+            st.markdown("""
+            <div style='background: #F7FAFC; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;'>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;'>
+                    <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
+                        <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🧠</div>
+                        <strong>O</strong>ffenheit
                     </div>
-                    <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px; margin-top: 1rem;'>
-                        <div style='font-size: 2rem; margin-bottom: 0.5rem;'>⚡</div>
-                        <strong>N</strong>eurotizismus
+                    <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
+                        <div style='font-size: 2rem; margin-bottom: 0.5rem;'>📊</div>
+                        <strong>G</strong>ewissenhaftigkeit
+                    </div>
+                    <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
+                        <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🌟</div>
+                        <strong>E</strong>xtraversion
+                    </div>
+                    <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px;'>
+                        <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🤝</div>
+                        <strong>V</strong>erträglichkeit
                     </div>
                 </div>
-                
+                <div style='text-align: center; padding: 1rem; background: white; border-radius: 8px; margin-top: 1rem;'>
+                    <div style='font-size: 2rem; margin-bottom: 0.5rem;'>⚡</div>
+                    <strong>N</strong>eurotizismus
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+            <div class="custom-card">
                 <h4>🔬 Wissenschaftliche Grundlage</h4>
                 <ul style='color: #666;'>
                     <li>Basierend auf dem lexikalischen Ansatz</li>
@@ -777,7 +784,7 @@ class BigFiveApp:
             </div>
             
             <h3>👨‍💻 Entwickler</h3>
-            <p>Diese Streamlit-Anwendung wurde entwickelt, um das Big-Five-Modell 
+            <p>Diese Streamlit-Anwendung wurde entwickelt, um das Big-five-Modell 
             zugänglich und anwendbar zu machen.</p>
         </div>
         """, unsafe_allow_html=True)
