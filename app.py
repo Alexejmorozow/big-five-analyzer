@@ -1,12 +1,24 @@
 import streamlit as st
-import streamlit as st
-st.write("🔄 NEUE VERSION GELADEN - Screening korrigiert")  # Debug-Line
 import pandas as pd
 import plotly.express as px
+
+# Streamlit Konfiguration MUSS GANZ OBEN STEHEN
+st.set_page_config(
+    page_title="Big Five Personality Analyzer",
+    page_icon="🧠",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Debug-Nachricht NACH set_page_config
+st.write("🔄 NEUE VERSION GELADEN - Screening korrigiert")
+
 from modules.screening import PersonalityScreener
 from modules.training import TrainingModule
 from modules.quiz import QuizModule
 from modules.recommendations import RecommendationEngine
+
+# Rest des Codes bleibt gleich...
 
 # Streamlit Konfiguration
 st.set_page_config(
