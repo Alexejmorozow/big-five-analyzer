@@ -96,25 +96,54 @@ class BigFiveApp:
             - 💡 Personalisierte Empfehlungen
             """)
         
-        # Schnellstart-Bereich
-        st.subheader("Schnellstart")
+        # Schnellstart-Bereich - Direkte Links zu allen Funktionen
+        st.subheader("🚀 Direkt zu den Funktionen")
         
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            if st.button("🎯 Schnelles Screening starten", use_container_width=True):
+            if st.button("""
+            **🔍 Screening starten**
+            
+            Persönlichkeitsprofil erstellen
+            """, use_container_width=True, help="30 oder 60 Fragen - Ihr persönliches Big Five Profil"):
                 st.session_state.app_mode = "🔍 Screening"
                 st.rerun()
         
         with col2:
-            if st.button("📚 Training beginnen", use_container_width=True):
+            if st.button("""
+            **📚 Training**
+            
+            Wissenschaftliche Grundlagen
+            """, use_container_width=True, help="Lernen Sie alles über die Big Five Dimensionen"):
                 st.session_state.app_mode = "📚 Training"
                 st.rerun()
         
         with col3:
-            if st.button("❓ Quiz testen", use_container_width=True):
+            if st.button("""
+            **❓ Quiz**
+            
+            Wissen testen
+            """, use_container_width=True, help="Testen Sie Ihr Wissen über Persönlichkeitspsychologie"):
                 st.session_state.app_mode = "❓ Quiz"
                 st.rerun()
+        
+        with col4:
+            if st.button("""
+            **💡 Empfehlungen**
+            
+            Personalisierte Tipps
+            """, use_container_width=True, help="Evidenzbasierte Entwicklungsempfehlungen"):
+                st.session_state.app_mode = "💡 Empfehlungen"
+                st.rerun()
+        
+        # Zusätzlich: Wenn bereits Screening-Ergebnisse vorliegen, spezielle Hinweise
+        if st.session_state.scores is not None:
+            st.success("""
+            🎉 **Sie haben bereits ein Screening abgeschlossen!**
+            Besuchen Sie die **Empfehlungen** für personalisiertes Feedback oder 
+            starten Sie ein **neues Screening** für einen Vergleich.
+            """)
     
     def show_screening(self):
         """Screening-Seite"""
