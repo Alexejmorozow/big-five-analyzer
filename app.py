@@ -145,7 +145,7 @@ class BigFiveApp:
         st.success("🎉 Auswertung abgeschlossen!")
         
         # Radar-Diagramm
-        fig = self.training.create_radar_chart(scores)
+        fig = self.screener.create_radar_chart(scores)
         st.plotly_chart(fig, use_container_width=True)
         
         # Detaillierte Ergebnisse
