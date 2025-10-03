@@ -120,6 +120,11 @@ class BigFiveApp:
         """Screening-Seite"""
         st.header("Persönlichkeitsscreening")
         
+        # Wenn bereits Ergebnisse vorhanden sind, diese zuerst anzeigen
+        if st.session_state.scores is not None:
+            self.show_screening_results(st.session_state.scores, st.session_state.profile)
+            return
+        
         screening_method = st.radio(
             "Wählen Sie eine Screening-Methode:",
             ["Schnelles Screening (30 Fragen)", "Ausführlicher Fragebogen (60 Fragen)"],
@@ -131,7 +136,7 @@ class BigFiveApp:
         else:
             scores = self.screener.behavioral_questionnaire()
         
-        # Ergebnisse automatisch anzeigen wenn scores vorhanden
+        # Ergebnisse anzeigen wenn scores vorhanden
         if scores is not None:
             profile = self.screener.classify_profile(scores)
             st.session_state.scores = scores
@@ -195,6 +200,12 @@ class BigFiveApp:
         - Testen Sie Ihr Wissen im **Quiz**
         - Holen Sie sich **personalisiertes Feedback** im Empfehlungs-Modul
         """)
+        
+        # Reset Button
+        if st.button("🔄 Neues Screening starten"):
+            st.session_state.scores = None
+            st.session_state.profile = None
+            st.rerun()
     
     def show_training(self):
         """Training-Seite"""
