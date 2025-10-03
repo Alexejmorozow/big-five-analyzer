@@ -186,61 +186,61 @@ class PersonalityScreener:
         return final_scores
 
     def create_radar_chart(self, scores):
-    """Erstellt ein Radar-Diagramm für die Big Five Scores - KORRIGIERT"""
-    if scores is None:
-        return None
+        """Erstellt ein Radar-Diagramm für die Big Five Scores - KORRIGIERT"""
+        if scores is None:
+            return None
+            
+        import plotly.graph_objects as go
         
-    import plotly.graph_objects as go
-    
-    # Feste Dimension-Namen
-    dimension_names = {
-        'O': 'Offenheit', 
-        'C': 'Gewissenhaftigkeit', 
-        'E': 'Extraversion',
-        'A': 'Verträglichkeit', 
-        'N': 'Neurotizismus'
-    }
-    
-    # Sicherstellen, dass alle Dimensionen in korrekter Reihenfolge sind
-    categories = ['Offenheit', 'Gewissenhaftigkeit', 'Extraversion', 'Verträglichkeit', 'Neurotizismus']
-    values = [
-        scores.get('O', 50),
-        scores.get('C', 50), 
-        scores.get('E', 50),
-        scores.get('A', 50),
-        scores.get('N', 50)
-    ]
-    
-    # Radar Chart erstellen
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatterpolar(
-        r=values,
-        theta=categories,
-        fill='toself',
-        name='Ihr Profil',
-        line=dict(color='blue'),
-        fillcolor='rgba(0, 115, 230, 0.3)'
-    ))
-    
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 100],
-                tickvals=[0, 25, 50, 75, 100],
-                ticktext=['0', '25', '50', '75', '100']
+        # Feste Dimension-Namen
+        dimension_names = {
+            'O': 'Offenheit', 
+            'C': 'Gewissenhaftigkeit', 
+            'E': 'Extraversion',
+            'A': 'Verträglichkeit', 
+            'N': 'Neurotizismus'
+        }
+        
+        # Sicherstellen, dass alle Dimensionen in korrekter Reihenfolge sind
+        categories = ['Offenheit', 'Gewissenhaftigkeit', 'Extraversion', 'Verträglichkeit', 'Neurotizismus']
+        values = [
+            scores.get('O', 50),
+            scores.get('C', 50), 
+            scores.get('E', 50),
+            scores.get('A', 50),
+            scores.get('N', 50)
+        ]
+        
+        # Radar Chart erstellen
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatterpolar(
+            r=values,
+            theta=categories,
+            fill='toself',
+            name='Ihr Profil',
+            line=dict(color='blue'),
+            fillcolor='rgba(0, 115, 230, 0.3)'
+        ))
+        
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 100],
+                    tickvals=[0, 25, 50, 75, 100],
+                    ticktext=['0', '25', '50', '75', '100']
+                ),
+                angularaxis=dict(
+                    direction="clockwise"
+                )
             ),
-            angularaxis=dict(
-                direction="clockwise"
-            )
-        ),
-        showlegend=True,
-        title="Big Five Persönlichkeitsprofil",
-        height=400
-    )
-    
-    return fig
+            showlegend=True,
+            title="Big Five Persönlichkeitsprofil",
+            height=400
+        )
+        
+        return fig
 
     def classify_profile(self, scores):
         """Klassifiziert das Persönlichkeitsprofil"""
