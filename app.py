@@ -576,8 +576,10 @@ class BigFiveApp:
         # Historische Entwicklung
         st.markdown("### Historische Entwicklung")
         st.markdown("""
-        Das Big-Five-Modell entwickelte sich aus dem **lexikalischen Ansatz**, der besagt, 
-        dass alle wichtigen Persönlichkeitsmerkmale in der natürlichen Sprache kodiert sind.
+        Die Big Five basieren auf dem sogenannten lexikalischen Ansatz. 
+        Dieser geht davon aus, dass sich alle wichtigen Merkmale menschlicher Persönlichkeit in der Sprache niedergeschlagen haben.
+        Bereits in den 1930er-Jahren identifizierten Allport und Odbert über 18'000 persönlichkeitsrelevante Begriffe. 
+        Durch statistische Analysen (Faktorenanalysen) kristallisierten sich daraus die fünf stabilen Dimensionen heraus, die kulturübergreifend bestätigt wurden.
         """)
         
         st.markdown("""
