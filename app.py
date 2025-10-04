@@ -232,16 +232,6 @@ css_styles = """
         border-left-color: #9b59b6;
         grid-column: 1 / -1;
     }
-    
-    /* SCHNELLSTART CARDS */
-    .quickstart-card {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0;
-        text-align: center;
-        border-left: 4px solid #667eea;
-    }
 </style>
 """
 
@@ -285,68 +275,37 @@ class BigFiveApp:
             self.show_about()
     
     def show_overview(self):
-        """Startseite mit Überblick und Navigation - KORRIGIERT"""
+        """Startseite mit Überblick und Navigation - BEREINIGT"""
         
-        # 📊 INFO CARDS IN ZWEI SPALTEN
-        col1, col2 = st.columns([2, 1])
+        # 📊 INFO CARDS - REDUNDANTE SCHNELLSTART-SEKTION ENTFERNT
+        st.markdown("""
+        <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Was sind die Big Five?</h3>
+            <p>Das <strong>Fünf-Faktoren-Modell</strong> ist das international anerkannte Standardmodell 
+            in der Persönlichkeitsforschung mit über 3.000 wissenschaftlichen Studien.</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        with col1:
-            st.markdown("""
-            <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Was sind die Big Five?</h3>
-                <p>Das <strong>Fünf-Faktoren-Modell</strong> ist das international anerkannte Standardmodell 
-                in der Persönlichkeitsforschung mit über 3.000 wissenschaftlichen Studien.</p>
+        # Dimension Cards mit CSS-Klassen
+        st.markdown("""
+        <div class="dimension-grid">
+            <div class="dimension-card dimension-openness">
+                <strong>Offenheit</strong><br>Kreativität & Neugier
             </div>
-            """, unsafe_allow_html=True)
-            
-            # Dimension Cards mit CSS-Klassen
-            st.markdown("""
-            <div class="dimension-grid">
-                <div class="dimension-card dimension-openness">
-                    <strong>Offenheit</strong><br>Kreativität & Neugier
-                </div>
-                <div class="dimension-card dimension-conscientiousness">
-                    <strong>Gewissenhaftigkeit</strong><br>Ordnung & Zuverlässigkeit
-                </div>
-                <div class="dimension-card dimension-extraversion">
-                    <strong>Extraversion</strong><br>Geselligkeit & Energie
-                </div>
-                <div class="dimension-card dimension-agreeableness">
-                    <strong>Verträglichkeit</strong><br>Kooperation & Mitgefühl
-                </div>
-                <div class="dimension-card dimension-neuroticism">
-                    <strong>Neurotizismus</strong><br>Emotionale Stabilität
-                </div>
+            <div class="dimension-card dimension-conscientiousness">
+                <strong>Gewissenhaftigkeit</strong><br>Ordnung & Zuverlässigkeit
             </div>
-            """, unsafe_allow_html=True)
-        
-        with col2:
-            # Schnellstart-Bereich - KORRIGIERT
-            st.markdown("""
-            <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); height: 100%;">
-                <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Schnellstart</h3>
-                <p style="color: #5d6d7e;">Wählen Sie eine Funktion um zu starten:</p>
+            <div class="dimension-card dimension-extraversion">
+                <strong>Extraversion</strong><br>Geselligkeit & Energie
             </div>
-            """, unsafe_allow_html=True)
-            
-            # Schnellstart-Optionen mit korrektem HTML
-            st.markdown("""
-            <div class="quickstart-card">
-                <strong>Screening</strong><br>Ihr Persönlichkeitsprofil
+            <div class="dimension-card dimension-agreeableness">
+                <strong>Verträglichkeit</strong><br>Kooperation & Mitgefühl
             </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("""
-            <div class="quickstart-card">
-                <strong>Training</strong><br>Wissenschaftliche Grundlagen
+            <div class="dimension-card dimension-neuroticism">
+                <strong>Neurotizismus</strong><br>Emotionale Stabilität
             </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("""
-            <div class="quickstart-card">
-                <strong>Empfehlungen</strong><br>Personalisierte Tipps
-            </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
         
         # 🎮 NAVIGATION MIT CUSTOM DIVIDER
         st.markdown('<div class="custom-divider"></div>', unsafe_allow_html=True)
