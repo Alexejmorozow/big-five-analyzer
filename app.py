@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from modules.screening import PersonalityScreener
+from modules.training import TrainingModule
 from modules.quiz import QuizModule
 from modules.recommendations import RecommendationEngine
 
