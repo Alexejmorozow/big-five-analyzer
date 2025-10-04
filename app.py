@@ -566,26 +566,31 @@ class BigFiveApp:
             self.training.show_hierarchical_structure()
     
     def show_model_overview(self):
-        """Zeigt einen Überblick über das Big-Five-Modell"""
+        """Zeigt einen Überblick über das Big-Five-Modell - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <h2 style="color: #2c3e50; margin-top: 0;">Das Fünf-Faktoren-Modell (Big Five)</h2>
-            
-            <h3 style="color: #34495e;">Historische Entwicklung</h3>
-            <p>Das Big-Five-Modell entwickelte sich aus dem <strong>lexikalischen Ansatz</strong>, der besagt, 
-            dass alle wichtigen Persönlichkeitsmerkmale in der natürlichen Sprache kodiert sind.</p>
-            
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                <strong>Wichtige Meilensteine:</strong><br>
-                • 1936: Allport & Odbert identifizieren 18.000 Persönlichkeitsbegriffe<br>
-                • 1960er: Cattell reduziert auf 16 Faktoren<br>
-                • 1980er: Fünf stabile Faktoren werden international bestätigt<br>
-                • 1990er: NEO-PI-R etabliert standardisiertes Messinstrument
-            </div>
-            
-            <h3 style="color: #34495e;">Die fünf Dimensionen</h3>
         </div>
         """, unsafe_allow_html=True)
+        
+        # Historische Entwicklung
+        st.markdown("### Historische Entwicklung")
+        st.markdown("""
+        Das Big-Five-Modell entwickelte sich aus dem **lexikalischen Ansatz**, der besagt, 
+        dass alle wichtigen Persönlichkeitsmerkmale in der natürlichen Sprache kodiert sind.
+        """)
+        
+        st.markdown("""
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+            <strong>Wichtige Meilensteine:</strong><br>
+            • 1936: Allport & Odbert identifizieren 18.000 Persönlichkeitsbegriffe<br>
+            • 1960er: Cattell reduziert auf 16 Faktoren<br>
+            • 1980er: Fünf stabile Faktoren werden international bestätigt<br>
+            • 1990er: NEO-PI-R etabliert standardisiertes Messinstrument
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("### Die fünf Dimensionen")
         
         dimensions_info = {
             'O': {
