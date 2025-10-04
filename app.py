@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from modules.screening import PersonalityScreener
-from modules.training import TrainingModule
 from modules.quiz import QuizModule
 from modules.recommendations import RecommendationEngine
 
@@ -240,7 +239,6 @@ st.markdown(css_styles, unsafe_allow_html=True)
 class BigFiveApp:
     def __init__(self):
         self.screener = PersonalityScreener()
-        self.training = TrainingModule()
         self.quiz = QuizModule()
         self.recommendations = RecommendationEngine()
         
@@ -486,43 +484,46 @@ class BigFiveApp:
             st.rerun()
 
     def show_training(self):
-        """Training-Seite - OPTIMIERT & REDUZIERT"""
+        """🎓 ZENTRALE Training-Seite - Alle Inhalte integriert"""
         if st.button("← Zurück zur Übersicht"):
             st.session_state.current_page = "overview"
             st.rerun()
             
-        st.header("Big Five Training")
+        st.header("🎓 Big Five Training")
         
-        training_topic = st.selectbox(
+        # Topic Selection mit verbessertem UI
+        topics = [
+            "📖 Grundlagen & Dimensionen",
+            "🧬 Genetik & Veränderbarkeit", 
+            "🧩 Aufbau & Messung",
+            "💼 Beruf & Forschung",
+            "⚖️ Kritik & Grenzen",
+            "💡 Fazit & Umsetzung"
+        ]
+        
+        selected_topic = st.radio(
             "Wählen Sie ein Thema:",
-            [
-                "📖 Überblick - Grundlagen & Dimensionen",
-                "🧬 Wissenschaft - Genetik & Veränderbarkeit",
-                "🧩 Methodik - Aufbau & Messung", 
-                "🎓 Anwendung - Beruf & Forschung",
-                "⚖️ Reflexion - Kritik & Grenzen",
-                "💡 Fazit - Zusammenfassung & Umsetzung"
-            ]
+            topics,
+            horizontal=True
         )
         
-        if training_topic == "📖 Überblick - Grundlagen & Dimensionen":
-            self.show_model_overview()
-        elif training_topic == "🧬 Wissenschaft - Genetik & Veränderbarkeit":
-            self.show_nature_nurture()
-        elif training_topic == "🧩 Methodik - Aufbau & Messung":
-            self.show_structure_measurement()
-        elif training_topic == "🎓 Anwendung - Beruf & Forschung":
-            self.show_application_science()
-        elif training_topic == "⚖️ Reflexion - Kritik & Grenzen":
-            self.show_limitations_critique()
-        elif training_topic == "💡 Fazit - Zusammenfassung & Umsetzung":
-            self.show_conclusion()
+        # ✅ Direkte Methoden-Aufrufe - keine Konflikte mehr
+        topic_handlers = {
+            topics[0]: self.show_model_overview,
+            topics[1]: self.show_nature_nurture,
+            topics[2]: self.show_structure_measurement,
+            topics[3]: self.show_application_science, 
+            topics[4]: self.show_limitations_critique,
+            topics[5]: self.show_conclusion
+        }
+        
+        topic_handlers[selected_topic]()
 
     def show_model_overview(self):
         """Zeigt einen Überblick über das Big-Five-Modell - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h2 style="color: #2c3e50; margin-top: 0;">📖 Überblick - Grundlagen & Dimensionen</h2>
+            <h2 style="color: #2c3e50; margin-top: 0;">📖 Grundlagen & Dimensionen</h2>
         </div>
         """, unsafe_allow_html=True)
         
@@ -568,7 +569,7 @@ class BigFiveApp:
             },
             'A': {
                 'name': 'Verträglichkeit',
-                'description': 'Verträgliche Menschen sind hilfsbereit, mitfühlend und kooperativ. Sie vermeiden Konflikte, zeigen Altruismus und handeln rücksichtsvoll. Eine geringe Verträglichkeit hingegen steht für Durchsetzungsfähigkeit und Wettbewerbsorientierung – Eigenschaften, die in hierarchischen oder leistungsorientierten Umfeldern vorteilhaft sein können. Studien zeigen jedoch, dass übermässige Freundlichkeit zu einer „Karrierebremse" werden kann: Sie erhöht zwar die Zufriedenheit, kann aber den objektiven Erfolg (z. B. Einkommen oder Beförderung) mindern',
+                'description': 'Verträgliche Menschen sind hilfsbereit, mitfühlend und kooperativ. Sie vermeiden Konflikte, zeigen Altruismus und handeln rücksichtsvoll. Eine geringe Verträglichkeit hingegen steht für Durchsetzungsfähigkeit und Wettbewerbsorientierung – Eigenschaften, die in hierarchischen oder leistungsorientierten Umfeldern vorteilhaft sein können. Studien zeigen jedoch, dass übermässige Freundlichkeit zu einer „Karrierebremse" werden kann: Sie erhöht zwar die Zufriedenheit, kann aber den objektiven Erfolg (z. B. Einkommen oder Beförderation) mindern',
                 'high': 'Hilfsbereit, vertrauensvoll, mitfühlend',
                 'low': 'Skeptisch, wettbewerbsorientiert, direkt'
             },
@@ -603,7 +604,7 @@ class BigFiveApp:
         """Anlage, Umwelt und Veränderbarkeit - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h2 style="color: #2c3e50; margin-top: 0;">🧬 Wissenschaft - Genetik & Veränderbarkeit</h2>
+            <h2 style="color: #2c3e50; margin-top: 0;">🧬 Genetik & Veränderbarkeit</h2>
             
             <p>Persönlichkeitsmerkmale sind teils genetisch, teils umweltbedingt.</p>
             
@@ -628,7 +629,7 @@ class BigFiveApp:
         """Aufbau und Messung - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h2 style="color: #2c3e50; margin-top: 0;">🧩 Methodik - Aufbau & Messung</h2>
+            <h2 style="color: #2c3e50; margin-top: 0;">🧩 Aufbau & Messung</h2>
             
             <h3 style="color: #34495e;">Hierarchische Struktur</h3>
             <p>Das Big-Five-Modell ist hierarchisch aufgebaut:</p>
@@ -660,7 +661,7 @@ class BigFiveApp:
         """Anwendung und wissenschaftliche Grundlagen - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h2 style="color: #2c3e50; margin-top: 0;">🎓 Anwendung - Beruf & Forschung</h2>
+            <h2 style="color: #2c3e50; margin-top: 0;">💼 Beruf & Forschung</h2>
             
             <h3 style="color: #34495e;">Eignungsdiagnostik</h3>
             <p>In der Eignungsdiagnostik ist die Persönlichkeit neben Intelligenz einer der wichtigsten Prädiktoren für Berufserfolg.</p>
@@ -684,7 +685,7 @@ class BigFiveApp:
                 </div>
             </div>
             
-            <h3 style="color: #34495e;">Praktische Anwendungen</h3>
+            <h3 style="color: #34495e;">Praktische Anwendations</h3>
             
             <div style="background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%); padding: 20px; border-radius: 12px; margin: 20px 0;">
                 <strong>💼 Berufliche Anwendungsbereiche:</strong><br>
@@ -700,7 +701,7 @@ class BigFiveApp:
         """Grenzen und Kritik - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h2 style="color: #2c3e50; margin-top: 0;">⚖️ Reflexion - Kritik & Grenzen</h2>
+            <h2 style="color: #2c3e50; margin-top: 0;">⚖️ Kritik & Grenzen</h2>
             
             <h3 style="color: #34495e;">Inhaltliche Kritik</h3>
             <p>Der Persönlichkeitspsychologe <strong>Dan McAdams</strong> kritisiert, dass die Big Five zwar beschreiben, <em>wie</em> Menschen sind, aber nicht <em>warum</em>.</p>
@@ -726,7 +727,7 @@ class BigFiveApp:
         """Fazit - KORRIGIERT"""
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h2 style="color: #2c3e50; margin-top: 0;">💡 Fazit - Zusammenfassung & Umsetzung</h2>
+            <h2 style="color: #2c3e50; margin-top: 0;">💡 Fazit & Umsetzung</h2>
             
             <p>Die Big Five bieten ein <strong>wissenschaftlich fundiertes Raster</strong>, um Persönlichkeit zu verstehen und Verhalten besser zu interpretieren.</p>
             
