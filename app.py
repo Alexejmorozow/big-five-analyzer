@@ -597,14 +597,19 @@ class BigFiveApp:
         dimensions_info = {
             'O': {
                 'name': 'Offenheit für Erfahrungen',
-                'description': 'Beschreibt die Offenheit für neue Erfahrungen, Kreativität und intellektuelle Neugier',
+                'description': 'Offene Menschen sind neugierig, kreativ, fantasievoll und interessieren sich für Kunst, Philosophie oder neue Ideen. 
+                Sie hinterfragen Konventionen, suchen Abwechslung und zeigen eine hohe intellektuelle Neugier.
+                Wenig offene Menschen bevorzugen hingegen Stabilität, Routinen und Bekanntes.
+                Hohe Offenheit steht in der modernen Arbeitswelt mit Innovationsfähigkeit, Lernbereitschaft und kognitiver Flexibilität in Verbindung',
                 'high': 'Kreativ, neugierig, vielseitig',
                 'low': 'Praktisch, konventionell, traditionell'
             },
             'C': {
                 'name': 'Gewissenhaftigkeit', 
-                'description': 'Bezieht sich auf Organisation, Zuverlässigkeit und Zielstrebigkeit',
-                'high': 'Organisiert, verantwortungsbewusst, zuverlässig',
+                'description': 'Dieser Faktor beschreibt Zielstrebigkeit, Organisation und Verantwortungsbewusstsein.
+                Menschen mit hoher Gewissenhaftigkeit planen ihren Tag sorgfältig, handeln überlegt, dokumentieren gewissenhaft und verfolgen ihre Ziele diszipliniert.
+                Forschungsergebnisse zeigen, dass Gewissenhaftigkeit der beste Prädiktor für beruflichen und akademischen Erfolg ist – über alle Branchen hinweg.
+                Sie wirkt sich zudem positiv auf die Gesundheit und Lebenszufriedenheit aus',
                 'low': 'Spontan, flexibel, ungezwungen'
             },
             'E': {
