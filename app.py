@@ -232,6 +232,16 @@ css_styles = """
         border-left-color: #9b59b6;
         grid-column: 1 / -1;
     }
+    
+    /* SCHNELLSTART CARDS */
+    .quickstart-card {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0;
+        text-align: center;
+        border-left: 4px solid #667eea;
+    }
 </style>
 """
 
@@ -289,7 +299,7 @@ class BigFiveApp:
             </div>
             """, unsafe_allow_html=True)
             
-            # Dimension Cards mit CSS-Klassen statt inline-Styles
+            # Dimension Cards mit CSS-Klassen
             st.markdown("""
             <div class="dimension-grid">
                 <div class="dimension-card dimension-openness">
@@ -311,22 +321,30 @@ class BigFiveApp:
             """, unsafe_allow_html=True)
         
         with col2:
+            # Schnellstart-Bereich - KORRIGIERT
             st.markdown("""
             <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); height: 100%;">
                 <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Schnellstart</h3>
                 <p style="color: #5d6d7e;">Wählen Sie eine Funktion um zu starten:</p>
-                
-                <div style="margin-top: 20px;">
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <strong>Screening</strong><br>Ihr Persönlichkeitsprofil
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <strong>Training</strong><br>Wissenschaftliche Grundlagen
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <strong>Empfehlungen</strong><br>Personalisierte Tipps
-                    </div>
-                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Schnellstart-Optionen mit korrektem HTML
+            st.markdown("""
+            <div class="quickstart-card">
+                <strong>Screening</strong><br>Ihr Persönlichkeitsprofil
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+            <div class="quickstart-card">
+                <strong>Training</strong><br>Wissenschaftliche Grundlagen
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+            <div class="quickstart-card">
+                <strong>Empfehlungen</strong><br>Personalisierte Tipps
             </div>
             """, unsafe_allow_html=True)
         
@@ -407,7 +425,6 @@ class BigFiveApp:
                         delta=level.capitalize()
                     )
 
-    # Die restlichen Methoden bleiben gleich wie zuvor
     def show_screening(self):
         """Screening-Seite"""
         if st.button("← Zurück zur Übersicht"):
@@ -416,6 +433,7 @@ class BigFiveApp:
             
         st.header("Persönlichkeitsscreening")
         
+        # Wenn bereits Ergebnisse vorhanden sind, diese zuerst anzeigen
         if st.session_state.scores is not None:
             self.show_screening_results(st.session_state.scores, st.session_state.profile)
             return
@@ -431,6 +449,7 @@ class BigFiveApp:
         else:
             scores = self.screener.behavioral_questionnaire()
         
+        # Ergebnisse anzeigen wenn scores vorhanden
         if scores is not None:
             profile = self.screener.classify_profile(scores)
             st.session_state.scores = scores
@@ -439,13 +458,22 @@ class BigFiveApp:
     
     def show_screening_results(self, scores, profile):
         """Zeigt die Screening-Ergebnisse"""
-        st.markdown('<div class="success-box"><strong>Auswertung abgeschlossen!</strong> Ihr persönliches Big Five Profil wurde erstellt.</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="success-box">
+            <strong>Auswertung abgeschlossen!</strong> Ihr persönliches Big Five Profil wurde erstellt.
+        </div>
+        """, unsafe_allow_html=True)
         
+        # Radar-Diagramm
         fig = self.screener.create_radar_chart(scores)
         if fig is not None:
             st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("Radar-Diagramm konnte nicht erstellt werden.")
         
+        # Detaillierte Ergebnisse
         st.subheader("Detaillierte Auswertung")
+        
         cols = st.columns(5)
         dimension_names = {
             'O': 'Offenheit', 'C': 'Gewissenhaftigkeit', 'E': 'Extraversion',
@@ -455,29 +483,45 @@ class BigFiveApp:
         for i, (dim, score) in enumerate(scores.items()):
             with cols[i]:
                 level = profile[dim]
+                color = "🟢" if level == "hoch" and dim != "N" else "🔴" if level == "niedrig" and dim != "N" else "🟡"
                 st.metric(
                     label=dimension_names[dim],
                     value=f"{score:.0f}",
                     delta=level.capitalize()
                 )
+                st.write(f"{color} {level}")
         
+        # Ähnlichkeitsanalyse
+        st.subheader("Ähnlichkeitsanalyse")
         similarities = self.screener.calculate_similarity(scores)
+        
         if similarities:
-            st.subheader("Ähnlichkeitsanalyse")
-            similarity_df = pd.DataFrame(list(similarities.items()), columns=['Profiltyp', 'Ähnlichkeit (%)'])
-            fig = px.bar(similarity_df, x='Ähnlichkeit (%)', y='Profiltyp', orientation='h', title="Ähnlichkeit mit typischen Profilen")
+            similarity_df = pd.DataFrame(
+                list(similarities.items()),
+                columns=['Profiltyp', 'Ähnlichkeit (%)']
+            )
+            
+            fig = px.bar(
+                similarity_df,
+                x='Ähnlichkeit (%)',
+                y='Profiltyp',
+                orientation='h',
+                title="Ähnlichkeit mit typischen Profilen"
+            )
             st.plotly_chart(fig, use_container_width=True)
         
+        # Nächste Schritte
         st.markdown("""
         <div class="info-box">
             <strong>Nächste Schritte:</strong><br>
-            • Besuchen Sie das <strong>Training</strong>-Modul<br>
+            • Besuchen Sie das <strong>Training</strong>-Modul, um mehr über die Big Five zu lernen<br>
             • Testen Sie Ihr Wissen im <strong>Quiz</strong><br>
-            • Holen Sie sich <strong>personalisiertes Feedback</strong>
+            • Holen Sie sich <strong>personalisiertes Feedback</strong> im Empfehlungs-Modul
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("Neues Screening starten"):
+        # Reset Button
+        if st.button("🔄 Neues Screening starten"):
             st.session_state.scores = None
             st.session_state.profile = None
             st.rerun()
@@ -489,10 +533,20 @@ class BigFiveApp:
             st.rerun()
             
         st.header("Big Five Training")
-        training_topic = st.selectbox("Wählen Sie ein Thema:", [
-            "Überblick über das Big-Five-Modell", "Offenheit für Erfahrungen", "Gewissenhaftigkeit",
-            "Extraversion", "Verträglichkeit", "Neurotizismus", "Wissenschaftliche Grundlagen", "Hierarchische Struktur"
-        ])
+        
+        training_topic = st.selectbox(
+            "Wählen Sie ein Thema:",
+            [
+                "Überblick über das Big-Five-Modell",
+                "Offenheit für Erfahrungen", 
+                "Gewissenhaftigkeit",
+                "Extraversion",
+                "Verträglichkeit", 
+                "Neurotizismus",
+                "Wissenschaftliche Grundlagen",
+                "Hierarchische Struktur"
+            ]
+        )
         
         if training_topic == "Überblick über das Big-Five-Modell":
             self.show_model_overview()
@@ -516,16 +570,81 @@ class BigFiveApp:
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <h2 style="color: #2c3e50; margin-top: 0;">Das Fünf-Faktoren-Modell (Big Five)</h2>
+            
             <h3 style="color: #34495e;">Historische Entwicklung</h3>
-            <p>Das Big-Five-Modell entwickelte sich aus dem <strong>lexikalischen Ansatz</strong>.</p>
+            <p>Das Big-Five-Modell entwickelte sich aus dem <strong>lexikalischen Ansatz</strong>, der besagt, 
+            dass alle wichtigen Persönlichkeitsmerkmale in der natürlichen Sprache kodiert sind.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                <strong>Wichtige Meilensteine:</strong><br>
+                • 1936: Allport & Odbert identifizieren 18.000 Persönlichkeitsbegriffe<br>
+                • 1960er: Cattell reduziert auf 16 Faktoren<br>
+                • 1980er: Fünf stabile Faktoren werden international bestätigt<br>
+                • 1990er: NEO-PI-R etabliert standardisiertes Messinstrument
+            </div>
+            
+            <h3 style="color: #34495e;">Die fünf Dimensionen</h3>
         </div>
         """, unsafe_allow_html=True)
+        
+        dimensions_info = {
+            'O': {
+                'name': 'Offenheit für Erfahrungen',
+                'description': 'Beschreibt die Offenheit für neue Erfahrungen, Kreativität und intellektuelle Neugier',
+                'high': 'Kreativ, neugierig, vielseitig',
+                'low': 'Praktisch, konventionell, traditionell'
+            },
+            'C': {
+                'name': 'Gewissenhaftigkeit', 
+                'description': 'Bezieht sich auf Organisation, Zuverlässigkeit und Zielstrebigkeit',
+                'high': 'Organisiert, verantwortungsbewusst, zuverlässig',
+                'low': 'Spontan, flexibel, ungezwungen'
+            },
+            'E': {
+                'name': 'Extraversion',
+                'description': 'Beschreibt Geselligkeit, Energie und positive Emotionalität',
+                'high': 'Gesellig, energisch, gesprächig',
+                'low': 'Zurückhaltend, ruhig, reserviert'
+            },
+            'A': {
+                'name': 'Verträglichkeit',
+                'description': 'Bezieht sich auf Mitgefühl, Kooperationsbereitschaft und Vertrauen',
+                'high': 'Hilfsbereit, vertrauensvoll, mitfühlend',
+                'low': 'Skeptisch, wettbewerbsorientiert, direkt'
+            },
+            'N': {
+                'name': 'Neurotizismus',
+                'description': 'Beschreibt emotionale Stabilität und Anfälligkeit für negative Emotionen',
+                'high': 'Emotional, sensibel, besorgt',
+                'low': 'Gelassen, emotional stabil, resilient'
+            }
+        }
+        
+        for dim, info in dimensions_info.items():
+            with st.expander(f"{info['name']} ({dim})"):
+                st.write(f"**Beschreibung:** {info['description']}")
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%); 
+                                padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60;">
+                        <strong>Hohe Ausprägung:</strong><br>{info['high']}
+                    </div>
+                    """, unsafe_allow_html=True)
+                with col2:
+                    st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); 
+                                padding: 15px; border-radius: 10px; border-left: 4px solid #3498db;">
+                        <strong>Niedrige Ausprägung:</strong><br>{info['low']}
+                    </div>
+                    """, unsafe_allow_html=True)
 
     def show_quiz(self):
         """Quiz-Seite"""
         if st.button("← Zurück zur Übersicht"):
             st.session_state.current_page = "overview"
             st.rerun()
+            
         st.header("Big Five Quiz")
         self.quiz.display_quiz()
 
@@ -534,22 +653,35 @@ class BigFiveApp:
         if st.button("← Zurück zur Übersicht"):
             st.session_state.current_page = "overview"
             st.rerun()
+            
         st.header("Personalisiertes Feedback")
         
         if st.session_state.scores is None:
             st.markdown("""
             <div class="warning-box">
-                <strong>Bitte führen Sie zuerst ein Screening durch</strong> um personalisierte Empfehlungen zu erhalten.
+                <strong>Bitte führen Sie zuerst ein Screening durch</strong>, um personalisierte 
+                Empfehlungen zu erhalten.
             </div>
             """, unsafe_allow_html=True)
+            
             if st.button("Zum Screening gehen"):
                 st.session_state.current_page = "screening"
                 st.rerun()
             return
         
-        self.recommendations.generate_recommendations(st.session_state.profile, st.session_state.scores)
+        # Empfehlungen generieren
+        self.recommendations.generate_recommendations(
+            st.session_state.profile, 
+            st.session_state.scores
+        )
+        
+        # Entwicklungsplan
         st.subheader("Persönlicher Entwicklungsplan")
-        development_plan = self.create_development_plan(st.session_state.profile, st.session_state.scores)
+        
+        development_plan = self.create_development_plan(
+            st.session_state.profile, 
+            st.session_state.scores
+        )
         
         for goal, actions in development_plan.items():
             with st.expander(f"{goal}"):
@@ -559,30 +691,40 @@ class BigFiveApp:
     def create_development_plan(self, profile, scores):
         """Erstellt einen persönlichen Entwicklungsplan"""
         plan = {}
+        
+        # Entwicklungsziele basierend auf Profil
         if profile.get('N') == 'hoch':
             plan["Emotionale Resilienz stärken"] = [
                 "Praktiziere täglich 10 Minuten Achtsamkeitsmeditation",
                 "Führe ein Stimmungstagebuch zur besseren Selbstwahrnehmung",
-                "Lerne kognitive Umstrukturierungstechniken"
+                "Lerne kognitive Umstrukturierungstechniken",
+                "Entwickle gesunde Bewältigungsstrategien für Stress"
             ]
+        
         if profile.get('C') == 'niedrig':
             plan["Organisation und Struktur verbessern"] = [
                 "Beginne mit täglichen To-Do-Listen",
                 "Nutze Kalender für Termine und Deadlines",
-                "Richte feste Arbeitsroutinen ein"
+                "Richte feste Arbeitsroutinen ein",
+                "Setze dir wöchentliche Prioritäten"
             ]
+        
         if profile.get('O') == 'niedrig':
             plan["Offenheit für Neues entwickeln"] = [
                 "Probiere monatlich eine neue Aktivität aus",
                 "Lies Bücher außerhalb deines gewohnten Genres",
-                "Besuche kulturelle Veranstaltungen"
+                "Besuche kulturelle Veranstaltungen",
+                "Tausche dich mit Menschen unterschiedlicher Hintergründe aus"
             ]
-        if not plan:
+        
+        if not plan:  # Falls kein spezifischer Entwicklungsbedarf
             plan["Persönliches Wachstum fördern"] = [
                 "Reflektiere regelmäßig über persönliche Stärken",
                 "Setze dir herausfordernde aber realistische Ziele",
-                "Suche aktiv nach Feedback von anderen"
+                "Suche aktiv nach Feedback von anderen",
+                "Bleibe neugierig und lernbereit"
             ]
+        
         return plan
 
     def show_about(self):
@@ -590,11 +732,42 @@ class BigFiveApp:
         if st.button("← Zurück zur Übersicht"):
             st.session_state.current_page = "overview"
             st.rerun()
+            
         st.header("Über diese Anwendung")
+        
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <h3 style="color: #2c3e50; margin-top: 0;">Wissenschaftliche Grundlage</h3>
-            <p>Diese Anwendung basiert auf dem <strong>Fünf-Faktoren-Modell</strong> (Big Five).</p>
+            
+            <p>Diese Anwendung basiert auf dem <strong>Fünf-Faktoren-Modell</strong> (Big Five), 
+            dem international anerkannten Standardmodell der Persönlichkeitsforschung.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                <strong>Wichtige Quellen:</strong><br>
+                • Costa, P. T., & McCrae, R. R. (1992). NEO-PI-R Professional Manual<br>
+                • Goldberg, L. R. (1993). The structure of phenotypic personality traits<br>
+                • John, O. P., & Srivastava, S. (1999). The Big Five trait taxonomy
+            </div>
+            
+            <h3 style="color: #2c3e50;">Technische Umsetzung</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); padding: 15px; border-radius: 10px;">
+                    <strong>Funktionen:</strong><br>
+                    • Screening mit Fragebögen<br>
+                    • Profilanalyse<br>
+                    • Wissenschaftliches Training<br>
+                    • Personalisierte Empfehlungen
+                </div>
+                <div style="background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%); padding: 15px; border-radius: 10px;">
+                    <strong>Hinweis:</strong><br>
+                    Diese Anwendung dient Bildungszwecken und ersetzt keine professionelle psychologische Beratung.
+                </div>
+            </div>
+            
+            <h3 style="color: #2c3e50;">Entwickler</h3>
+            <p>Diese Streamlit-Anwendung wurde entwickelt, um das Big-five-Modell 
+            zugänglich und anwendbar zu machen.</p>
         </div>
         """, unsafe_allow_html=True)
 
