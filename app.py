@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 🎨 MODERNES CSS STYLING
+# 🎨 VERBESSERTES MODERNES CSS STYLING - PHASE 1
 css_styles = """
 <style>
     /* Haupt-Hintergrund mit subtilem Gradient */
@@ -23,38 +23,28 @@ css_styles = """
         min-height: 100vh;
     }
     
-    /* 📱 MODERNE BUTTONS */
-    .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 18px 25px;
-        border-radius: 15px;
-        font-weight: 600;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        width: 100%;
-        margin: 8px 0;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    }
-    
-    /* 🎯 HEADER STYLING MIT GRADIENT */
+    /* 🌟 VERBESSERTE HEADER MIT SUBTILEN ANIMATIONEN */
     h1 {
-        color: #2c3e50;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        padding-bottom: 15px;
-        font-weight: 800;
-        font-size: 2.5em;
         text-align: center;
+        font-weight: 800;
+        font-size: 2.8em;
         margin-bottom: 30px;
+        position: relative;
+    }
+    
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
     }
     
     h2 {
@@ -74,20 +64,57 @@ css_styles = """
         margin-top: 25px;
     }
     
-    /* 📊 METRIC CARDS - NOCH SCHÖNER */
-    [data-testid="metric-container"] {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    /* 🌟 VERBESSERTE BUTTONS MIT ICONS */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
         border: none;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        border-left: 5px solid #667eea;
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        margin: 8px 0;
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* 🌟 VERBESSERTE METRIC CARDS MIT MEHR TIEFE */
+    [data-testid="metric-container"] {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 25px !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+        border: 1px solid rgba(255,255,255,0.8) !important;
+        transition: all 0.3s ease !important;
     }
     
     [data-testid="metric-container"]:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        transform: translateY(-5px) !important;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
     }
     
     /* 📝 TEXT CONTAINER STYLING */
@@ -96,10 +123,11 @@ css_styles = """
         line-height: 1.6;
     }
     
-    /* 🔄 PROGRESS BAR STYLING */
+    /* 🌟 VERBESSERTE PROGRESS BARS */
     .stProgress > div > div {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         border-radius: 10px;
+        height: 8px !important;
     }
     
     /* 📦 HAUPT CONTAINER */
@@ -108,7 +136,7 @@ css_styles = """
         max-width: 1200px;
     }
     
-    /* 🎪 EXPANDER STYLING - MODERN */
+    /* 🌟 VERBESSERTE EXPANDER */
     .streamlit-expanderHeader {
         background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         border-radius: 12px;
@@ -117,6 +145,11 @@ css_styles = """
         box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         margin: 10px 0;
         padding: 20px;
+        transition: transform 0.2s ease;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        transform: translateX(5px);
     }
     
     .streamlit-expanderContent {
@@ -138,61 +171,82 @@ css_styles = """
         }
     }
     
-    /* 🌈 FARBIGE INFO-BOXEN - UPGRADED */
+    /* 🌟 VERBESSERTE INFO-BOXEN */
     .info-box {
         background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%);
         border-left: 5px solid #3498db;
         padding: 25px;
-        border-radius: 15px;
+        border-radius: 16px;
         margin: 15px 0;
-        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+        border: 1px solid rgba(255,255,255,0.5);
     }
     
     .success-box {
         background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%);
         border-left: 5px solid #27ae60;
         padding: 25px;
-        border-radius: 15px;
+        border-radius: 16px;
         margin: 15px 0;
-        box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
+        box-shadow: 0 8px 25px rgba(39, 174, 96, 0.15);
+        border: 1px solid rgba(255,255,255,0.5);
     }
     
     .warning-box {
         background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%);
         border-left: 5px solid #f39c12;
         padding: 25px;
-        border-radius: 15px;
+        border-radius: 16px;
         margin: 15px 0;
-        box-shadow: 0 6px 20px rgba(243, 156, 18, 0.2);
+        box-shadow: 0 8px 25px rgba(243, 156, 18, 0.15);
+        border: 1px solid rgba(255,255,255,0.5);
     }
     
-    /* 🔥 BESONDERE ELEMENTE */
-    
-    /* Radio Buttons stylen */
+    /* 🌟 VERBESSERTE RADIO BUTTONS */
     .stRadio > div {
         background: white;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        border: 1px solid #e1e5e9;
     }
     
-    /* Selectbox stylen */
-    .stSelectbox > div > div {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
-    
-    /* Custom Divider */
-    .custom-divider {
-        height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    /* 🌟 ELEGANTE TRENNLINIEN */
+    .elegant-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #667eea 50%, transparent 100%);
+        margin: 40px 0;
         border: none;
-        margin: 30px 0;
-        border-radius: 3px;
     }
     
-    /* DIMENSION CARDS */
+    /* 🌟 MODERNE INFO-BOXEN */
+    .modern-info-box {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%);
+        border-left: 5px solid #3498db;
+        padding: 25px;
+        border-radius: 16px;
+        margin: 20px 0;
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+        border: 1px solid rgba(255,255,255,0.5);
+    }
+    
+    /* 🌟 SUBTILE ANIMATION FÜR METRIKEN */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    [data-testid="metric-container"] {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    /* 🌟 DIMENSION CARDS */
     .dimension-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -201,10 +255,18 @@ css_styles = """
     }
     
     .dimension-card {
-        padding: 15px;
-        border-radius: 12px;
+        padding: 20px;
+        border-radius: 16px;
         border-left: 4px solid;
         color: #2c3e50;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .dimension-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
     
     .dimension-openness {
@@ -275,7 +337,7 @@ class BigFiveApp:
             self.show_about()
     
     def show_overview(self):
-        """Startseite mit Überblick und Navigation"""
+        """Startseite mit Überblick und Navigation - VERBESSERT"""
         
         # 📊 INFO CARDS
         st.markdown("""
@@ -286,29 +348,39 @@ class BigFiveApp:
         </div>
         """, unsafe_allow_html=True)
         
-        # Dimension Cards mit CSS-Klassen
+        # 🌟 VERBESSERTE DIMENSION CARDS MIT ANIMATIONEN
         st.markdown("""
         <div class="dimension-grid">
-            <div class="dimension-card dimension-openness">
-                <strong>Offenheit</strong><br>Kreativität & Neugier
+            <div class="dimension-card dimension-openness" style="animation: fadeInUp 0.4s ease-out;">
+                <div style="font-size: 2em; margin-bottom: 10px;">🧠</div>
+                <strong>Offenheit</strong><br>
+                <small style="opacity: 0.8;">Kreativität & Neugier</small>
             </div>
-            <div class="dimension-card dimension-conscientiousness">
-                <strong>Gewissenhaftigkeit</strong><br>Ordnung & Zuverlässigkeit
+            <div class="dimension-card dimension-conscientiousness" style="animation: fadeInUp 0.6s ease-out;">
+                <div style="font-size: 2em; margin-bottom: 10px;">📊</div>
+                <strong>Gewissenhaftigkeit</strong><br>
+                <small style="opacity: 0.8;">Ordnung & Zuverlässigkeit</small>
             </div>
-            <div class="dimension-card dimension-extraversion">
-                <strong>Extraversion</strong><br>Geselligkeit & Energie
+            <div class="dimension-card dimension-extraversion" style="animation: fadeInUp 0.8s ease-out;">
+                <div style="font-size: 2em; margin-bottom: 10px;">🌟</div>
+                <strong>Extraversion</strong><br>
+                <small style="opacity: 0.8;">Geselligkeit & Energie</small>
             </div>
-            <div class="dimension-card dimension-agreeableness">
-                <strong>Verträglichkeit</strong><br>Kooperation & Mitgefühl
+            <div class="dimension-card dimension-agreeableness" style="animation: fadeInUp 1.0s ease-out;">
+                <div style="font-size: 2em; margin-bottom: 10px;">🤝</div>
+                <strong>Verträglichkeit</strong><br>
+                <small style="opacity: 0.8;">Kooperation & Mitgefühl</small>
             </div>
-            <div class="dimension-card dimension-neuroticism">
-                <strong>Neurotizismus</strong><br>Emotionale Stabilität
+            <div class="dimension-card dimension-neuroticism" style="animation: fadeInUp 1.2s ease-out; grid-column: 1 / -1;">
+                <div style="font-size: 2em; margin-bottom: 10px;">⚖️</div>
+                <strong>Neurotizismus</strong><br>
+                <small style="opacity: 0.8;">Emotionale Stabilität</small>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # 🎮 NAVIGATION MIT CUSTOM DIVIDER
-        st.markdown('<div class="custom-divider"></div>', unsafe_allow_html=True)
+        # 🎮 NAVIGATION MIT ELEGANTEN DIVIDER
+        st.markdown('<div class="elegant-divider"></div>', unsafe_allow_html=True)
         st.subheader("App Navigation")
         st.markdown("<p style='color: #5d6d7e; font-size: 1.1em; text-align: center;'>Wählen Sie einen Bereich um zu starten</p>", unsafe_allow_html=True)
         
@@ -316,19 +388,19 @@ class BigFiveApp:
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("**Screening starten**", use_container_width=True, 
+            if st.button("**🔍 Screening starten**", use_container_width=True, 
                         help="30 oder 60 Fragen - Ihr persönliches Big Five Profil"):
                 st.session_state.current_page = "screening"
                 st.rerun()
         
         with col2:
-            if st.button("**Training & Wissen**", use_container_width=True, 
+            if st.button("**📚 Training & Wissen**", use_container_width=True, 
                         help="Lernen Sie alles über die Big Five Dimensionen"):
                 st.session_state.current_page = "training"
                 st.rerun()
         
         with col3:
-            if st.button("**Quiz & Test**", use_container_width=True, 
+            if st.button("**🎯 Quiz & Test**", use_container_width=True, 
                         help="Testen Sie Ihr Wissen über Persönlichkeitspsychologie"):
                 st.session_state.current_page = "quiz"
                 st.rerun()
@@ -338,7 +410,7 @@ class BigFiveApp:
         
         with col4:
             button_disabled = st.session_state.scores is None
-            if st.button("**Meine Empfehlungen**", 
+            if st.button("**💡 Meine Empfehlungen**", 
                         disabled=button_disabled,
                         use_container_width=True, 
                         help="Evidenzbasierte Entwicklungsempfehlungen" if not button_disabled else "Bitte zuerst Screening durchführen"):
@@ -347,23 +419,28 @@ class BigFiveApp:
                     st.rerun()
         
         with col5:
-            if st.button("**Über die App**", use_container_width=True, 
+            if st.button("**ℹ️ Über die App**", use_container_width=True, 
                         help="Informationen zur wissenschaftlichen Grundlage"):
                 st.session_state.current_page = "about"
                 st.rerun()
         
         with col6:
-            if st.button("**Startseite**", use_container_width=True, 
+            if st.button("**🏠 Startseite**", use_container_width=True, 
                         help="Zurück zur Übersicht"):
                 st.session_state.current_page = "overview"
                 st.rerun()
         
-        # Status-Anzeige wenn Screening bereits durchgeführt
+        # 🌟 VERBESSERTE STATUS-ANZEIGE WENN SCREENING VORHANDEN
         if st.session_state.scores is not None:
             st.markdown("""
-            <div class="success-box">
-                <strong>Sie haben bereits ein Screening abgeschlossen!</strong><br>
-                Besuchen Sie die <strong>Empfehlungen</strong> für personalisiertes Feedback.
+            <div class="modern-info-box">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="font-size: 2em;">🎯</div>
+                    <div>
+                        <strong style="font-size: 1.2em;">Screening abgeschlossen!</strong><br>
+                        Besuchen Sie die <strong>Empfehlungen</strong> für personalisiertes Feedback.
+                    </div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
             
@@ -416,10 +493,21 @@ class BigFiveApp:
             self.show_screening_results(scores, profile)
     
     def show_screening_results(self, scores, profile):
-        """Zeigt die Screening-Ergebnisse"""
+        """Zeigt die Screening-Ergebnisse - VERBESSERT"""
+        # 🌟 VERBESSERTE ERFOLGSMELDUNG
         st.markdown("""
-        <div class="success-box">
-            <strong>Auswertung abgeschlossen!</strong> Ihr persönliches Big Five Profil wurde erstellt.
+        <div style="
+            background: linear-gradient(135deg, #e8f6ef 0%, #d4f0e4 100%); 
+            padding: 30px; 
+            border-radius: 20px; 
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.15);
+        ">
+            <div style="font-size: 3em; margin-bottom: 15px;">🎉</div>
+            <h3 style="color: #27ae60; margin: 0;">Auswertung abgeschlossen!</h3>
+            <p style="margin: 10px 0 0 0; color: #2c3e50;">Ihr persönliches Big Five Profil wurde erstellt</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -471,7 +559,7 @@ class BigFiveApp:
         
         # Nächste Schritte
         st.markdown("""
-        <div class="info-box">
+        <div class="modern-info-box">
             <strong>Nächste Schritte:</strong><br>
             • Besuchen Sie das <strong>Training</strong>-Modul, um mehr über die Big Five zu lernen<br>
             • Testen Sie Ihr Wissen im <strong>Quiz</strong><br>
@@ -480,7 +568,7 @@ class BigFiveApp:
         """, unsafe_allow_html=True)
         
         # Reset Button
-        if st.button("🔄 Neues Screening starten"):
+        if st.button("🔄 Neues Screening starten", use_container_width=True):
             st.session_state.scores = None
             st.session_state.profile = None
             st.rerun()
@@ -538,13 +626,13 @@ class BigFiveApp:
         
         if st.session_state.scores is None:
             st.markdown("""
-            <div class="warning-box">
+            <div class="modern-info-box">
                 <strong>Bitte führen Sie zuerst ein Screening durch</strong>, um personalisierte 
                 Empfehlungen zu erhalten.
             </div>
             """, unsafe_allow_html=True)
             
-            if st.button("Zum Screening gehen"):
+            if st.button("Zum Screening gehen", use_container_width=True):
                 st.session_state.current_page = "screening"
                 st.rerun()
             return
