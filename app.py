@@ -375,33 +375,21 @@ class BigFiveApp:
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("""
-                <div style="font-size: 3em; margin-bottom: 15px;">🔍</div>
-                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Screening</div>
-                <div style="font-size: 0.9em; opacity: 0.9;">30 oder 60 Fragen - Ihr persönliches Big Five Profil</div>
-            """, 
+            if st.button("🔍\n### Screening\n#### 30 oder 60 Fragen - Ihr persönliches Big Five Profil", 
             use_container_width=True, 
             key="nav_screening"):
                 st.session_state.current_page = "screening"
                 st.rerun()
         
         with col2:
-            if st.button("""
-                <div style="font-size: 3em; margin-bottom: 15px;">📚</div>
-                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Training & Wissen</div>
-                <div style="font-size: 0.9em; opacity: 0.9;">Lernen Sie alles über die Big Five Dimensionen</div>
-            """, 
+            if st.button("📚\n### Training & Wissen\n#### Lernen Sie alles über die Big Five Dimensionen", 
             use_container_width=True, 
             key="nav_training"):
                 st.session_state.current_page = "training"
                 st.rerun()
         
         with col3:
-            if st.button("""
-                <div style="font-size: 3em; margin-bottom: 15px;">🎯</div>
-                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Quiz & Test</div>
-                <div style="font-size: 0.9em; opacity: 0.9;">Testen Sie Ihr Wissen über Persönlichkeitspsychologie</div>
-            """, 
+            if st.button("🎯\n### Quiz & Test\n#### Testen Sie Ihr Wissen über Persönlichkeitspsychologie", 
             use_container_width=True, 
             key="nav_quiz"):
                 st.session_state.current_page = "quiz"
@@ -412,13 +400,9 @@ class BigFiveApp:
         
         with col4:
             button_disabled = st.session_state.scores is None
-            disabled_text = "🔒 (Bitte zuerst Screening)" if button_disabled else ""
+            disabled_text = "\n#### (Bitte zuerst Screening)" if button_disabled else "\n#### Evidenzbasierte Entwicklungsempfehlungen"
             
-            if st.button(f"""
-                <div style="font-size: 3em; margin-bottom: 15px;">💡</div>
-                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Meine Empfehlungen</div>
-                <div style="font-size: 0.9em; opacity: 0.9;">Evidenzbasierte Entwicklungsempfehlungen {disabled_text}</div>
-            """, 
+            if st.button(f"💡\n### Meine Empfehlungen{disabled_text}", 
             disabled=button_disabled,
             use_container_width=True, 
             key="nav_recommendations"):
@@ -427,22 +411,14 @@ class BigFiveApp:
                     st.rerun()
         
         with col5:
-            if st.button("""
-                <div style="font-size: 3em; margin-bottom: 15px;">ℹ️</div>
-                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Über die App</div>
-                <div style="font-size: 0.9em; opacity: 0.9;">Informationen zur wissenschaftlichen Grundlage</div>
-            """, 
+            if st.button("ℹ️\n### Über die App\n#### Informationen zur wissenschaftlichen Grundlage", 
             use_container_width=True, 
             key="nav_about"):
                 st.session_state.current_page = "about"
                 st.rerun()
         
         with col6:
-            if st.button("""
-                <div style="font-size: 3em; margin-bottom: 15px;">🏠</div>
-                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Startseite</div>
-                <div style="font-size: 0.9em; opacity: 0.8;">Zurück zur Übersicht</div>
-            """, 
+            if st.button("🏠\n### Startseite\n#### Zurück zur Übersicht", 
             use_container_width=True, 
             key="nav_home"):
                 st.session_state.current_page = "overview"
