@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 🎨 VERBESSERTES MODERNES CSS STYLING - PHASE 1
+# 🎨 VERBESSERTES MODERNES CSS STYLING - MIT NAVIGATIONS-ERWEITERUNGEN
 css_styles = """
 <style>
     /* Haupt-Hintergrund mit subtilem Gradient */
@@ -169,6 +169,15 @@ css_styles = """
         h1 {
             font-size: 2em;
         }
+        
+        .nav-grid {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+        }
+        
+        .nav-card {
+            padding: 20px 15px !important;
+        }
     }
     
     /* 🌟 VERBESSERTE INFO-BOXEN */
@@ -294,6 +303,61 @@ css_styles = """
         border-left-color: #9b59b6;
         grid-column: 1 / -1;
     }
+    
+    /* 🌟 INTERAKTIVE NAVIGATIONS-KARTEN */
+    .nav-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 20px;
+        border-radius: 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        margin: 10px 0;
+        border: 2px solid transparent;
+    }
+    
+    .nav-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        border-color: rgba(255,255,255,0.3);
+    }
+    
+    .nav-card-disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    .nav-card-disabled:hover {
+        transform: none;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* 🌟 SUBTILE PULS-ANIMATION FÜR WICHTIGE NAVIGATION */
+    @keyframes subtlePulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+    
+    .nav-card-primary {
+        animation: subtlePulse 3s ease-in-out infinite;
+    }
+    
+    .nav-card-primary:hover {
+        animation: none;
+    }
+    
+    /* 🌟 BREADCRUMB NAVIGATION */
+    .breadcrumb {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 12px 20px;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+        margin: 10px 0 25px 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
 </style>
 """
 
@@ -313,6 +377,32 @@ class BigFiveApp:
             st.session_state.profile = None
         if 'current_page' not in st.session_state:
             st.session_state.current_page = "overview"
+    
+    def show_breadcrumb_navigation(self):
+        """Zeigt Breadcrumb-Navigation auf allen Unterseiten"""
+        current_page = st.session_state.current_page
+        
+        page_names = {
+            "overview": "Startseite",
+            "screening": "Screening", 
+            "training": "Training & Wissen",
+            "quiz": "Quiz & Test",
+            "recommendations": "Meine Empfehlungen",
+            "about": "Über die App"
+        }
+        
+        if current_page != "overview":
+            col1, col2 = st.columns([1, 4])
+            with col1:
+                if st.button("← Zurück zur Übersicht", use_container_width=True):
+                    st.session_state.current_page = "overview"
+                    st.rerun()
+            with col2:
+                st.markdown(f"""
+                <div class="breadcrumb">
+                    <strong>Aktuelle Seite:</strong> {page_names.get(current_page, current_page)}
+                </div>
+                """, unsafe_allow_html=True)
     
     def run(self):
         """Hauptanwendung"""
@@ -337,7 +427,7 @@ class BigFiveApp:
             self.show_about()
     
     def show_overview(self):
-        """Startseite mit Überblick und Navigation - VERBESSERT"""
+        """Startseite mit Überblick und Navigation - VERBESSERTE NAVIGATION"""
         
         # 📊 INFO CARDS
         st.markdown("""
@@ -348,7 +438,7 @@ class BigFiveApp:
         </div>
         """, unsafe_allow_html=True)
         
-        # 🌟 VERBESSERTE DIMENSION CARDS MIT ANIMATIONEN
+        # 🌟 DIMENSION CARDS
         st.markdown("""
         <div class="dimension-grid">
             <div class="dimension-card dimension-openness" style="animation: fadeInUp 0.4s ease-out;">
@@ -379,58 +469,154 @@ class BigFiveApp:
         </div>
         """, unsafe_allow_html=True)
         
-        # 🎮 NAVIGATION MIT ELEGANTEN DIVIDER
+        # 🎯 **VERBESSERTE: VISUELLE NAVIGATIONS-KARTEN**
         st.markdown('<div class="elegant-divider"></div>', unsafe_allow_html=True)
         st.subheader("App Navigation")
         st.markdown("<p style='color: #5d6d7e; font-size: 1.1em; text-align: center;'>Wählen Sie einen Bereich um zu starten</p>", unsafe_allow_html=True)
         
-        # Erste Button-Reihe
+        # Erste Reihe der Navigations-Karten
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("**🔍 Screening starten**", use_container_width=True, 
-                        help="30 oder 60 Fragen - Ihr persönliches Big Five Profil"):
+            st.markdown("""
+            <div style="
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                margin: 10px 0;
+                border: 2px solid transparent;
+            ">
+                <div style="font-size: 2.5em; margin-bottom: 15px;">🔍</div>
+                <h3 style="margin: 0 0 10px 0; color: white;">Screening</h3>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9em;">30 oder 60 Fragen - Ihr persönliches Big Five Profil</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("**Screening starten**", use_container_width=True, key="nav_screening"):
                 st.session_state.current_page = "screening"
                 st.rerun()
         
         with col2:
-            if st.button("**📚 Training & Wissen**", use_container_width=True, 
-                        help="Lernen Sie alles über die Big Five Dimensionen"):
+            st.markdown("""
+            <div style="
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+                margin: 10px 0;
+            ">
+                <div style="font-size: 2.5em; margin-bottom: 15px;">📚</div>
+                <h3 style="margin: 0 0 10px 0; color: white;">Training & Wissen</h3>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9em;">Lernen Sie alles über die Big Five Dimensionen</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("**Training & Wissen**", use_container_width=True, key="nav_training"):
                 st.session_state.current_page = "training"
                 st.rerun()
         
         with col3:
-            if st.button("**🎯 Quiz & Test**", use_container_width=True, 
-                        help="Testen Sie Ihr Wissen über Persönlichkeitspsychologie"):
+            st.markdown("""
+            <div style="
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                color: white;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+                margin: 10px 0;
+            ">
+                <div style="font-size: 2.5em; margin-bottom: 15px;">🎯</div>
+                <h3 style="margin: 0 0 10px 0; color: white;">Quiz & Test</h3>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9em;">Testen Sie Ihr Wissen über Persönlichkeitspsychologie</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("**Quiz & Test**", use_container_width=True, key="nav_quiz"):
                 st.session_state.current_page = "quiz"
                 st.rerun()
         
-        # Zweite Button-Reihe
+        # Zweite Reihe der Navigations-Karten
         col4, col5, col6 = st.columns(3)
         
         with col4:
             button_disabled = st.session_state.scores is None
-            if st.button("**💡 Meine Empfehlungen**", 
+            disabled_style = "opacity: 0.6; cursor: not-allowed;" if button_disabled else ""
+            disabled_text = " (Bitte zuerst Screening)" if button_disabled else ""
+            
+            st.markdown(f"""
+            <div style="
+                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+                color: white;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+                margin: 10px 0;
+                {disabled_style}
+            ">
+                <div style="font-size: 2.5em; margin-bottom: 15px;">💡</div>
+                <h3 style="margin: 0 0 10px 0; color: white;">Meine Empfehlungen</h3>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9em;">Evidenzbasierte Entwicklungsempfehlungen{disabled_text}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button("**Meine Empfehlungen**", 
                         disabled=button_disabled,
                         use_container_width=True, 
-                        help="Evidenzbasierte Entwicklungsempfehlungen" if not button_disabled else "Bitte zuerst Screening durchführen"):
-                if not button_disabled:
-                    st.session_state.current_page = "recommendations"
-                    st.rerun()
+                        key="nav_recommendations"):
+                st.session_state.current_page = "recommendations"
+                st.rerun()
         
         with col5:
-            if st.button("**ℹ️ Über die App**", use_container_width=True, 
-                        help="Informationen zur wissenschaftlichen Grundlage"):
+            st.markdown("""
+            <div style="
+                background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                color: white;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(250, 112, 154, 0.3);
+                margin: 10px 0;
+            ">
+                <div style="font-size: 2.5em; margin-bottom: 15px;">ℹ️</div>
+                <h3 style="margin: 0 0 10px 0; color: white;">Über die App</h3>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9em;">Informationen zur wissenschaftlichen Grundlage</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("**Über die App**", use_container_width=True, key="nav_about"):
                 st.session_state.current_page = "about"
                 st.rerun()
         
         with col6:
-            if st.button("**🏠 Startseite**", use_container_width=True, 
-                        help="Zurück zur Übersicht"):
+            st.markdown("""
+            <div style="
+                background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+                color: #2c3e50;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3);
+                margin: 10px 0;
+            ">
+                <div style="font-size: 2.5em; margin-bottom: 15px;">🏠</div>
+                <h3 style="margin: 0 0 10px 0; color: #2c3e50;">Startseite</h3>
+                <p style="margin: 0; opacity: 0.8; font-size: 0.9em;">Zurück zur Übersicht</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("**Startseite**", use_container_width=True, key="nav_home"):
                 st.session_state.current_page = "overview"
                 st.rerun()
         
-        # 🌟 VERBESSERTE STATUS-ANZEIGE WENN SCREENING VORHANDEN
+        # Status-Anzeige wenn Screening bereits durchgeführt
         if st.session_state.scores is not None:
             st.markdown("""
             <div class="modern-info-box">
@@ -463,10 +649,7 @@ class BigFiveApp:
 
     def show_screening(self):
         """Screening-Seite"""
-        if st.button("← Zurück zur Übersicht"):
-            st.session_state.current_page = "overview"
-            st.rerun()
-            
+        self.show_breadcrumb_navigation()
         st.header("Persönlichkeitsscreening")
         
         # Wenn bereits Ergebnisse vorhanden sind, diese zuerst anzeigen
@@ -575,10 +758,7 @@ class BigFiveApp:
 
     def show_training(self):
         """Training-Seite"""
-        if st.button("← Zurück zur Übersicht"):
-            st.session_state.current_page = "overview"
-            st.rerun()
-            
+        self.show_breadcrumb_navigation()
         st.header("Big Five Training")
         
         training_topic = st.selectbox(
@@ -609,19 +789,13 @@ class BigFiveApp:
 
     def show_quiz(self):
         """Quiz-Seite"""
-        if st.button("← Zurück zur Übersicht"):
-            st.session_state.current_page = "overview"
-            st.rerun()
-            
+        self.show_breadcrumb_navigation()
         st.header("Big Five Quiz")
         self.quiz.display_quiz()
 
     def show_recommendations(self):
         """Empfehlungs-Seite"""
-        if st.button("← Zurück zur Übersicht"):
-            st.session_state.current_page = "overview"
-            st.rerun()
-            
+        self.show_breadcrumb_navigation()
         st.header("Personalisiertes Feedback")
         
         if st.session_state.scores is None:
@@ -697,10 +871,7 @@ class BigFiveApp:
 
     def show_about(self):
         """Über-Seite mit Informationen zur App - KORRIGIERTE VERSION"""
-        if st.button("← Zurück zur Übersicht"):
-            st.session_state.current_page = "overview"
-            st.rerun()
-            
+        self.show_breadcrumb_navigation()
         st.header("Über diese Anwendung")
         
         st.markdown("### Wissenschaftliche Grundlage")
