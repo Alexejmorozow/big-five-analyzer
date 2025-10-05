@@ -275,9 +275,9 @@ class BigFiveApp:
             self.show_about()
     
     def show_overview(self):
-        """Startseite mit Überblick und Navigation - BEREINIGT"""
+        """Startseite mit Überblick und Navigation"""
         
-        # 📊 INFO CARDS - REDUNDANTE SCHNELLSTART-SEKTION ENTFERNT
+        # 📊 INFO CARDS
         st.markdown("""
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <h3 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Was sind die Big Five?</h3>
@@ -486,7 +486,7 @@ class BigFiveApp:
             st.rerun()
 
     def show_training(self):
-        """Training-Seite - KORRIGIERT: TrainingModule Methoden aufrufen"""
+        """Training-Seite"""
         if st.button("← Zurück zur Übersicht"):
             st.session_state.current_page = "overview"
             st.rerun()
@@ -505,7 +505,7 @@ class BigFiveApp:
             ]
         )
         
-        # WICHTIG: Hier werden die Methoden der TrainingModule Klasse aufgerufen
+        # Training-Module aufrufen
         if training_topic == "📖 Überblick - Grundlagen & Dimensionen":
             self.training.show_model_overview()
         elif training_topic == "🧬 Wissenschaft - Genetik & Veränderbarkeit":
@@ -608,48 +608,56 @@ class BigFiveApp:
         return plan
 
     def show_about(self):
-        """Über-Seite mit Informationen zur App"""
+        """Über-Seite mit Informationen zur App - KORRIGIERTE VERSION"""
         if st.button("← Zurück zur Übersicht"):
             st.session_state.current_page = "overview"
             st.rerun()
             
         st.header("Über diese Anwendung")
         
+        st.markdown("### Wissenschaftliche Grundlage")
         st.markdown("""
-        <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <h3 style="color: #2c3e50; margin-top: 0;">Wissenschaftliche Grundlage</h3>
-            
-            <p>Diese Anwendung basiert auf dem <strong>Fünf-Faktoren-Modell</strong> (Big Five), 
-            dem international anerkannten Standardmodell der Persönlichkeitsforschung.</p>
-            
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                <strong>Wichtige Quellen:</strong><br>
-                • Costa, P. T., & McCrae, R. R. (1992). NEO-PI-R Professional Manual<br>
-                • Goldberg, L. R. (1993). The structure of phenotypic personality traits<br>
-                • John, O. P., & Srivastava, S. (1999). The Big Five trait taxonomy
-            </div>
-            
-            <h3 style="color: #2c3e50;">Technische Umsetzung</h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); padding: 15px; border-radius: 10px;">
-                    <strong>Funktionen:</strong><br>
-                    • Screening mit Fragebögen<br>
-                    • Profilanalyse<br>
-                    • Wissenschaftliches Training<br>
-                    • Personalisierte Empfehlungen
-                </div>
-                <div style="background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%); padding: 15px; border-radius: 10px;">
-                    <strong>Hinweis:</strong><br>
-                    Diese Anwendung dient Bildungszwecken und ersetzt keine professionelle psychologische Beratung.
-                </div>
-            </div>
-            
-            <h3 style="color: #2c3e50;">Entwickler</h3>
-            <p>Diese Streamlit-Anwendung wurde entwickelt, um das Big-five-Modell 
-            zugänglich und anwendbar zu machen.</p>
+        Diese Anwendung basiert auf dem **Fünf-Faktoren-Modell** (Big Five), 
+        dem international anerkannten Standardmodell der Persönlichkeitsforschung.
+        """)
+        
+        st.markdown("""
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+            <strong>Wichtige Quellen:</strong><br>
+            • Costa, P. T., & McCrae, R. R. (1992). NEO-PI-R Professional Manual<br>
+            • Goldberg, L. R. (1993). The structure of phenotypic personality traits<br>
+            • John, O. P., & Srivastava, S. (1999). The Big Five trait taxonomy
         </div>
         """, unsafe_allow_html=True)
+        
+        st.markdown("### Technische Umsetzung")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d4e7f8 100%); padding: 15px; border-radius: 10px;">
+                <strong>Funktionen:</strong><br>
+                • Screening mit Fragebögen<br>
+                • Profilanalyse<br>
+                • Wissenschaftliches Training<br>
+                • Personalisierte Empfehlungen
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div style="background: linear-gradient(135deg, #fff9e6 0%, #fff2cc 100%); padding: 15px; border-radius: 10px;">
+                <strong>Hinweis:</strong><br>
+                Diese Anwendung dient Bildungszwecken und ersetzt keine professionelle psychologische Beratung.
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("### Entwickler")
+        st.markdown("""
+        Diese Streamlit-Anwendung wurde entwickelt, um das Big-five-Modell 
+        zugänglich und anwendbar zu machen.
+        """)
 
 # Hauptanwendung ausführen
 if __name__ == "__main__":
