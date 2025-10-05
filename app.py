@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 🎨 SICHERES MODERNES CSS STYLING
+# 🎨 MODERNES CSS STYLING MIT GRÖSSEREN BOXEN
 css_styles = """
 <style>
     /* Haupt-Hintergrund mit subtilem Gradient */
@@ -64,24 +64,66 @@ css_styles = """
         margin-top: 25px;
     }
     
-    /* 🌟 VERBESSERTE BUTTONS */
-    .stButton > button {
+    /* 🌟 GRÖSSERE BUTTONS FÜR NAVIGATION */
+    .nav-button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 16px 24px;
-        border-radius: 12px;
+        padding: 35px 25px !important;
+        border-radius: 20px;
         font-weight: 600;
-        font-size: 16px;
+        font-size: 18px !important;
         transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
         width: 100%;
-        margin: 8px 0;
+        margin: 10px 0;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
     }
     
-    .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+    .nav-button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Verschiedene Farben für Navigations-Buttons */
+    .nav-button-screening {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    .nav-button-training {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+    }
+    
+    .nav-button-quiz {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    }
+    
+    .nav-button-recommendations {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+    }
+    
+    .nav-button-about {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+    }
+    
+    .nav-button-home {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+        color: #2c3e50 !important;
+    }
+    
+    .nav-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+    
+    .nav-button:disabled:hover {
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3) !important;
     }
     
     /* 🌟 VERBESSERTE METRIC CARDS */
@@ -126,9 +168,10 @@ css_styles = """
     
     /* 📱 MOBILE OPTIMIERUNG */
     @media (max-width: 768px) {
-        .stButton > button {
-            padding: 16px 20px;
-            font-size: 15px;
+        .nav-button {
+            padding: 25px 15px !important;
+            min-height: 140px;
+            font-size: 16px !important;
         }
         
         h1 {
@@ -281,7 +324,7 @@ class BigFiveApp:
             self.show_about()
     
     def show_overview(self):
-        """Startseite mit Überblick und Navigation - SICHERE VERSION"""
+        """Startseite mit Überblick und Navigation - MIT GRÖSSEREN BOXEN"""
         
         # 📊 INFO CARDS
         st.markdown("""
@@ -323,92 +366,85 @@ class BigFiveApp:
         </div>
         """, unsafe_allow_html=True)
         
-        # 🎯 **SICHERE NAVIGATION**
+        # 🎯 **GRÖSSERE NAVIGATIONS-BOXEN**
         st.markdown('<div class="elegant-divider"></div>', unsafe_allow_html=True)
         st.subheader("App Navigation")
         st.markdown("<p style='color: #5d6d7e; font-size: 1.1em; text-align: center;'>Wählen Sie einen Bereich um zu starten</p>", unsafe_allow_html=True)
         
-        # Erste Button-Reihe - VISUELL VERBESSERT
+        # Erste Reihe der größeren Navigations-Boxen
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.markdown("""
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 2.5em;">🔍</div>
-                <h4 style="margin: 5px 0; color: #2c3e50;">Screening</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button("**Screening starten**", use_container_width=True, 
-                        help="30 oder 60 Fragen - Ihr persönliches Big Five Profil"):
+            if st.button("""
+                <div style="font-size: 3em; margin-bottom: 15px;">🔍</div>
+                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Screening</div>
+                <div style="font-size: 0.9em; opacity: 0.9;">30 oder 60 Fragen - Ihr persönliches Big Five Profil</div>
+            """, 
+            use_container_width=True, 
+            key="nav_screening"):
                 st.session_state.current_page = "screening"
                 st.rerun()
         
         with col2:
-            st.markdown("""
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 2.5em;">📚</div>
-                <h4 style="margin: 5px 0; color: #2c3e50;">Training & Wissen</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button("**Training & Wissen**", use_container_width=True, 
-                        help="Lernen Sie alles über die Big Five Dimensionen"):
+            if st.button("""
+                <div style="font-size: 3em; margin-bottom: 15px;">📚</div>
+                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Training & Wissen</div>
+                <div style="font-size: 0.9em; opacity: 0.9;">Lernen Sie alles über die Big Five Dimensionen</div>
+            """, 
+            use_container_width=True, 
+            key="nav_training"):
                 st.session_state.current_page = "training"
                 st.rerun()
         
         with col3:
-            st.markdown("""
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 2.5em;">🎯</div>
-                <h4 style="margin: 5px 0; color: #2c3e50;">Quiz & Test</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button("**Quiz & Test**", use_container_width=True, 
-                        help="Testen Sie Ihr Wissen über Persönlichkeitspsychologie"):
+            if st.button("""
+                <div style="font-size: 3em; margin-bottom: 15px;">🎯</div>
+                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Quiz & Test</div>
+                <div style="font-size: 0.9em; opacity: 0.9;">Testen Sie Ihr Wissen über Persönlichkeitspsychologie</div>
+            """, 
+            use_container_width=True, 
+            key="nav_quiz"):
                 st.session_state.current_page = "quiz"
                 st.rerun()
         
-        # Zweite Button-Reihe - VISUELL VERBESSERT
+        # Zweite Reihe der größeren Navigations-Boxen
         col4, col5, col6 = st.columns(3)
         
         with col4:
             button_disabled = st.session_state.scores is None
+            disabled_text = "🔒 (Bitte zuerst Screening)" if button_disabled else ""
             
-            st.markdown("""
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 2.5em;">💡</div>
-                <h4 style="margin: 5px 0; color: #2c3e50;">Meine Empfehlungen</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button("**Meine Empfehlungen**", 
-                        disabled=button_disabled,
-                        use_container_width=True, 
-                        help="Evidenzbasierte Entwicklungsempfehlungen" if not button_disabled else "Bitte zuerst Screening durchführen"):
+            if st.button(f"""
+                <div style="font-size: 3em; margin-bottom: 15px;">💡</div>
+                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Meine Empfehlungen</div>
+                <div style="font-size: 0.9em; opacity: 0.9;">Evidenzbasierte Entwicklungsempfehlungen {disabled_text}</div>
+            """, 
+            disabled=button_disabled,
+            use_container_width=True, 
+            key="nav_recommendations"):
                 if not button_disabled:
                     st.session_state.current_page = "recommendations"
                     st.rerun()
         
         with col5:
-            st.markdown("""
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 2.5em;">ℹ️</div>
-                <h4 style="margin: 5px 0; color: #2c3e50;">Über die App</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button("**Über die App**", use_container_width=True, 
-                        help="Informationen zur wissenschaftlichen Grundlage"):
+            if st.button("""
+                <div style="font-size: 3em; margin-bottom: 15px;">ℹ️</div>
+                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Über die App</div>
+                <div style="font-size: 0.9em; opacity: 0.9;">Informationen zur wissenschaftlichen Grundlage</div>
+            """, 
+            use_container_width=True, 
+            key="nav_about"):
                 st.session_state.current_page = "about"
                 st.rerun()
         
         with col6:
-            st.markdown("""
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 2.5em;">🏠</div>
-                <h4 style="margin: 5px 0; color: #2c3e50;">Startseite</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button("**Startseite**", use_container_width=True, 
-                        help="Zurück zur Übersicht"):
+            if st.button("""
+                <div style="font-size: 3em; margin-bottom: 15px;">🏠</div>
+                <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">Startseite</div>
+                <div style="font-size: 0.9em; opacity: 0.8;">Zurück zur Übersicht</div>
+            """, 
+            use_container_width=True, 
+            key="nav_home"):
                 st.session_state.current_page = "overview"
                 st.rerun()
         
@@ -445,7 +481,7 @@ class BigFiveApp:
 
     def show_screening(self):
         """Screening-Seite"""
-        if st.button("← Zurück zur Übersicht"):
+        if st.button("← Zurück zur Übersicht", use_container_width=True):
             st.session_state.current_page = "overview"
             st.rerun()
             
@@ -546,7 +582,7 @@ class BigFiveApp:
 
     def show_training(self):
         """Training-Seite"""
-        if st.button("← Zurück zur Übersicht"):
+        if st.button("← Zurück zur Übersicht", use_container_width=True):
             st.session_state.current_page = "overview"
             st.rerun()
             
@@ -580,7 +616,7 @@ class BigFiveApp:
 
     def show_quiz(self):
         """Quiz-Seite"""
-        if st.button("← Zurück zur Übersicht"):
+        if st.button("← Zurück zur Übersicht", use_container_width=True):
             st.session_state.current_page = "overview"
             st.rerun()
             
@@ -589,7 +625,7 @@ class BigFiveApp:
 
     def show_recommendations(self):
         """Empfehlungs-Seite"""
-        if st.button("← Zurück zur Übersicht"):
+        if st.button("← Zurück zur Übersicht", use_container_width=True):
             st.session_state.current_page = "overview"
             st.rerun()
             
@@ -668,7 +704,7 @@ class BigFiveApp:
 
     def show_about(self):
         """Über-Seite mit Informationen zur App"""
-        if st.button("← Zurück zur Übersicht"):
+        if st.button("← Zurück zur Übersicht", use_container_width=True):
             st.session_state.current_page = "overview"
             st.rerun()
             
